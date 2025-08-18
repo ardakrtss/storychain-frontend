@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/contexts/AuthContext';
-import { themeStorage, storyStorage } from '@/lib/storage';
-import MagicalHero from '@/components/MagicalHero';
+import { useAuth } from '../contexts/AuthContext';
+import { themeStorage, storyStorage } from '../lib/storage';
+import MagicalHero from '../components/MagicalHero';
 
 export default function HomePage() {
   const { user } = useAuth();
