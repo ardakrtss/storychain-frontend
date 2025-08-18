@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
-import api from '@/lib/api';
+import api from '../../lib/api';
 
 interface Theme {
   id: string;
