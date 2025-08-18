@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import api from '@/lib/api';
+import { useAuth } from '../../contexts/AuthContext';
+import api from '../../lib/api';
 
 interface Story {
   id: string;
