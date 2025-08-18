@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from '../contexts/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'StoryChain - Paylaşımlı Hikaye Yazma Platformu',
@@ -19,11 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr">
-      <body className={inter.className}>
+      <body>
         <AuthProvider>
-          <div className="min-h-screen flex flex-col">
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             <Header />
-            <main className="flex-grow">
+            <main style={{ flexGrow: 1 }}>
               {children}
             </main>
             <Footer />
