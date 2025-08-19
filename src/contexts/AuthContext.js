@@ -1,25 +1,9 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../lib/api';
 
-interface User {
-  id: string;
-  nickname: string;
-  role?: 'user' | 'admin';
-  stories_written?: number;
-  total_likes?: number;
-}
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  signIn: (nickname: string) => Promise<{ success: boolean; error?: string }>;
-  signOut: () => Promise<void>;
-  updateUser: (updates: Partial<User>) => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -29,84 +13,80 @@ export const useAuth = () => {
   return context;
 };
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Check if user is logged in on app start
-             const checkAuth = async () => {
-           const token = localStorage.getItem('token');
-           const adminToken = localStorage.getItem('adminToken');
-           
-           if (adminToken) {
-             try {
-               const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
-               setUser(adminUser);
-             } catch {
-               localStorage.removeItem('adminToken');
-               localStorage.removeItem('adminUser');
-             }
-           } else if (token) {
-             try {
-               const response = await api.get('/auth/me');
-               setUser(response.data);
-             } catch {
-               localStorage.removeItem('token');
-             }
-           }
-           setLoading(false);
-         };
+    const checkAuth = async () => {
+      const token = localStorage.getItem('token');
+      const adminToken = localStorage.getItem('adminToken');
+      
+      if (adminToken) {
+        try {
+          const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
+          setUser(adminUser);
+        } catch {
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminUser');
+        }
+      } else if (token) {
+        try {
+          const response = await api.get('/auth/me');
+          setUser(response.data);
+        } catch {
+          localStorage.removeItem('token');
+        }
+      }
+      setLoading(false);
+    };
 
     checkAuth();
   }, []);
 
-           const signIn = async (nickname: string): Promise<{ success: boolean; error?: string }> => {
-           try {
-             const response = await api.post('/auth/login', { nickname });
-             const { token, user } = response.data;
-             
-             localStorage.setItem('token', token);
-             setUser(user);
-             
-             return { success: true };
-           } catch (error: unknown) {
-             console.error('Sign in error:', error);
-             const errorMessage = error instanceof Error ? error.message : 'Giriş yapılamadı';
-             return { 
-               success: false, 
-               error: errorMessage
-             };
-           }
-         };
+  const signIn = async (nickname) => {
+    try {
+      const response = await api.post('/auth/login', { nickname });
+      const { token, user } = response.data;
+      
+      localStorage.setItem('token', token);
+      setUser(user);
+      
+      return { success: true };
+    } catch (error) {
+      console.error('Sign in error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Giriş yapılamadı';
+      return { 
+        success: false, 
+        error: errorMessage
+      };
+    }
+  };
 
-           const signOut = async () => {
-           try {
-             localStorage.removeItem('token');
-             localStorage.removeItem('adminToken');
-             localStorage.removeItem('adminUser');
-             setUser(null);
-           } catch {
-             console.error('Sign out error');
-           }
-         };
+  const signOut = async () => {
+    try {
+      localStorage.removeItem('token');
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+      setUser(null);
+    } catch {
+      console.error('Sign out error');
+    }
+  };
 
-           const updateUser = async (updates: Partial<User>) => {
-           try {
-             if (user) {
-               const response = await api.put('/users/profile', updates);
-               setUser(response.data);
-             }
-           } catch {
-             console.error('Update user error');
-           }
-         };
+  const updateUser = async (updates) => {
+    try {
+      if (user) {
+        const updatedUser = { ...user, ...updates };
+        setUser(updatedUser);
+      }
+    } catch (error) {
+      console.error('Update user error:', error);
+    }
+  };
 
-  const value: AuthContextType = {
+  const value = {
     user,
     loading,
     signIn,

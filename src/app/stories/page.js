@@ -4,24 +4,14 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 
-interface Story {
-  id: string;
-  title: string;
-  theme: string;
-  content: string;
-  author: string;
-  likeCount: number;
-  createdAt: string;
-}
-
 export default function StoriesPage() {
-  const [stories, setStories] = useState<Story[]>([]);
+  const [stories, setStories] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     // Mock data for now
-    const mockStories: Story[] = [
+    const mockStories = [
       {
         id: '1',
         title: 'Büyülü Ormanın Sırrı',

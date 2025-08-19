@@ -6,57 +6,15 @@ import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import api from '../../lib/api';
 
-interface Theme {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-  characters: string;
-  plotHints: string;
-}
-
-interface StorySegment {
-  id: string;
-  author: string;
-  content: string;
-  order: number;
-  createdAt: string;
-}
-
-
-
 function WritePageContent() {
-  const [theme, setTheme] = useState<Theme | null>(null);
-  const [story, setStory] = useState<{
-    id: string;
-    title: string;
-    theme: string;
-    segments: Array<{
-      id: string;
-      author: string;
-      content: string;
-      order: number;
-      createdAt: string;
-    }>;
-    isCompleted: boolean;
-    likeCount: number;
-    createdAt: string;
-    lastSegment?: {
-      id: string;
-      author: string;
-      content: string;
-      order: number;
-      createdAt: string;
-    };
-    currentAuthorNumber?: number;
-  } | null>(null);
+  const [theme, setTheme] = useState(null);
+  const [story, setStory] = useState(null);
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [mode, setMode] = useState<'new' | 'continue'>('new');
+  const [mode, setMode] = useState('new');
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -103,7 +61,7 @@ function WritePageContent() {
     initializePage();
   }, [themeId, storyId, writeMode, user, router]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!content.trim()) {
@@ -151,7 +109,7 @@ function WritePageContent() {
       }
       
       router.push('/stories');
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error submitting story:', error);
       const errorMessage = error instanceof Error ? error.message : 'Hikaye gönderilirken bir hata oluştu';
       setError(errorMessage);

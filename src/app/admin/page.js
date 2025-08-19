@@ -4,49 +4,13 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../lib/api';
 
-interface Story {
-  id: string;
-  title: string;
-  theme: string;
-  segments: Array<{
-    id: string;
-    author: string;
-    content: string;
-    order: number;
-    createdAt: string;
-  }>;
-  isCompleted: boolean;
-  likeCount: number;
-  createdAt: string;
-  segmentCount: number;
-  lastActivity: string;
-}
-
-interface User {
-  id: string;
-  nickname: string;
-  stories_written: number;
-  total_likes: number;
-  storyCount: number;
-  createdAt?: string;
-}
-
-interface Stats {
-  totalStories: number;
-  completedStories: number;
-  ongoingStories: number;
-  totalUsers: number;
-  totalSegments: number;
-  averageSegmentsPerStory: string;
-}
-
 export default function AdminPanel() {
   const { user } = useAuth();
-  const [stories, setStories] = useState<Story[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
-  const [stats, setStats] = useState<Stats | null>(null);
+  const [stories, setStories] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'stories' | 'users' | 'stats'>('stories');
+  const [activeTab, setActiveTab] = useState('stories');
 
   useEffect(() => {
     if (user?.role === 'admin') {
@@ -73,7 +37,7 @@ export default function AdminPanel() {
     }
   };
 
-  const deleteStory = async (storyId: string) => {
+  const deleteStory = async (storyId) => {
     if (!confirm('Bu hikayeyi silmek istediğinizden emin misiniz?')) {
       return;
     }
@@ -88,7 +52,7 @@ export default function AdminPanel() {
     }
   };
 
-  const approveStory = async (storyId: string) => {
+  const approveStory = async (storyId) => {
     try {
       await api.put(`/admin/stories/${storyId}/approve`);
       setStories(stories.map(s => 

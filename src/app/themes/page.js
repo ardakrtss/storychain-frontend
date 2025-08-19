@@ -6,18 +6,8 @@ import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import api from '../../lib/api';
 
-interface Theme {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-  characters: string;
-  plotHints: string;
-}
-
 export default function ThemesPage() {
-  const [themes, setThemes] = useState<Theme[]>([]);
+  const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { user } = useAuth();
@@ -39,7 +29,7 @@ export default function ThemesPage() {
     fetchThemes();
   }, []);
 
-  const handleThemeSelect = (themeId: string) => {
+  const handleThemeSelect = (themeId) => {
     // Tema seçildiğinde yeni hikaye yazma sayfasına yönlendir
     router.push(`/write?theme=${themeId}&mode=new`);
   };

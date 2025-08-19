@@ -12,7 +12,7 @@ export default function NicknamePage() {
   const { signIn } = useAuth();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!nickname.trim()) {

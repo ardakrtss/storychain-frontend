@@ -12,7 +12,7 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
@@ -30,7 +30,7 @@ export default function AdminLogin() {
       } else {
         setError('Admin yetkisi bulunmamaktadır');
       }
-    } catch (error: unknown) {
+    } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Giriş yapılamadı';
       setError(errorMessage);
     } finally {

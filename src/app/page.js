@@ -8,9 +8,9 @@ import MagicalHero from '../components/MagicalHero';
 
 export default function HomePage() {
   const { user } = useAuth();
-  const [recentStories, setRecentStories] = useState<any[]>([]);
-  const [popularStories, setPopularStories] = useState<any[]>([]);
-  const [themes, setThemes] = useState<any[]>([]);
+  const [recentStories, setRecentStories] = useState([]);
+  const [popularStories, setPopularStories] = useState([]);
+  const [themes, setThemes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
