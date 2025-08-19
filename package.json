@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm install --save-dev typescript @types/react @types/react-dom @types/node && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -19,11 +19,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.4.6",
-    "typescript": "^5"
+    "eslint-config-next": "15.4.6"
   }
 }
