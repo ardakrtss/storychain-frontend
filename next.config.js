@@ -10,6 +10,9 @@ const nextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: true
+  },
+  experimental: {
+    typedRoutes: false
   }
 }
 
