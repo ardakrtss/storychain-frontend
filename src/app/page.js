@@ -51,12 +51,51 @@ export default function HomePage() {
           <div 
             className="w-full h-full bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 800\'%3E%3Cdefs%3E%3ClinearGradient id=\'sky\' x1=\'0%25\' y1=\'0%25\' x2=\'0%25\' y2=\'100%25\'%3E%3Cstop offset=\'0%25\' style=\'stop-color:%23e0f2fe;stop-opacity:1\' /%3E%3Cstop offset=\'50%25\' style=\'stop-color:%23fce7f3;stop-opacity:1\' /%3E%3Cstop offset=\'100%25\' style=\'stop-color:%23f3e8ff;stop-opacity:1\' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=\'1200\' height=\'800\' fill=\'url(%23sky)\'/%3E%3C/svg%3E")',
+              backgroundImage: `
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+              `,
               backgroundSize: 'cover'
             }}
           />
+          {/* Masalsı elementler */}
+          <div className="absolute inset-0">
+            {/* Yıldızlar */}
+            <div className="absolute top-20 left-20 w-2 h-2 bg-yellow-300 rounded-full animate-pulse opacity-80"></div>
+            <div className="absolute top-32 right-32 w-1 h-1 bg-yellow-300 rounded-full animate-pulse opacity-60"></div>
+            <div className="absolute top-16 left-1/2 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse opacity-70"></div>
+            <div className="absolute top-40 right-1/4 w-1 h-1 bg-yellow-300 rounded-full animate-pulse opacity-50"></div>
+            <div className="absolute top-24 left-1/3 w-1 h-1 bg-yellow-300 rounded-full animate-pulse opacity-80"></div>
+            
+            {/* Bulutlar */}
+            <div className="absolute top-16 left-8 text-white text-6xl opacity-20 animate-pulse">☁️</div>
+            <div className="absolute top-28 right-16 text-white text-5xl opacity-15 animate-pulse delay-1000">☁️</div>
+            <div className="absolute top-12 right-1/3 text-white text-4xl opacity-25 animate-pulse delay-2000">☁️</div>
+            
+            {/* Kuşlar */}
+            <div className="absolute top-6 right-16 text-white text-4xl opacity-40">🕊️</div>
+            <div className="absolute top-10 right-32 text-white text-3xl opacity-30">🕊️</div>
+            <div className="absolute top-20 left-1/4 text-white text-2xl opacity-35">🕊️</div>
+            
+            {/* Masalsı yaratıklar */}
+            <div className="absolute bottom-28 left-1/4 text-white text-5xl opacity-30 animate-bounce">🦄</div>
+            <div className="absolute bottom-24 right-1/3 text-white text-4xl opacity-25 animate-bounce delay-1000">🦄</div>
+            <div className="absolute bottom-20 left-1/3 text-white text-3xl opacity-20 animate-bounce delay-2000">🦄</div>
+            
+            {/* Çiçekler */}
+            <div className="absolute bottom-8 left-8 text-white text-4xl opacity-40">🌸</div>
+            <div className="absolute bottom-6 right-16 text-white text-3xl opacity-35">🌺</div>
+            <div className="absolute bottom-12 right-1/3 text-white text-2xl opacity-30">🌼</div>
+            
+            {/* Büyülü ışıklar */}
+            <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-pink-300 rounded-full animate-pulse opacity-60"></div>
+            <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-blue-300 rounded-full animate-pulse opacity-50"></div>
+            <div className="absolute top-1/2 left-1/3 w-3.5 h-3.5 bg-yellow-300 rounded-full animate-pulse opacity-70"></div>
+          </div>
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+          <div className="absolute inset-0 bg-black bg-opacity-10"></div>
         </div>
 
         {/* İçerik */}
