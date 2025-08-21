@@ -12,6 +12,13 @@ const nextConfig = {
   },
   experimental: {
     typedRoutes: false
+  },
+  // Netlify için gerekli ayarlar
+  async redirects() {
+    return [];
+  },
+  async rewrites() {
+    return [];
   }
 }
 
