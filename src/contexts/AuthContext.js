@@ -45,9 +45,18 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, []);
 
-  const signIn = async (nickname) => {
+  const signIn = async (nickname, password = null) => {
     try {
-      const response = await api.post('/auth/login', { nickname });
+      let response;
+      
+      if (password) {
+        // Şifre ile giriş
+        response = await api.post('/auth/login', { nickname, password });
+      } else {
+        // Sadece rumuz ile giriş (eski yöntem)
+        response = await api.post('/auth/login', { nickname });
+      }
+      
       const { token, user } = response.data;
       
       localStorage.setItem('token', token);
@@ -56,7 +65,7 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (error) {
       console.error('Sign in error:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Giriş yapılamadı';
+      const errorMessage = error.response?.data?.error || error.message || 'Giriş yapılamadı';
       return { 
         success: false, 
         error: errorMessage

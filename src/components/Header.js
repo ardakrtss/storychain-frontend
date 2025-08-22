@@ -69,7 +69,7 @@ export default function Header() {
             ) : (
               <div className="flex items-center space-x-4">
                 <Link href="/nickname" className="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-4 py-2 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-lg">
-                  Rumuz Gir
+                  Giriş Yap
                 </Link>
               </div>
             )}
@@ -128,7 +128,7 @@ export default function Header() {
               ) : (
                 <>
                   <Link href="/nickname" className="block px-3 py-2 text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors">
-                    Rumuz Gir
+                    Giriş Yap
                   </Link>
                 </>
               )}

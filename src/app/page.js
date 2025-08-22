@@ -119,7 +119,7 @@ export default function HomePage() {
             ) : (
               <>
                 <Link 
-                  href="/nickname" 
+                  href="/register" 
                   className="bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white px-8 py-4 rounded-full font-semibold transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl text-lg"
                 >
                   <span className="text-2xl">✏️</span>

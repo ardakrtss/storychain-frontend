@@ -14,67 +14,9 @@ export default function LeaderboardPage() {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        // Backend'de leaderboard endpoint'i yoksa mock data kullanacağız
-        const mockLeaderboard = [
-          {
-            id: 1,
-            nickname: 'Hikayeci_Ali',
-            stories_written: 15,
-            total_likes: 127,
-            rank: 1
-          },
-          {
-            id: 2,
-            nickname: 'Yıldız_Yazar',
-            stories_written: 12,
-            total_likes: 98,
-            rank: 2
-          },
-          {
-            id: 3,
-            nickname: 'Çevreci_Mert',
-            stories_written: 8,
-            total_likes: 76,
-            rank: 3
-          },
-          {
-            id: 4,
-            nickname: 'Fantastik_Elif',
-            stories_written: 10,
-            total_likes: 65,
-            rank: 4
-          },
-          {
-            id: 5,
-            nickname: 'Macera_Can',
-            stories_written: 6,
-            total_likes: 54,
-            rank: 5
-          },
-          {
-            id: 6,
-            nickname: 'Gizem_Zeynep',
-            stories_written: 9,
-            total_likes: 43,
-            rank: 6
-          },
-          {
-            id: 7,
-            nickname: 'Bilim_Ahmet',
-            stories_written: 7,
-            total_likes: 38,
-            rank: 7
-          },
-          {
-            id: 8,
-            nickname: 'SıfırAtık_Leyla',
-            stories_written: 5,
-            total_likes: 32,
-            rank: 8
-          }
-        ];
-
-        setLeaderboard(mockLeaderboard);
+        // Backend'de leaderboard endpoint'i olmadığı için şimdilik boş array
+        // Gerçek kullanıcılar geldiğinde buraya API çağrısı yapılacak
+        setLeaderboard([]);
       } catch (error) {
         console.error('Error fetching leaderboard:', error);
         setError('Lider tablosu yüklenirken bir hata oluştu');
@@ -191,61 +133,79 @@ export default function LeaderboardPage() {
 
           {/* Table Body */}
           <div className="divide-y divide-gray-200">
-            {leaderboard.map((player, index) => (
-              <div 
-                key={player.id} 
-                className={`px-6 py-4 hover:bg-gray-50 transition-colors ${getRankColor(player.rank)}`}
-              >
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  {/* Rank */}
-                  <div className="col-span-1 text-center">
-                    <span className="text-2xl font-bold">
-                      {getRankIcon(player.rank)}
-                    </span>
-                  </div>
+            {leaderboard.length > 0 ? (
+              leaderboard.map((player, index) => (
+                <div 
+                  key={player.id} 
+                  className={`px-6 py-4 hover:bg-gray-50 transition-colors ${getRankColor(player.rank)}`}
+                >
+                  <div className="grid grid-cols-12 gap-4 items-center">
+                    {/* Rank */}
+                    <div className="col-span-1 text-center">
+                      <span className="text-2xl font-bold">
+                        {getRankIcon(player.rank)}
+                      </span>
+                    </div>
 
-                  {/* Player Name */}
-                  <div className="col-span-4">
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
-                        {player.nickname.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900">
-                          {player.nickname}
+                    {/* Player Name */}
+                    <div className="col-span-4">
+                      <div className="flex items-center">
+                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
+                          {player.nickname.charAt(0).toUpperCase()}
                         </div>
-                        {user && user.nickname === player.nickname && (
-                          <div className="text-xs text-purple-600 font-medium">Sen!</div>
-                        )}
+                        <div>
+                          <div className="font-semibold text-gray-900">
+                            {player.nickname}
+                          </div>
+                          {user && user.nickname === player.nickname && (
+                            <div className="text-xs text-purple-600 font-medium">Sen!</div>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Stories Written */}
-                  <div className="col-span-3 text-center">
-                    <div className="text-lg font-semibold text-gray-900">
-                      {player.stories_written}
+                    {/* Stories Written */}
+                    <div className="col-span-3 text-center">
+                      <div className="text-lg font-semibold text-gray-900">
+                        {player.stories_written}
+                      </div>
+                      <div className="text-sm text-gray-500">hikaye</div>
                     </div>
-                    <div className="text-sm text-gray-500">hikaye</div>
-                  </div>
 
-                  {/* Total Likes */}
-                  <div className="col-span-3 text-center">
-                    <div className="text-lg font-semibold text-gray-900">
-                      {player.total_likes}
+                    {/* Total Likes */}
+                    <div className="col-span-3 text-center">
+                      <div className="text-lg font-semibold text-gray-900">
+                        {player.total_likes}
+                      </div>
+                      <div className="text-sm text-gray-500">❤️ beğeni</div>
                     </div>
-                    <div className="text-sm text-gray-500">❤️ beğeni</div>
-                  </div>
 
-                  {/* Score */}
-                  <div className="col-span-1 text-center">
-                    <div className="text-lg font-bold text-purple-600">
-                      {player.stories_written * 10 + player.total_likes}
+                    {/* Score */}
+                    <div className="col-span-1 text-center">
+                      <div className="text-lg font-bold text-purple-600">
+                        {player.stories_written * 10 + player.total_likes}
+                      </div>
                     </div>
                   </div>
                 </div>
+              ))
+            ) : (
+              <div className="px-6 py-12 text-center">
+                <div className="text-6xl mb-4">🏆</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Henüz Lider Yok
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  İlk hikayenizi yazarak lider tablosuna adınızı yazdırın!
+                </p>
+                <Link 
+                  href="/nickname" 
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors inline-flex items-center gap-2"
+                >
+                  ✏️ İlk Hikayenizi Yazın
+                </Link>
               </div>
-            ))}
+            )}
           </div>
         </div>
 

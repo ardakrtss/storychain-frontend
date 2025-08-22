@@ -6,10 +6,11 @@ import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import api from '../../lib/api';
 
-export default function NicknamePage() {
+export default function RegisterPage() {
   const [formData, setFormData] = useState({
     nickname: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -27,6 +28,7 @@ export default function NicknamePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validation
     if (!formData.nickname.trim()) {
       setError('Lütfen bir rumuz girin!');
       return;
@@ -43,7 +45,17 @@ export default function NicknamePage() {
     }
 
     if (!formData.password) {
-      setError('Lütfen şifrenizi girin!');
+      setError('Lütfen bir şifre girin!');
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Şifre en az 6 karakter olmalıdır!');
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Şifreler eşleşmiyor!');
       return;
     }
 
@@ -51,16 +63,30 @@ export default function NicknamePage() {
     setError('');
 
     try {
-      // Şifre ile giriş yap
-      const result = await signIn(formData.nickname.trim(), formData.password);
-      if (result.success) {
-        router.push('/themes');
+      // Kayıt ol
+      const registerResponse = await api.post('/auth/register', {
+        nickname: formData.nickname.trim(),
+        password: formData.password
+      });
+
+      if (registerResponse.data.success) {
+        // Kayıt başarılı, otomatik giriş yap
+        const loginResult = await signIn(formData.nickname.trim());
+        if (loginResult.success) {
+          router.push('/themes');
+        } else {
+          setError('Kayıt başarılı ama giriş yapılamadı. Lütfen giriş sayfasından tekrar deneyin.');
+        }
       } else {
-        setError(result.error || 'Bir hata oluştu. Lütfen tekrar deneyin.');
+        setError(registerResponse.data.error || 'Kayıt yapılamadı. Lütfen tekrar deneyin.');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setError('Giriş yapılamadı. Rumuz ve şifrenizi kontrol edin.');
+      console.error('Register error:', error);
+      if (error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('Kayıt yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -72,13 +98,13 @@ export default function NicknamePage() {
         {/* Header */}
         <div className="text-center">
           <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <span className="text-white text-3xl">✏️</span>
+            <span className="text-white text-3xl">📝</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            StoryChain&apos;e Hoş Geldin!
+            StoryChain&apos;e Katıl
           </h2>
           <p className="text-gray-600">
-            Hikaye yazmaya başlamak için giriş yap
+            Hikaye yazma macerasına başlamak için hesap oluştur
           </p>
         </div>
 
@@ -118,7 +144,24 @@ export default function NicknamePage() {
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-500"
-                placeholder="Şifrenizi girin"
+                placeholder="En az 6 karakter"
+                disabled={isSubmitting}
+              />
+            </div>
+
+            {/* Confirm Password Input */}
+            <div>
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                Şifre Tekrar
+              </label>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                placeholder="Şifrenizi tekrar girin"
                 disabled={isSubmitting}
               />
             </div>
@@ -133,18 +176,18 @@ export default function NicknamePage() {
             {/* Submit Button */}
             <button
               type="submit"
-              disabled={isSubmitting || !formData.nickname.trim() || !formData.password}
+              disabled={isSubmitting || !formData.nickname.trim() || !formData.password || !formData.confirmPassword}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>
                   <span className="animate-spin">⏳</span>
-                  Giriş yapılıyor...
+                  Hesap oluşturuluyor...
                 </>
               ) : (
                 <>
                   <span>🚀</span>
-                  Giriş Yap
+                  Hesap Oluştur
                 </>
               )}
             </button>
@@ -162,15 +205,15 @@ export default function NicknamePage() {
             </div>
           </div>
 
-          {/* Register Link */}
+          {/* Login Link */}
           <div className="mt-6 text-center">
             <p className="text-gray-600 text-sm">
-              Henüz hesabın yok mu?{' '}
+              Zaten hesabın var mı?{' '}
               <Link 
-                href="/register" 
+                href="/nickname" 
                 className="text-purple-600 hover:text-purple-700 font-semibold"
               >
-                Hesap Oluştur
+                Giriş Yap
               </Link>
             </p>
           </div>
@@ -183,33 +226,23 @@ export default function NicknamePage() {
                   <span className="text-white text-xs">💡</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">Nasıl Çalışır?</h4>
+                  <h4 className="font-semibold text-gray-900 mb-1">Neden Hesap Oluşturmalıyım?</h4>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li>• Rumuz ve şifrenizle giriş yapın</li>
-                    <li>• 6 farklı temadan birini seçin</li>
-                    <li>• 1000 karakterlik bölümler yazın</li>
-                    <li>• 5 yazar birlikte hikaye tamamlar</li>
+                    <li>• Hikayelerinizi kaydedin</li>
+                    <li>• Lider tablosunda yer alın</li>
+                    <li>• Beğenilerinizi takip edin</li>
+                    <li>• Güvenli giriş yapın</li>
                   </ul>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Links */}
-          <div className="mt-6 text-center">
-            <Link 
-              href="/how-it-works" 
-              className="text-purple-600 hover:text-purple-700 font-semibold text-sm"
-            >
-              Detaylı bilgi için tıkla →
-            </Link>
           </div>
         </div>
 
         {/* Footer */}
         <div className="text-center">
           <p className="text-gray-500 text-sm">
-            Giriş yaptıktan sonra, hikaye yazma macerana başlayabilirsin!
+            Hesabınızı oluşturduktan sonra hemen hikaye yazmaya başlayabilirsiniz!
           </p>
         </div>
       </div>
