@@ -69,6 +69,11 @@ function WritePageContent() {
       return;
     }
 
+    if (content.trim().length < 50) {
+      setError('Hikaye içeriği en az 50 karakter olmalıdır');
+      return;
+    }
+
     if (content.length > 1000) {
       setError('Hikaye en fazla 1000 karakter olabilir');
       return;
