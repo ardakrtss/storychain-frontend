@@ -13,7 +13,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 bg-[url('/hero-background.png')] bg-cover bg-center opacity-65"></div>
       
@@ -37,26 +37,26 @@ export default function HomePage() {
           <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {/* Badge */}
             <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
-              <span className="text-purple-300 text-sm font-semibold">✨ Yeni Nesil Hikaye Platformu</span>
+              <span className="text-purple-700 text-sm font-semibold">✨ Yeni Nesil Hikaye Platformu</span>
             </div>
 
             {/* Main Title */}
-            <h1 className="text-7xl lg:text-9xl font-black text-white mb-8 leading-none">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse" style={{ fontFamily: 'Osnabruck, sans-serif' }}>
+            <h1 className="text-7xl lg:text-9xl font-black text-gray-900 mb-8 leading-none">
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent animate-pulse" style={{ fontFamily: 'Osnabruck, sans-serif' }}>
                 StoryChain
               </span>
             </h1>
             
             {/* Subtitle */}
-            <p className="text-3xl lg:text-4xl text-gray-300 mb-8 max-w-5xl mx-auto leading-relaxed font-light">
+            <p className="text-3xl lg:text-4xl text-gray-700 mb-8 max-w-5xl mx-auto leading-relaxed font-light">
               Hayal Gücünü{' '}
-              <span className="text-yellow-300 font-bold animate-pulse drop-shadow-lg">
+              <span className="text-yellow-600 font-bold animate-pulse drop-shadow-lg">
                 Serbest Bırak!
               </span>
             </p>
 
             {/* Description */}
-            <p className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
               Binlerce yazarın katıldığı kolektif hikaye yazma platformu. 
               Birlikte benzersiz hikayeler yaratın, hayal gücünüzü paylaşın.
             </p>
@@ -87,7 +87,7 @@ export default function HomePage() {
               
               <Link 
                 href="/stories" 
-                className="group bg-white/10 hover:bg-white/20 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-white/20 hover:border-white/40 backdrop-blur-sm flex items-center gap-4 hover:scale-105"
+                className="group bg-gray-800 hover:bg-gray-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-600 hover:border-gray-500 backdrop-blur-sm flex items-center gap-4 hover:scale-105"
               >
                 <span className="text-2xl">📖</span>
                 <span>Hikayeleri Keşfet</span>
@@ -97,17 +97,17 @@ export default function HomePage() {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10">
-                <div className="text-3xl font-bold text-purple-400 mb-2">1000+</div>
-                <div className="text-gray-300">Aktif Yazar</div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white/90 shadow-lg">
+                <div className="text-3xl font-bold text-purple-600 mb-2">1000+</div>
+                <div className="text-gray-700">Aktif Yazar</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10">
-                <div className="text-3xl font-bold text-pink-400 mb-2">5000+</div>
-                <div className="text-gray-300">Tamamlanan Hikaye</div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white/90 shadow-lg">
+                <div className="text-3xl font-bold text-pink-600 mb-2">5000+</div>
+                <div className="text-gray-700">Tamamlanan Hikaye</div>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10">
-                <div className="text-3xl font-bold text-blue-400 mb-2">50+</div>
-                <div className="text-gray-300">Farklı Tema</div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white/90 shadow-lg">
+                <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
+                <div className="text-gray-700">Farklı Tema</div>
               </div>
             </div>
           </div>
@@ -119,14 +119,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
-              <span className="text-purple-300 text-sm font-semibold">🚀 Nasıl Çalışır?</span>
+              <span className="text-purple-700 text-sm font-semibold">🚀 Nasıl Çalışır?</span>
             </div>
-            <h2 className="text-5xl lg:text-6xl font-bold text-white mb-8">
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-8">
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 3 Basit Adımda Başlayın
               </span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
               StoryChain ile hikaye yazma deneyimi çok kolay. Sadece 3 adımda başlayın!
             </p>
           </div>
@@ -135,13 +135,13 @@ export default function HomePage() {
             {/* Step 1 */}
             <div className="group relative">
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:border-white/40 transition-all duration-500 hover:bg-white/15 hover:scale-105">
+              <div className="relative bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:bg-white/90 hover:scale-105 shadow-lg">
                 <div className="text-center">
                   <div className="w-24 h-24 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
                     1
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">Tema Seçin</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Tema Seçin</h3>
+                  <p className="text-gray-700 leading-relaxed">
                     İlham verici temalar arasından seçim yapın ve hikayenizi başlatın.
                   </p>
                 </div>
@@ -151,13 +151,13 @@ export default function HomePage() {
             {/* Step 2 */}
             <div className="group relative">
               <div className="absolute inset-0 bg-gradient-to-r from-pink-600/20 to-purple-600/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:border-white/40 transition-all duration-500 hover:bg-white/15 hover:scale-105">
+              <div className="relative bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:bg-white/90 hover:scale-105 shadow-lg">
                 <div className="text-center">
                   <div className="w-24 h-24 bg-gradient-to-r from-pink-600 to-purple-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
                     2
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">Hikaye Yazın</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Hikaye Yazın</h3>
+                  <p className="text-gray-700 leading-relaxed">
                     Hayal gücünüzü kullanarak hikayenizi yazın ve paylaşın.
                   </p>
                 </div>
@@ -167,13 +167,13 @@ export default function HomePage() {
             {/* Step 3 */}
             <div className="group relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-              <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:border-white/40 transition-all duration-500 hover:bg-white/15 hover:scale-105">
+              <div className="relative bg-white/80 backdrop-blur-lg rounded-3xl p-8 border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:bg-white/90 hover:scale-105 shadow-lg">
                 <div className="text-center">
                   <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center text-white text-4xl font-bold mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 shadow-2xl">
                     3
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">Paylaşın</h3>
-                  <p className="text-gray-300 leading-relaxed">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Paylaşın</h3>
+                  <p className="text-gray-700 leading-relaxed">
                     Hikayenizi toplulukla paylaşın ve başkalarının devam etmesini bekleyin.
                   </p>
                 </div>
@@ -189,10 +189,10 @@ export default function HomePage() {
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-3xl blur-xl"></div>
             <div className="relative bg-gradient-to-r from-purple-600/10 to-pink-600/10 backdrop-blur-lg rounded-3xl p-16 border border-purple-500/30">
-              <h2 className="text-5xl lg:text-6xl font-bold text-white mb-8">
+              <h2 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-8">
                 Hikaye Yazma Macerasına Katılın!
               </h2>
-              <p className="text-xl text-gray-300 mb-12 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-xl text-gray-700 mb-12 leading-relaxed max-w-3xl mx-auto">
                 Binlerce yazarın katıldığı bu büyük hikaye topluluğuna siz de katılın. 
                 Hayal gücünüzü paylaşın, başkalarının hikayelerini keşfedin.
               </p>
