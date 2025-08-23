@@ -17,7 +17,7 @@ export default function HomePage() {
         {/* Masalsı Arka Plan Görseli */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-65"
-          style={{ backgroundImage: "url('/images/hero-background.png')" }}
+          style={{ backgroundImage: "url('/hero-background.png')" }}
         ></div>
         
         {/* Hero Content */}
