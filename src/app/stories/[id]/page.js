@@ -10,10 +10,15 @@ export default function StoryDetailPage() {
   const [story, setStory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
   const { user } = useAuth();
   const params = useParams();
   const router = useRouter();
   const storyId = params.id;
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   useEffect(() => {
     const fetchStory = async () => {
@@ -60,21 +65,21 @@ export default function StoryDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
-        <div className="text-2xl text-gray-900">Hikaye yükleniyor...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+        <div className="text-2xl text-white">Hikaye yükleniyor...</div>
       </div>
     );
   }
 
   if (error || !story) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Hata</h2>
-          <p className="text-gray-600 mb-4">{error || 'Hikaye bulunamadı'}</p>
+          <h2 className="text-2xl font-bold text-white mb-4">Hata</h2>
+          <p className="text-gray-300 mb-4">{error || 'Hikaye bulunamadı'}</p>
           <Link 
             href="/stories" 
-            className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
           >
             Hikayelere Dön
           </Link>
@@ -84,119 +89,156 @@ export default function StoryDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 py-12 overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-pink-600/5 to-purple-600/5 animate-pulse"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-bounce"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            {story.title}
+        <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
+            <span className="text-purple-300 text-sm font-semibold">📖 Hikaye Detayı</span>
+          </div>
+          <h1 className="text-5xl lg:text-6xl font-black text-white mb-8 leading-tight">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              {story.title}
+            </span>
           </h1>
-          <div className="flex items-center justify-center gap-4 text-gray-600">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+          <div className="flex items-center justify-center gap-6 text-gray-300">
+            <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-300 border border-purple-500/30 backdrop-blur-sm">
               {story.theme}
             </span>
-            <span>👤 {story.segments && story.segments.length > 0 ? story.segments[0].author : 'Anonim'}</span>
-            <span>📅 {new Date(story.createdAt).toLocaleDateString('tr-TR')}</span>
+            <span className="flex items-center gap-2">
+              <span className="text-lg">👤</span>
+              <span className="font-semibold">{story.segments && story.segments.length > 0 ? story.segments[0].author : 'Anonim'}</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="text-lg">📅</span>
+              <span>{new Date(story.createdAt).toLocaleDateString('tr-TR')}</span>
+            </span>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+        <div className={`flex flex-col sm:flex-row gap-6 justify-center mb-12 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {!story.isCompleted && (
             <button
               onClick={handleContinueStory}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+              className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden"
             >
-              ✏️ Hikayeye Devam Et
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              <span className="text-2xl relative z-10">✏️</span>
+              <span className="relative z-10">Hikayeye Devam Et</span>
             </button>
           )}
           
           <button
             onClick={handleLikeStory}
-            className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            className="group relative bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-pink-500/50 transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden"
           >
-            ❤️ Beğen ({story.likeCount || 0})
+            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <span className="text-2xl relative z-10">❤️</span>
+            <span className="relative z-10">Beğen ({story.likeCount || 0})</span>
           </button>
           
           <Link 
             href="/stories" 
-            className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+            className="group bg-white/10 hover:bg-white/20 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-white/20 hover:border-white/40 backdrop-blur-sm flex items-center justify-center gap-4 hover:scale-105"
           >
-            📚 Tüm Hikayeler
+            <span className="text-2xl">📚</span>
+            <span>Tüm Hikayeler</span>
           </Link>
         </div>
 
         {/* Story Content */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Hikaye İçeriği</h2>
-          
-          {story.segments && story.segments.length > 0 ? (
-            <div className="space-y-6">
-              {story.segments.map((segment, index) => (
-                <div key={segment.id} className="border-l-4 border-purple-500 pl-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                        {index + 1}
+        <div className={`group relative mb-12 transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+          <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 hover:border-white/40 transition-all duration-500 p-10">
+            <h2 className="text-3xl font-black text-white mb-8">Hikaye İçeriği</h2>
+            
+            {story.segments && story.segments.length > 0 ? (
+              <div className="space-y-8">
+                {story.segments.map((segment, index) => (
+                  <div key={segment.id} className="group/item relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 to-pink-600/5 rounded-2xl blur-lg group-hover/item:blur-xl transition-all duration-500"></div>
+                    <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-500 hover:bg-white/10">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg group-hover/item:scale-110 transition-transform duration-500">
+                            {index + 1}
+                          </div>
+                          <span className="font-bold text-white text-lg">
+                            {segment.author}
+                          </span>
+                        </div>
+                        <span className="text-gray-300 font-semibold">
+                          {new Date(segment.createdAt).toLocaleDateString('tr-TR')}
+                        </span>
                       </div>
-                      <span className="font-semibold text-gray-900">
-                        {segment.author}
-                      </span>
+                      <p className="text-gray-200 leading-relaxed text-lg">
+                        {segment.content}
+                      </p>
                     </div>
-                    <span className="text-sm text-gray-500">
-                      {new Date(segment.createdAt).toLocaleDateString('tr-TR')}
-                    </span>
                   </div>
-                  <p className="text-gray-700 leading-relaxed">
-                    {segment.content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <div className="text-6xl mb-4">📝</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Henüz İçerik Yok</h3>
-              <p className="text-gray-600 mb-4">Bu hikayeye ilk katkıyı sen yap!</p>
-              {user ? (
-                <button
-                  onClick={handleContinueStory}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold"
-                >
-                  İlk Bölümü Yaz
-                </button>
-              ) : (
-                <Link 
-                  href="/nickname" 
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold"
-                >
-                  Rumuz Gir ve Yaz
-                </Link>
-              )}
-            </div>
-          )}
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <div className="text-9xl mb-8 animate-bounce">📝</div>
+                <h3 className="text-3xl font-bold text-white mb-6">Henüz İçerik Yok</h3>
+                <p className="text-gray-300 mb-10 text-xl leading-relaxed">Bu hikayeye ilk katkıyı sen yap!</p>
+                {user ? (
+                  <button
+                    onClick={handleContinueStory}
+                    className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 inline-flex items-center gap-4 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <span className="text-2xl relative z-10">✏️</span>
+                    <span className="relative z-10">İlk Bölümü Yaz</span>
+                  </button>
+                ) : (
+                  <Link 
+                    href="/nickname" 
+                    className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 inline-flex items-center gap-4 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                    <span className="text-2xl relative z-10">🔑</span>
+                    <span className="relative z-10">Giriş Yap ve Yaz</span>
+                  </Link>
+                )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Story Info */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Hikaye Bilgileri</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div className="text-center">
-              <div className="text-2xl mb-2">📝</div>
-              <p className="font-semibold">Bölüm Sayısı</p>
-              <p className="text-gray-600">{story.segments ? story.segments.length : 0}</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl mb-2">❤️</div>
-              <p className="font-semibold">Beğeni Sayısı</p>
-              <p className="text-gray-600">{story.likeCount || 0}</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl mb-2">🏁</div>
-              <p className="font-semibold">Durum</p>
-              <p className="text-gray-600">
-                {story.isCompleted ? 'Tamamlandı' : 'Devam Ediyor'}
-              </p>
+        <div className={`group relative transition-all duration-1000 delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+          <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 hover:border-white/40 transition-all duration-500 p-10">
+            <h3 className="text-2xl font-black text-white mb-8 text-center">Hikaye Bilgileri</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="group/item text-center">
+                <div className="text-5xl mb-4 group-hover/item:scale-110 transition-transform duration-500">📝</div>
+                <p className="font-bold text-white text-lg mb-2">Bölüm Sayısı</p>
+                <p className="text-gray-300 font-semibold">{story.segments ? story.segments.length : 0}</p>
+              </div>
+              <div className="group/item text-center">
+                <div className="text-5xl mb-4 group-hover/item:scale-110 transition-transform duration-500">❤️</div>
+                <p className="font-bold text-white text-lg mb-2">Beğeni Sayısı</p>
+                <p className="text-gray-300 font-semibold">{story.likeCount || 0}</p>
+              </div>
+              <div className="group/item text-center">
+                <div className="text-5xl mb-4 group-hover/item:scale-110 transition-transform duration-500">🏁</div>
+                <p className="font-bold text-white text-lg mb-2">Durum</p>
+                <p className="text-gray-300 font-semibold">
+                  {story.isCompleted ? 'Tamamlandı' : 'Devam Ediyor'}
+                </p>
+              </div>
             </div>
           </div>
         </div>
