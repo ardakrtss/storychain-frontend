@@ -14,7 +14,10 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 overflow-hidden">
-      {/* Animated Background */}
+      {/* Background Image */}
+      <div className="absolute inset-0 bg-[url('/hero-background.png')] bg-cover bg-center opacity-65"></div>
+      
+      {/* Animated Background Overlay */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-purple-600/10 animate-pulse"></div>
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>

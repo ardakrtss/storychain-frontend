@@ -125,12 +125,15 @@ function WritePageContent() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Giriş Yapmanız Gerekiyor</h2>
-          <Link href="/nickname" className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold">
-            Rumuz Gir
-          </Link>
+          <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-12 hover:bg-white/10 transition-all duration-300">
+            <h2 className="text-3xl font-bold text-white mb-6">Giriş Yapmanız Gerekiyor</h2>
+            <Link href="/nickname" className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center gap-3 mx-auto w-fit">
+              <span className="text-2xl">🔑</span>
+              <span>Giriş Yap</span>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -138,78 +141,123 @@ function WritePageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
-        <div className="text-2xl text-gray-900">Sayfa yükleniyor...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-12 hover:bg-white/10 transition-all duration-300">
+          <div className="text-3xl text-white flex items-center gap-4">
+            <span className="animate-spin text-4xl">⏳</span>
+            <span>Sayfa yükleniyor...</span>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error || (!theme && !story)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Hata</h2>
-          <p className="text-gray-600 mb-4">{error || 'Gerekli bilgiler bulunamadı'}</p>
-          <Link href="/themes" className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold">
-            Temalara Dön
-          </Link>
+          <div className="bg-red-500/20 backdrop-blur-sm rounded-3xl border border-red-500/30 p-12 hover:bg-red-500/30 transition-all duration-300">
+            <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+              <span className="text-4xl">⚠️</span>
+              <span>Hata</span>
+            </h2>
+            <p className="text-gray-300 text-lg mb-8">{error || 'Gerekli bilgiler bulunamadı'}</p>
+            <Link href="/themes" className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center gap-3 mx-auto w-fit">
+              <span className="text-2xl">🏠</span>
+              <span>Temalara Dön</span>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-purple-600/10 animate-pulse"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-bounce"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
+      {/* Floating Elements */}
+      <div className="absolute top-20 left-10 w-4 h-4 bg-purple-400 rounded-full animate-ping opacity-75"></div>
+      <div className="absolute top-40 right-20 w-3 h-3 bg-pink-400 rounded-full animate-bounce opacity-75"></div>
+      <div className="absolute bottom-40 left-20 w-5 h-5 bg-blue-400 rounded-full animate-pulse opacity-75"></div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {mode === 'new' ? 'Yeni Hikaye Yazma' : 'Hikayeye Devam Etme'}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
+            <span className="text-purple-300 text-sm font-semibold">
+              {mode === 'new' ? '✏️ Yeni Hikaye Yazma' : '📝 Hikayeye Devam Etme'}
+            </span>
+          </div>
+          
+          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6 leading-none">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              {mode === 'new' ? 'Yeni Hikaye' : 'Hikayeye Devam Et'}
+            </span>
           </h1>
-          <p className="text-lg text-gray-600">
-            Merhaba <span className="font-semibold text-purple-600">{user.nickname}</span>! 
+          
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Merhaba <span className="font-bold text-purple-400">{user.nickname}</span>! 
             {mode === 'new' ? (
               <span className="font-semibold" style={{ color: theme?.color }}> {theme?.name}</span>
             ) : (
-              <span> Sen bu hikayede <span className="font-bold text-purple-600">{story?.currentAuthorNumber}. yazar</span>sın!</span>
+              <span> Sen bu hikayede <span className="font-bold text-purple-400">{story?.currentAuthorNumber}. yazar</span>sın!</span>
             )}
           </p>
         </div>
 
         {/* Story Info */}
-        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 mb-8 hover:bg-white/10 transition-all duration-300 hover:border-white/20">
           {mode === 'new' && theme ? (
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-6">
               <div 
-                className="w-16 h-16 rounded-lg flex items-center justify-center text-4xl mr-4"
-                style={{ backgroundColor: theme.color + '20' }}
+                className="w-20 h-20 rounded-2xl flex items-center justify-center text-5xl mr-6 shadow-lg"
+                style={{ backgroundColor: theme.color + '20', border: `2px solid ${theme.color}40` }}
               >
                 {theme.icon}
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{theme.name}</h2>
-                <p className="text-gray-600">{theme.description}</p>
+                <h2 className="text-3xl font-bold text-white mb-2">{theme.name}</h2>
+                <p className="text-gray-300 text-lg">{theme.description}</p>
               </div>
             </div>
           ) : mode === 'continue' && story ? (
-            <div className="mb-4">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{story.title}</h2>
-              <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
-                <span>👤 {story.currentAuthorNumber}. yazar (5 yazardan)</span>
-                <span>📖 {story.lastSegment.author} yazdı</span>
+            <div className="mb-6">
+              <h2 className="text-3xl font-bold text-white mb-3">{story.title}</h2>
+              <div className="flex items-center gap-6 text-lg text-gray-300 mb-4">
+                <span className="flex items-center gap-2">
+                  <span className="text-2xl">👤</span>
+                  <span>{story.currentAuthorNumber}. yazar (5 yazardan)</span>
+                </span>
+                <span className="flex items-center gap-2">
+                  <span className="text-2xl">📖</span>
+                  <span>{story.lastSegment.author} yazdı</span>
+                </span>
               </div>
             </div>
           ) : null}
           
           {theme && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Karakterler:</h3>
-                <p className="text-sm text-gray-600">{theme.characters}</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                <h3 className="font-bold text-white text-xl mb-3 flex items-center gap-2">
+                  <span className="text-2xl">🎭</span>
+                  Karakterler
+                </h3>
+                <p className="text-gray-300 leading-relaxed">{theme.characters}</p>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Hikaye İpuçları:</h3>
-                <p className="text-sm text-gray-600">{theme.plotHints}</p>
+              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
+                <h3 className="font-bold text-white text-xl mb-3 flex items-center gap-2">
+                  <span className="text-2xl">💡</span>
+                  Hikaye İpuçları
+                </h3>
+                <p className="text-gray-300 leading-relaxed">{theme.plotHints}</p>
               </div>
             </div>
           )}
@@ -217,26 +265,29 @@ function WritePageContent() {
 
         {/* Previous Content (for continue mode) */}
         {mode === 'continue' && story && (
-          <div className="bg-blue-50 rounded-xl p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              📖 Bir Önceki Yazarın Yazdığı:
+          <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm rounded-3xl border border-blue-500/30 p-8 mb-8 hover:bg-blue-600/30 transition-all duration-300">
+            <h3 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
+              <span className="text-3xl">📖</span>
+              Bir Önceki Yazarın Yazdığı
             </h3>
-            <div className="bg-white rounded-lg p-4 border-l-4 border-blue-500">
-              <p className="text-gray-700 leading-relaxed">{story.lastSegment.content}</p>
-              <div className="mt-3 text-sm text-gray-500">
-                — {story.lastSegment.author} tarafından yazıldı
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+              <p className="text-gray-200 leading-relaxed text-lg">{story.lastSegment.content}</p>
+              <div className="mt-4 text-gray-400 text-sm flex items-center gap-2">
+                <span className="text-xl">✍️</span>
+                <span>{story.lastSegment.author} tarafından yazıldı</span>
               </div>
             </div>
           </div>
         )}
 
         {/* Writing Form */}
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 hover:bg-white/10 transition-all duration-300">
           <form onSubmit={handleSubmit}>
             {/* Title Input (only for new stories) */}
             {mode === 'new' && (
-              <div className="mb-6">
-                <label htmlFor="title" className="block text-lg font-semibold text-gray-900 mb-3">
+              <div className="mb-8">
+                <label htmlFor="title" className="block text-xl font-bold text-white mb-4 flex items-center gap-3">
+                  <span className="text-2xl">📝</span>
                   Hikaye Başlığı
                 </label>
                 <input
@@ -244,16 +295,16 @@ function WritePageContent() {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+                  className="w-full px-6 py-4 bg-white/10 border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 text-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
                   placeholder="Hikayenin başlığını yaz..."
                   maxLength={100}
                   disabled={submitting}
                 />
-                <div className="flex justify-between items-center mt-2">
-                  <span className="text-sm text-gray-500">
+                <div className="flex justify-between items-center mt-3">
+                  <span className="text-sm text-gray-400">
                     En az 3 karakter olmalıdır
                   </span>
-                  <span className={`text-sm ${title.length > 80 ? 'text-red-500' : 'text-gray-500'}`}>
+                  <span className={`text-sm ${title.length > 80 ? 'text-red-400' : 'text-gray-400'}`}>
                     {title.length}/100
                   </span>
                 </div>
@@ -261,15 +312,16 @@ function WritePageContent() {
             )}
 
             {/* Content Textarea */}
-            <div className="mb-6">
-              <label htmlFor="content" className="block text-lg font-semibold text-gray-900 mb-3">
+            <div className="mb-8">
+              <label htmlFor="content" className="block text-xl font-bold text-white mb-4 flex items-center gap-3">
+                <span className="text-2xl">✍️</span>
                 {mode === 'new' ? 'Hikayeni Yaz' : 'Hikayeye Devam Et'} ({content.length}/1000 karakter)
               </label>
               <textarea
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full h-64 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none text-gray-900 placeholder-gray-500"
+                className="w-full h-80 px-6 py-4 bg-white/10 border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 text-lg resize-none backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
                 placeholder={mode === 'new' 
                   ? "Hikayenin başlangıcını yaz... Karakterleri tanıt, atmosferi yarat, heyecan başlat!"
                   : "Hikayenin devamını yaz... Bir önceki yazarın yazdığına uygun şekilde devam et!"
@@ -277,11 +329,11 @@ function WritePageContent() {
                 maxLength={1000}
                 disabled={submitting}
               />
-              <div className="flex justify-between items-center mt-2">
-                <span className="text-sm text-gray-500">
+              <div className="flex justify-between items-center mt-3">
+                <span className="text-sm text-gray-400">
                   En az 100 karakter yazman önerilir
                 </span>
-                <span className={`text-sm ${content.length > 900 ? 'text-red-500' : 'text-gray-500'}`}>
+                <span className={`text-sm ${content.length > 900 ? 'text-red-400' : 'text-gray-400'}`}>
                   {content.length}/1000
                 </span>
               </div>
@@ -289,60 +341,93 @@ function WritePageContent() {
 
             {/* Error Message */}
             {error && (
-              <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-3">
-                <p className="text-red-600 text-sm">{error}</p>
+              <div className="mb-8 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-4">
+                <p className="text-red-300 text-lg flex items-center gap-2">
+                  <span className="text-xl">⚠️</span>
+                  {error}
+                </p>
               </div>
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-6">
               <button
                 type="submit"
                 disabled={submitting || content.length < 50 || (mode === 'new' && (!title.trim() || title.trim().length < 3))}
-                className="flex-1 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                className="group flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 text-white py-4 px-8 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center justify-center gap-3 overflow-hidden"
               >
+                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 {submitting ? (
                   <>
-                    <span className="animate-spin">⏳</span>
-                    Gönderiliyor...
+                    <span className="animate-spin text-2xl relative z-10">⏳</span>
+                    <span className="relative z-10">Gönderiliyor...</span>
                   </>
                 ) : (
                   <>
-                    <span>📝</span>
-                    {mode === 'new' ? 'Hikayeyi Başlat' : 'Hikayeye Devam Et'}
+                    <span className="text-2xl relative z-10">📝</span>
+                    <span className="relative z-10">{mode === 'new' ? 'Hikayeyi Başlat' : 'Hikayeye Devam Et'}</span>
+                    <span className="group-hover:translate-x-2 transition-transform duration-300 relative z-10">→</span>
                   </>
                 )}
               </button>
               
               <Link
                 href="/themes"
-                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors text-center"
+                className="group flex-1 bg-white/10 hover:bg-white/20 text-white py-4 px-8 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-white/20 hover:border-white/40 backdrop-blur-sm flex items-center justify-center gap-3 hover:scale-105"
               >
-                Geri Dön
+                <span className="text-2xl">←</span>
+                <span>Geri Dön</span>
               </Link>
             </div>
           </form>
         </div>
 
         {/* Tips */}
-        <div className="mt-8 bg-blue-50 rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">💡 Yazma İpuçları:</h3>
-          <ul className="text-sm text-gray-600 space-y-1">
+        <div className="mt-12 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-3xl border border-purple-500/30 p-8 hover:bg-purple-600/30 transition-all duration-300">
+          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+            <span className="text-3xl">💡</span>
+            Yazma İpuçları
+          </h3>
+          <ul className="text-lg text-gray-300 space-y-3">
             {mode === 'new' ? (
               <>
-                <li>• Güçlü bir başlangıç yap ve karakterleri tanıt</li>
-                <li>• Atmosferi yarat ve okuyucuyu içine çek</li>
-                <li>• Sonraki yazarlar için ilginç bir son bırak</li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 text-xl">✨</span>
+                  <span>Güçlü bir başlangıç yap ve karakterleri tanıt</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 text-xl">🌟</span>
+                  <span>Atmosferi yarat ve okuyucuyu içine çek</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 text-xl">🎯</span>
+                  <span>Sonraki yazarlar için ilginç bir son bırak</span>
+                </li>
               </>
             ) : (
               <>
-                <li>• Bir önceki yazarın yazdığına uygun şekilde devam et</li>
-                <li>• Karakterleri ve olayları geliştir</li>
-                <li>• Hikayeyi ilginç bir yöne götür</li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 text-xl">🔄</span>
+                  <span>Bir önceki yazarın yazdığına uygun şekilde devam et</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 text-xl">📈</span>
+                  <span>Karakterleri ve olayları geliştir</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 text-xl">🎪</span>
+                  <span>Hikayeyi ilginç bir yöne götür</span>
+                </li>
               </>
             )}
-            <li>• Tema renklerini ve atmosferini koru</li>
-            <li>• 1000 karakter sınırını aşma!</li>
+            <li className="flex items-start gap-3">
+              <span className="text-purple-400 text-xl">🎨</span>
+              <span>Tema renklerini ve atmosferini koru</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="text-purple-400 text-xl">📏</span>
+              <span>1000 karakter sınırını aşma!</span>
+            </li>
           </ul>
         </div>
       </div>
@@ -353,8 +438,13 @@ function WritePageContent() {
 export default function WritePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 flex items-center justify-center">
-        <div className="text-2xl text-gray-900">Sayfa yükleniyor...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-12 hover:bg-white/10 transition-all duration-300">
+          <div className="text-3xl text-white flex items-center gap-4">
+            <span className="animate-spin text-4xl">⏳</span>
+            <span>Sayfa yükleniyor...</span>
+          </div>
+        </div>
       </div>
     }>
       <WritePageContent />
