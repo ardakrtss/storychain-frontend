@@ -61,10 +61,10 @@ export default function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Giriş Yapmanız Gerekiyor</h2>
-          <p className="text-gray-300 mb-6">Profilinizi görüntülemek için giriş yapın.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Giriş Yapmanız Gerekiyor</h2>
+          <p className="text-gray-700 mb-6">Profilinizi görüntülemek için giriş yapın.</p>
           <Link 
             href="/nickname" 
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl"
@@ -78,18 +78,18 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-2xl text-white">Profil yükleniyor...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="text-2xl text-gray-900">Profil yükleniyor...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Hata</h2>
-          <p className="text-gray-300 mb-4">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Hata</h2>
+          <p className="text-gray-700 mb-4">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
@@ -102,7 +102,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 py-8 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 py-8 overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-pink-600/5 to-purple-600/5 animate-pulse"></div>
@@ -115,14 +115,14 @@ export default function ProfilePage() {
         {/* Header */}
         <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
-            <span className="text-purple-300 text-sm font-semibold">👤 Kullanıcı Profili</span>
+            <span className="text-purple-700 text-sm font-semibold">👤 Kullanıcı Profili</span>
           </div>
-          <h1 className="text-6xl lg:text-7xl font-black text-white mb-6">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-6xl lg:text-7xl font-black text-gray-900 mb-6">
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
               Dashboard
             </span>
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-gray-700">
             Hikaye yazma maceranızın detaylı özeti
           </p>
         </div>
@@ -130,7 +130,7 @@ export default function ProfilePage() {
         {/* User Info Card - SaaS Website Kit Style */}
         <div className={`group relative mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-          <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 hover:border-white/40 transition-all duration-500">
+          <div className="relative bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 p-8 hover:border-gray-300 transition-all duration-500">
             <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
               {/* Avatar - Modern Design */}
               <div className="relative">
@@ -143,10 +143,10 @@ export default function ProfilePage() {
               
               {/* User Details */}
               <div className="flex-1 text-center lg:text-left">
-                <h2 className="text-4xl font-black text-white mb-3">
+                <h2 className="text-4xl font-black text-gray-900 mb-3">
                   {user.nickname || 'Anonim Yazar'}
                 </h2>
-                <p className="text-gray-400 mb-8 text-lg">
+                <p className="text-gray-600 mb-8 text-lg">
                   StoryChain'e katılım: {new Date(user.createdAt || Date.now()).toLocaleDateString('tr-TR')}
                 </p>
                 
@@ -156,28 +156,28 @@ export default function ProfilePage() {
                     <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
                     <div className="relative bg-gradient-to-br from-purple-600/20 to-purple-800/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-500 hover:scale-105">
                       <div className="text-4xl font-black text-purple-400 mb-2">{userStats.totalStories}</div>
-                      <div className="text-sm text-gray-300 font-semibold">Hikaye</div>
+                      <div className="text-sm text-gray-700 font-semibold">Hikaye</div>
                     </div>
                   </div>
                   <div className="group relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-pink-600/20 to-pink-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
                     <div className="relative bg-gradient-to-br from-pink-600/20 to-pink-800/20 backdrop-blur-sm rounded-2xl p-6 border border-pink-500/30 hover:border-pink-400/50 transition-all duration-500 hover:scale-105">
                       <div className="text-4xl font-black text-pink-400 mb-2">{userStats.totalLikes}</div>
-                      <div className="text-sm text-gray-300 font-semibold">Beğeni</div>
+                      <div className="text-sm text-gray-700 font-semibold">Beğeni</div>
                     </div>
                   </div>
                   <div className="group relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-blue-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
                     <div className="relative bg-gradient-to-br from-blue-600/20 to-blue-800/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-500 hover:scale-105">
                       <div className="text-4xl font-black text-blue-400 mb-2">{userStats.totalCharacters.toLocaleString()}</div>
-                      <div className="text-sm text-gray-300 font-semibold">Karakter</div>
+                      <div className="text-sm text-gray-700 font-semibold">Karakter</div>
                     </div>
                   </div>
                   <div className="group relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-green-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
                     <div className="relative bg-gradient-to-br from-green-600/20 to-green-800/20 backdrop-blur-sm rounded-2xl p-6 border border-green-500/30 hover:border-green-400/50 transition-all duration-500 hover:scale-105">
                       <div className="text-4xl font-black text-green-400 mb-2">{userStats.averageRating}</div>
-                      <div className="text-sm text-gray-300 font-semibold">Ortalama</div>
+                      <div className="text-sm text-gray-700 font-semibold">Ortalama</div>
                     </div>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function ProfilePage() {
                 </Link>
                 <button 
                   onClick={handleLogout}
-                  className="bg-white/10 hover:bg-red-500/20 text-white hover:text-red-300 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-500 border border-white/20 hover:border-red-500/40 backdrop-blur-sm hover:scale-105"
+                  className="bg-gray-800 hover:bg-red-600 text-white hover:text-red-100 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-500 border border-gray-600 hover:border-red-500 backdrop-blur-sm hover:scale-105"
                 >
                   🚪 Çıkış Yap
                 </button>

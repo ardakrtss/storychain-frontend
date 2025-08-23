@@ -34,18 +34,18 @@ export default function StoriesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="text-2xl text-white">Hikayeler yükleniyor...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="text-2xl text-gray-900">Hikayeler yükleniyor...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Hata</h2>
-          <p className="text-gray-300 mb-4">{error}</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Hata</h2>
+          <p className="text-gray-700 mb-4">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
             className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
@@ -58,7 +58,7 @@ export default function StoriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 py-12 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 py-12 overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-pink-600/5 to-purple-600/5 animate-pulse"></div>
@@ -71,14 +71,14 @@ export default function StoriesPage() {
         {/* Header */}
         <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
-            <span className="text-purple-300 text-sm font-semibold">📚 Hikaye Koleksiyonu</span>
+            <span className="text-purple-700 text-sm font-semibold">📚 Hikaye Koleksiyonu</span>
           </div>
-          <h1 className="text-6xl lg:text-7xl font-black text-white mb-8">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-6xl lg:text-7xl font-black text-gray-900 mb-8">
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
               Hikayeler
             </span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
             Diğer yazarlarımızın birlikte yarattığı harika hikayeleri keşfet! 
             Beğendiğin hikayelere kalp ver ve yeni hikayeler yazmaya ilham al.
           </p>
@@ -108,7 +108,7 @@ export default function StoriesPage() {
           
           <Link 
             href="/leaderboard" 
-            className="group bg-white/10 hover:bg-white/20 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-white/20 hover:border-white/40 backdrop-blur-sm flex items-center justify-center gap-4 hover:scale-105"
+            className="group bg-gray-800 hover:bg-gray-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-600 hover:border-gray-500 backdrop-blur-sm flex items-center justify-center gap-4 hover:scale-105"
           >
             <span className="text-2xl">🏆</span>
             <span>Lider Tablosu</span>
@@ -120,8 +120,8 @@ export default function StoriesPage() {
           {stories.length === 0 ? (
             <div className="text-center py-20">
               <div className="text-9xl mb-8 animate-bounce">📚</div>
-              <h3 className="text-3xl font-bold text-white mb-6">Henüz Hikaye Yok</h3>
-              <p className="text-gray-300 mb-10 text-xl leading-relaxed">İlk hikayeyi sen yazarak başlat!</p>
+              <h3 className="text-3xl font-bold text-gray-900 mb-6">Henüz Hikaye Yok</h3>
+              <p className="text-gray-700 mb-10 text-xl leading-relaxed">İlk hikayeyi sen yazarak başlat!</p>
               <Link 
                 href="/themes" 
                 className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 inline-flex items-center gap-4 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 overflow-hidden"
@@ -140,11 +140,11 @@ export default function StoriesPage() {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                  <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 hover:border-white/40 transition-all duration-500 hover:bg-white/15 hover:scale-105 overflow-hidden">
+                  <div className="relative bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:bg-white/90 hover:scale-105 overflow-hidden">
                     {/* Story Header */}
                     <div className="p-8">
                       <div className="flex items-center justify-between mb-4">
-                        <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-300 border border-purple-500/30 backdrop-blur-sm">
+                        <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-700 border border-purple-500/30 backdrop-blur-sm">
                           {story.theme}
                         </span>
                         <div className="flex items-center gap-2 text-pink-400">
@@ -153,17 +153,17 @@ export default function StoriesPage() {
                         </div>
                       </div>
                       
-                      <h3 className="text-2xl font-bold text-white mb-4 line-clamp-2 leading-tight">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-4 line-clamp-2 leading-tight">
                         {story.title}
                       </h3>
                       
-                      <p className="text-gray-300 text-base mb-6 line-clamp-3 leading-relaxed">
+                      <p className="text-gray-700 text-base mb-6 line-clamp-3 leading-relaxed">
                         {story.segments && story.segments.length > 0 
                           ? story.segments[0].content 
                           : 'Hikaye içeriği yükleniyor...'}
                       </p>
                       
-                      <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
+                      <div className="flex items-center justify-between text-sm text-gray-600 mb-6">
                         <span className="flex items-center gap-2">
                           <span className="text-lg">👤</span>
                           <span className="font-semibold">{story.segments && story.segments.length > 0 ? story.segments[0].author : 'Anonim'}</span>
@@ -176,9 +176,9 @@ export default function StoriesPage() {
                     </div>
                     
                     {/* Story Footer */}
-                    <div className="px-8 py-6 bg-white/5 border-t border-white/10">
+                    <div className="px-8 py-6 bg-gray-50 border-t border-gray-200">
                       <div className="flex items-center justify-between">
-                        <span className="text-gray-300 font-semibold flex items-center gap-2">
+                        <span className="text-gray-700 font-semibold flex items-center gap-2">
                           <span className="text-lg">📖</span>
                           {story.segments ? story.segments.length : 0} bölüm
                         </span>
