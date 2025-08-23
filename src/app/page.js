@@ -42,7 +42,7 @@ export default function HomePage() {
 
             {/* Main Title */}
             <h1 className="text-7xl lg:text-9xl font-black text-white mb-8 leading-none">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse">
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent animate-pulse" style={{ fontFamily: 'Osnabruck, sans-serif' }}>
                 StoryChain
               </span>
             </h1>
