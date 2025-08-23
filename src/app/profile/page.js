@@ -17,6 +17,11 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('stories');
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -97,273 +102,323 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 py-8 overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-pink-600/5 to-purple-600/5 animate-pulse"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.1),transparent_50%)]"></div>
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-bounce"></div>
+        <div className="absolute bottom-1/3 left-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            👤 Profilim
+        <div className={`text-center mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
+            <span className="text-purple-300 text-sm font-semibold">👤 Kullanıcı Profili</span>
+          </div>
+          <h1 className="text-6xl lg:text-7xl font-black text-white mb-6">
+            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+              Dashboard
+            </span>
           </h1>
           <p className="text-xl text-gray-300">
-            Hikaye yazma maceranızın özeti
+            Hikaye yazma maceranızın detaylı özeti
           </p>
         </div>
 
-        {/* User Info Card - Vuexy Style */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8 mb-8">
-          <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
-            {/* Avatar - Modern Design */}
-            <div className="relative">
-              <div className="w-32 h-32 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-2xl">
-                {user.nickname?.charAt(0).toUpperCase() || 'U'}
+        {/* User Info Card - SaaS Website Kit Style */}
+        <div className={`group relative mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+          <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 p-8 hover:border-white/40 transition-all duration-500">
+            <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+              {/* Avatar - Modern Design */}
+              <div className="relative">
+                <div className="w-40 h-40 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 rounded-3xl flex items-center justify-center text-white text-6xl font-black shadow-2xl group-hover:scale-110 transition-transform duration-500">
+                  {user.nickname?.charAt(0).toUpperCase() || 'U'}
+                </div>
+                <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 rounded-full border-4 border-gray-900 animate-pulse"></div>
+                <div className="absolute -top-2 -left-2 w-6 h-6 bg-purple-400 rounded-full animate-ping opacity-75"></div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-gray-900"></div>
-            </div>
-            
-            {/* User Details */}
-            <div className="flex-1 text-center lg:text-left">
-              <h2 className="text-3xl font-bold text-white mb-2">
-                {user.nickname || 'Anonim Yazar'}
-              </h2>
-              <p className="text-gray-400 mb-6">
-                StoryChain'e katılım: {new Date(user.createdAt || Date.now()).toLocaleDateString('tr-TR')}
-              </p>
               
-              {/* Stats Grid - Vuexy Style */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 backdrop-blur-sm rounded-xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300">
-                  <div className="text-3xl font-bold text-purple-400 mb-2">{userStats.totalStories}</div>
-                  <div className="text-sm text-gray-300">Hikaye</div>
-                </div>
-                <div className="bg-gradient-to-br from-pink-600/20 to-pink-800/20 backdrop-blur-sm rounded-xl p-6 border border-pink-500/30 hover:border-pink-400/50 transition-all duration-300">
-                  <div className="text-3xl font-bold text-pink-400 mb-2">{userStats.totalLikes}</div>
-                  <div className="text-sm text-gray-300">Beğeni</div>
-                </div>
-                <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 backdrop-blur-sm rounded-xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">{userStats.totalCharacters.toLocaleString()}</div>
-                  <div className="text-sm text-gray-300">Karakter</div>
-                </div>
-                <div className="bg-gradient-to-br from-green-600/20 to-green-800/20 backdrop-blur-sm rounded-xl p-6 border border-green-500/30 hover:border-green-400/50 transition-all duration-300">
-                  <div className="text-3xl font-bold text-green-400 mb-2">{userStats.averageRating}</div>
-                  <div className="text-sm text-gray-300">Ortalama</div>
+              {/* User Details */}
+              <div className="flex-1 text-center lg:text-left">
+                <h2 className="text-4xl font-black text-white mb-3">
+                  {user.nickname || 'Anonim Yazar'}
+                </h2>
+                <p className="text-gray-400 mb-8 text-lg">
+                  StoryChain'e katılım: {new Date(user.createdAt || Date.now()).toLocaleDateString('tr-TR')}
+                </p>
+                
+                {/* Stats Grid - SaaS Website Kit Style */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="group relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-purple-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                    <div className="relative bg-gradient-to-br from-purple-600/20 to-purple-800/20 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-500 hover:scale-105">
+                      <div className="text-4xl font-black text-purple-400 mb-2">{userStats.totalStories}</div>
+                      <div className="text-sm text-gray-300 font-semibold">Hikaye</div>
+                    </div>
+                  </div>
+                  <div className="group relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-pink-600/20 to-pink-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                    <div className="relative bg-gradient-to-br from-pink-600/20 to-pink-800/20 backdrop-blur-sm rounded-2xl p-6 border border-pink-500/30 hover:border-pink-400/50 transition-all duration-500 hover:scale-105">
+                      <div className="text-4xl font-black text-pink-400 mb-2">{userStats.totalLikes}</div>
+                      <div className="text-sm text-gray-300 font-semibold">Beğeni</div>
+                    </div>
+                  </div>
+                  <div className="group relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-blue-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                    <div className="relative bg-gradient-to-br from-blue-600/20 to-blue-800/20 backdrop-blur-sm rounded-2xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-500 hover:scale-105">
+                      <div className="text-4xl font-black text-blue-400 mb-2">{userStats.totalCharacters.toLocaleString()}</div>
+                      <div className="text-sm text-gray-300 font-semibold">Karakter</div>
+                    </div>
+                  </div>
+                  <div className="group relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-green-800/20 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                    <div className="relative bg-gradient-to-br from-green-600/20 to-green-800/20 backdrop-blur-sm rounded-2xl p-6 border border-green-500/30 hover:border-green-400/50 transition-all duration-500 hover:scale-105">
+                      <div className="text-4xl font-black text-green-400 mb-2">{userStats.averageRating}</div>
+                      <div className="text-sm text-gray-300 font-semibold">Ortalama</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-4">
-              <Link 
-                href="/themes" 
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
-              >
-                <span className="text-xl">✏️</span>
-                <span>Yeni Hikaye Yaz</span>
-              </Link>
-              <button 
-                onClick={handleLogout}
-                className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 border border-white/20 hover:border-white/40"
-              >
-                Çıkış Yap
-              </button>
+              
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-4">
+                <Link 
+                  href="/themes" 
+                  className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-500 flex items-center gap-3 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                  <span className="text-2xl relative z-10">✏️</span>
+                  <span className="relative z-10">Yeni Hikaye Yaz</span>
+                </Link>
+                <button 
+                  onClick={handleLogout}
+                  className="bg-white/10 hover:bg-red-500/20 text-white hover:text-red-300 px-10 py-5 rounded-2xl font-bold text-lg transition-all duration-500 border border-white/20 hover:border-red-500/40 backdrop-blur-sm hover:scale-105"
+                >
+                  🚪 Çıkış Yap
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Tabs - Modern Design */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
-          {/* Tab Headers */}
-          <div className="flex border-b border-white/20">
-            <button
-              onClick={() => setActiveTab('stories')}
-              className={`flex-1 px-8 py-6 text-center font-semibold transition-all duration-300 ${
-                activeTab === 'stories'
-                  ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border-b-2 border-purple-400'
-                  : 'text-gray-300 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <span className="text-xl mr-2">📚</span>
-              Hikayelerim
-            </button>
-            <button
-              onClick={() => setActiveTab('info')}
-              className={`flex-1 px-8 py-6 text-center font-semibold transition-all duration-300 ${
-                activeTab === 'info'
-                  ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border-b-2 border-purple-400'
-                  : 'text-gray-300 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <span className="text-xl mr-2">ℹ️</span>
-              Kişisel Bilgiler
-            </button>
-          </div>
+        {/* Tabs - SaaS Website Kit Style */}
+        <div className={`group relative transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+          <div className="relative bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 overflow-hidden hover:border-white/40 transition-all duration-500">
+            {/* Tab Headers */}
+            <div className="flex border-b border-white/20">
+              <button
+                onClick={() => setActiveTab('stories')}
+                className={`flex-1 px-10 py-8 text-center font-bold text-lg transition-all duration-500 ${
+                  activeTab === 'stories'
+                    ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border-b-2 border-purple-400'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="text-2xl mr-3">📚</span>
+                Hikayelerim
+              </button>
+              <button
+                onClick={() => setActiveTab('info')}
+                className={`flex-1 px-10 py-8 text-center font-bold text-lg transition-all duration-500 ${
+                  activeTab === 'info'
+                    ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-white border-b-2 border-purple-400'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="text-2xl mr-3">ℹ️</span>
+                Kişisel Bilgiler
+              </button>
+            </div>
 
-          {/* Tab Content */}
-          <div className="p-8">
-            {activeTab === 'stories' && (
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-8">Tamamladığım Hikayeler</h3>
-                
-                {userStories.length > 0 ? (
-                  <div className="space-y-6">
-                    {userStories.map((story, index) => (
-                      <div key={story.id || index} className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300 hover:bg-white/10">
-                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-4 mb-3">
-                              <h4 className="text-xl font-semibold text-white">
-                                {story.title || `Hikaye ${index + 1}`}
-                              </h4>
-                              <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs px-3 py-1 rounded-full">
-                                {story.theme || 'Genel'}
-                              </span>
+            {/* Tab Content */}
+            <div className="p-10">
+              {activeTab === 'stories' && (
+                <div>
+                  <h3 className="text-3xl font-black text-white mb-10">Tamamladığım Hikayeler</h3>
+                  
+                  {userStories.length > 0 ? (
+                    <div className="space-y-8">
+                      {userStories.map((story, index) => (
+                        <div key={story.id || index} className="group relative">
+                          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                          <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10 hover:border-white/30 transition-all duration-500 hover:bg-white/10 hover:scale-105">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-4 mb-4">
+                                  <h4 className="text-2xl font-bold text-white">
+                                    {story.title || `Hikaye ${index + 1}`}
+                                  </h4>
+                                  <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm px-4 py-2 rounded-full font-semibold">
+                                    {story.theme || 'Genel'}
+                                  </span>
+                                </div>
+                                <p className="text-gray-300 mb-6 line-clamp-3 text-lg leading-relaxed">
+                                  {story.content || story.segments?.map(s => s.content).join(' ') || 'Hikaye içeriği...'}
+                                </p>
+                                <div className="flex items-center gap-8 text-sm text-gray-400">
+                                  <span className="flex items-center gap-2">
+                                    <span className="text-lg">📅</span>
+                                    {new Date(story.createdAt || Date.now()).toLocaleDateString('tr-TR')}
+                                  </span>
+                                  <span className="flex items-center gap-2">
+                                    <span className="text-lg">❤️</span>
+                                    {story.likes || 0} beğeni
+                                  </span>
+                                  <span className="flex items-center gap-2">
+                                    <span className="text-lg">⭐</span>
+                                    {story.rating || 0} puan
+                                  </span>
+                                  <span className="flex items-center gap-2">
+                                    <span className="text-lg">📝</span>
+                                    {story.content?.length || 0} karakter
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex gap-4">
+                                <Link 
+                                  href={`/stories/${story.id || index}`}
+                                  className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl transform hover:scale-110 overflow-hidden"
+                                >
+                                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                                  <span className="relative z-10">Görüntüle</span>
+                                </Link>
+                              </div>
                             </div>
-                            <p className="text-gray-300 mb-4 line-clamp-3">
-                              {story.content || story.segments?.map(s => s.content).join(' ') || 'Hikaye içeriği...'}
-                            </p>
-                            <div className="flex items-center gap-6 text-sm text-gray-400">
-                              <span className="flex items-center gap-1">
-                                <span>📅</span>
-                                {new Date(story.createdAt || Date.now()).toLocaleDateString('tr-TR')}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span>❤️</span>
-                                {story.likes || 0} beğeni
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span>⭐</span>
-                                {story.rating || 0} puan
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <span>📝</span>
-                                {story.content?.length || 0} karakter
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex gap-3">
-                            <Link 
-                              href={`/stories/${story.id || index}`}
-                              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 text-sm shadow-lg hover:shadow-xl"
-                            >
-                              Görüntüle
-                            </Link>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-16">
-                    <div className="text-8xl mb-6">📝</div>
-                    <h4 className="text-2xl font-semibold text-white mb-4">
-                      Henüz Hikaye Yazmadınız
-                    </h4>
-                    <p className="text-gray-300 mb-8 text-lg">
-                      İlk hikayenizi yazarak profil sayfanızı doldurun!
-                    </p>
-                    <Link 
-                      href="/themes" 
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 inline-flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
-                    >
-                      <span className="text-xl">✏️</span>
-                      <span>İlk Hikayenizi Yazın</span>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            )}
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-20">
+                      <div className="text-9xl mb-8 animate-bounce">📝</div>
+                      <h4 className="text-3xl font-bold text-white mb-6">
+                        Henüz Hikaye Yazmadınız
+                      </h4>
+                      <p className="text-gray-300 mb-10 text-xl leading-relaxed">
+                        İlk hikayenizi yazarak profil sayfanızı doldurun!
+                      </p>
+                      <Link 
+                        href="/themes" 
+                        className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 inline-flex items-center gap-4 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 overflow-hidden"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                        <span className="text-2xl relative z-10">✏️</span>
+                        <span className="relative z-10">İlk Hikayenizi Yazın</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
 
-            {activeTab === 'info' && (
-              <div>
-                <h3 className="text-2xl font-bold text-white mb-8">Kişisel Bilgiler</h3>
-                
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Rumuz
-                      </label>
-                      <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 text-white border border-white/10">
-                        {user.nickname || 'Belirtilmemiş'}
+              {activeTab === 'info' && (
+                <div>
+                  <h3 className="text-3xl font-black text-white mb-10">Kişisel Bilgiler</h3>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <div className="space-y-8">
+                      <div>
+                        <label className="block text-lg font-bold text-gray-300 mb-4">
+                          Rumuz
+                        </label>
+                        <div className="bg-white/5 backdrop-blur-sm rounded-2xl px-8 py-6 text-white border border-white/10 text-lg font-semibold">
+                          {user.nickname || 'Belirtilmemiş'}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-lg font-bold text-gray-300 mb-4">
+                          Katılım Tarihi
+                        </label>
+                        <div className="bg-white/5 backdrop-blur-sm rounded-2xl px-8 py-6 text-white border border-white/10 text-lg font-semibold">
+                          {new Date(user.createdAt || Date.now()).toLocaleDateString('tr-TR')}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-lg font-bold text-gray-300 mb-4">
+                          Rol
+                        </label>
+                        <div className="bg-white/5 backdrop-blur-sm rounded-2xl px-8 py-6 text-white border border-white/10 text-lg font-semibold">
+                          {user.role === 'admin' ? '👑 Admin' : '✍️ Yazar'}
+                        </div>
                       </div>
                     </div>
                     
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Katılım Tarihi
-                      </label>
-                      <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 text-white border border-white/10">
-                        {new Date(user.createdAt || Date.now()).toLocaleDateString('tr-TR')}
+                    <div className="space-y-8">
+                      <div>
+                        <label className="block text-lg font-bold text-gray-300 mb-4">
+                          Toplam Hikaye
+                        </label>
+                        <div className="bg-gradient-to-r from-purple-600/20 to-purple-800/20 backdrop-blur-sm rounded-2xl px-8 py-6 text-purple-400 font-bold text-lg border border-purple-500/30">
+                          {userStats.totalStories} hikaye
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Rol
-                      </label>
-                      <div className="bg-white/5 backdrop-blur-sm rounded-xl px-6 py-4 text-white border border-white/10">
-                        {user.role === 'admin' ? '👑 Admin' : '✍️ Yazar'}
+                      
+                      <div>
+                        <label className="block text-lg font-bold text-gray-300 mb-4">
+                          Toplam Beğeni
+                        </label>
+                        <div className="bg-gradient-to-r from-pink-600/20 to-pink-800/20 backdrop-blur-sm rounded-2xl px-8 py-6 text-pink-400 font-bold text-lg border border-pink-500/30">
+                          {userStats.totalLikes} beğeni
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-lg font-bold text-gray-300 mb-4">
+                          Toplam Karakter
+                        </label>
+                        <div className="bg-gradient-to-r from-blue-600/20 to-blue-800/20 backdrop-blur-sm rounded-2xl px-8 py-6 text-blue-400 font-bold text-lg border border-blue-500/30">
+                          {userStats.totalCharacters.toLocaleString()} karakter
+                        </div>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Toplam Hikaye
-                      </label>
-                      <div className="bg-gradient-to-r from-purple-600/20 to-purple-800/20 backdrop-blur-sm rounded-xl px-6 py-4 text-purple-400 font-semibold border border-purple-500/30">
-                        {userStats.totalStories} hikaye
+                  {/* Achievements Section - SaaS Website Kit Style */}
+                  <div className="mt-16 pt-12 border-t border-white/20">
+                    <h4 className="text-2xl font-black text-white mb-10">Başarılar</h4>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                      <div className={`group relative text-center p-8 rounded-2xl transition-all duration-500 hover:scale-105 ${userStats.totalStories >= 1 ? 'bg-gradient-to-br from-yellow-600/20 to-yellow-800/20 border border-yellow-500/30 text-yellow-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/10 to-yellow-800/10 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                        <div className="relative">
+                          <div className="text-6xl mb-4">🎯</div>
+                          <div className="font-bold mb-3 text-lg">İlk Hikaye</div>
+                          <div className="text-sm">1 hikaye yaz</div>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Toplam Beğeni
-                      </label>
-                      <div className="bg-gradient-to-r from-pink-600/20 to-pink-800/20 backdrop-blur-sm rounded-xl px-6 py-4 text-pink-400 font-semibold border border-pink-500/30">
-                        {userStats.totalLikes} beğeni
+                      <div className={`group relative text-center p-8 rounded-2xl transition-all duration-500 hover:scale-105 ${userStats.totalStories >= 5 ? 'bg-gradient-to-br from-green-600/20 to-green-800/20 border border-green-500/30 text-green-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
+                        <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-green-800/10 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                        <div className="relative">
+                          <div className="text-6xl mb-4">📚</div>
+                          <div className="font-bold mb-3 text-lg">Hikayeci</div>
+                          <div className="text-sm">5 hikaye yaz</div>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-3">
-                        Toplam Karakter
-                      </label>
-                      <div className="bg-gradient-to-r from-blue-600/20 to-blue-800/20 backdrop-blur-sm rounded-xl px-6 py-4 text-blue-400 font-semibold border border-blue-500/30">
-                        {userStats.totalCharacters.toLocaleString()} karakter
+                      <div className={`group relative text-center p-8 rounded-2xl transition-all duration-500 hover:scale-105 ${userStats.totalLikes >= 10 ? 'bg-gradient-to-br from-pink-600/20 to-pink-800/20 border border-pink-500/30 text-pink-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
+                        <div className="absolute inset-0 bg-gradient-to-r from-pink-600/10 to-pink-800/10 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                        <div className="relative">
+                          <div className="text-6xl mb-4">❤️</div>
+                          <div className="font-bold mb-3 text-lg">Popüler</div>
+                          <div className="text-sm">10 beğeni al</div>
+                        </div>
+                      </div>
+                      <div className={`group relative text-center p-8 rounded-2xl transition-all duration-500 hover:scale-105 ${userStats.totalCharacters >= 10000 ? 'bg-gradient-to-br from-purple-600/20 to-purple-800/20 border border-purple-500/30 text-purple-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-purple-800/10 rounded-2xl blur-lg group-hover:blur-xl transition-all duration-500"></div>
+                        <div className="relative">
+                          <div className="text-6xl mb-4">✍️</div>
+                          <div className="font-bold mb-3 text-lg">Yazar</div>
+                          <div className="text-sm">10K karakter yaz</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                
-                {/* Achievements Section - Modern Design */}
-                <div className="mt-12 pt-8 border-t border-white/20">
-                  <h4 className="text-xl font-bold text-white mb-6">Başarılar</h4>
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div className={`text-center p-6 rounded-xl transition-all duration-300 ${userStats.totalStories >= 1 ? 'bg-gradient-to-br from-yellow-600/20 to-yellow-800/20 border border-yellow-500/30 text-yellow-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
-                      <div className="text-4xl mb-3">🎯</div>
-                      <div className="font-semibold mb-2">İlk Hikaye</div>
-                      <div className="text-sm">1 hikaye yaz</div>
-                    </div>
-                    <div className={`text-center p-6 rounded-xl transition-all duration-300 ${userStats.totalStories >= 5 ? 'bg-gradient-to-br from-green-600/20 to-green-800/20 border border-green-500/30 text-green-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
-                      <div className="text-4xl mb-3">📚</div>
-                      <div className="font-semibold mb-2">Hikayeci</div>
-                      <div className="text-sm">5 hikaye yaz</div>
-                    </div>
-                    <div className={`text-center p-6 rounded-xl transition-all duration-300 ${userStats.totalLikes >= 10 ? 'bg-gradient-to-br from-pink-600/20 to-pink-800/20 border border-pink-500/30 text-pink-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
-                      <div className="text-4xl mb-3">❤️</div>
-                      <div className="font-semibold mb-2">Popüler</div>
-                      <div className="text-sm">10 beğeni al</div>
-                    </div>
-                    <div className={`text-center p-6 rounded-xl transition-all duration-300 ${userStats.totalCharacters >= 10000 ? 'bg-gradient-to-br from-purple-600/20 to-purple-800/20 border border-purple-500/30 text-purple-400' : 'bg-white/5 border border-white/10 text-gray-500'}`}>
-                      <div className="text-4xl mb-3">✍️</div>
-                      <div className="font-semibold mb-2">Yazar</div>
-                      <div className="text-sm">10K karakter yaz</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       </div>
