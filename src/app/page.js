@@ -13,7 +13,24 @@ export default function HomePage() {
       <div className="relative overflow-hidden">
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-purple-600/10"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+        
+        {/* Masalsı Arka Plan Görseli */}
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%221200%22%20height%3D%22800%22%20viewBox%3D%220%200%201200%20800%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22sky%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%220%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20style%3D%22stop-color%3A%23e0f2fe%3Bstop-opacity%3A0.1%22%20/%3E%3Cstop%20offset%3D%2250%25%22%20style%3D%22stop-color%3A%23fce7f3%3Bstop-opacity%3A0.1%22%20/%3E%3Cstop%20offset%3D%22100%25%22%20style%3D%22stop-color%3A%23f3e8ff%3Bstop-opacity%3A0.1%22%20/%3E%3C/linearGradient%3E%3CradialGradient%20id%3D%22rainbow%22%20cx%3D%2250%25%22%20cy%3D%2220%25%22%20r%3D%2240%25%22%3E%3Cstop%20offset%3D%220%25%22%20style%3D%22stop-color%3A%23ff6b6b%3Bstop-opacity%3A0.3%22%20/%3E%3Cstop%20offset%3D%2216.66%25%22%20style%3D%22stop-color%3A%23ffd93d%3Bstop-opacity%3A0.3%22%20/%3E%3Cstop%20offset%3D%2233.33%25%22%20style%3D%22stop-color%3A%236bcf7f%3Bstop-opacity%3A0.3%22%20/%3E%3Cstop%20offset%3D%2250%25%22%20style%3D%22stop-color%3A%234ecdc4%3Bstop-opacity%3A0.3%22%20/%3E%3Cstop%20offset%3D%2266.66%25%22%20style%3D%22stop-color%3A%2345b7d1%3Bstop-opacity%3A0.3%22%20/%3E%3Cstop%20offset%3D%2283.33%25%22%20style%3D%22stop-color%3A%2396ceb4%3Bstop-opacity%3A0.3%22%20/%3E%3Cstop%20offset%3D%22100%25%22%20style%3D%22stop-color%3A%23feca57%3Bstop-opacity%3A0.3%22%20/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect%20width%3D%221200%22%20height%3D%22800%22%20fill%3D%22url%28%23sky%29%22%20/%3E%3Cellipse%20cx%3D%22600%22%20cy%3D%22160%22%20rx%3D%22400%22%20ry%3D%2280%22%20fill%3D%22url%28%23rainbow%29%22%20/%3E%3Ccircle%20cx%3D%22600%22%20cy%3D%22300%22%20r%3D%2280%22%20fill%3D%22%23ffb3d9%22%20opacity%3D%220.2%22%20/%3E%3Ccircle%20cx%3D%22580%22%20cy%3D%22280%22%20r%3D%2215%22%20fill%3D%22%23ffb3d9%22%20opacity%3D%220.15%22%20/%3E%3Ccircle%20cx%3D%22620%22%20cy%3D%22280%22%20r%3D%2215%22%20fill%3D%22%23ffb3d9%22%20opacity%3D%220.15%22%20/%3E%3Ccircle%20cx%3D%22600%22%20cy%3D%22320%22%20r%3D%2220%22%20fill%3D%22%23ffb3d9%22%20opacity%3D%220.15%22%20/%3E%3Crect%20x%3D%22550%22%20y%3D%22380%22%20width%3D%22100%22%20height%3D%22120%22%20fill%3D%22%23a8e6cf%22%20opacity%3D%220.1%22%20/%3E%3Crect%20x%3D%22540%22%20y%3D%22370%22%20width%3D%22120%22%20height%3D%2220%22%20fill%3D%22%23a8e6cf%22%20opacity%3D%220.1%22%20/%3E%3Crect%20x%3D%22530%22%20y%3D%22360%22%20width%3D%22140%22%20height%3D%2220%22%20fill%3D%22%23a8e6cf%22%20opacity%3D%220.1%22%20/%3E%3Crect%20x%3D%22520%22%20y%3D%22350%22%20width%3D%22160%22%20height%3D%2220%22%20fill%3D%22%23a8e6cf%22%20opacity%3D%220.1%22%20/%3E%3Ccircle%20cx%3D%22400%22%20cy%3D%22200%22%20r%3D%223%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.4%22%20/%3E%3Ccircle%20cx%3D%22800%22%20cy%3D%22150%22%20r%3D%222%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.3%22%20/%3E%3Ccircle%20cx%3D%22500%22%20cy%3D%22120%22%20r%3D%222.5%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.35%22%20/%3E%3Ccircle%20cx%3D%22700%22%20cy%3D%22180%22%20r%3D%221.5%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.25%22%20/%3E%3Ccircle%20cx%3D%22450%22%20cy%3D%22160%22%20r%3D%221%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.3%22%20/%3E%3Ccircle%20cx%3D%22750%22%20cy%3D%22140%22%20r%3D%222%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.35%22%20/%3E%3Ccircle%20cx%3D%22350%22%20cy%3D%22180%22%20r%3D%221.5%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.25%22%20/%3E%3Ccircle%20cx%3D%22850%22%20cy%3D%22170%22%20r%3D%221%22%20fill%3D%22%23ffd93d%22%20opacity%3D%220.3%22%20/%3E%3Ctext%20x%3D%22200%22%20y%3D%22100%22%20font-size%3D%2260%22%20fill%3D%22white%22%20opacity%3D%220.15%22%3E☁️%3C/text%3E%3Ctext%20x%3D%22900%22%20y%3D%22120%22%20font-size%3D%2250%22%20fill%3D%22white%22%20opacity%3D%220.1%22%3E☁️%3C/text%3E%3Ctext%20x%3D%22300%22%20y%3D%2280%22%20font-size%3D%2240%22%20fill%3D%22white%22%20opacity%3D%220.125%22%3E☁️%3C/text%3E%3Ctext%20x%3D%22800%22%20y%3D%2290%22%20font-size%3D%2245%22%20fill%3D%22white%22%20opacity%3D%220.075%22%3E☁️%3C/text%3E%3Ctext%20x%3D%22150%22%20y%3D%22150%22%20font-size%3D%2235%22%20fill%3D%22white%22%20opacity%3D%220.15%22%3E🕊️%3C/text%3E%3Ctext%20x%3D%22950%22%20y%3D%22110%22%20font-size%3D%2230%22%20fill%3D%22white%22%20opacity%3D%220.125%22%3E🕊️%3C/text%3E%3Ctext%20x%3D%22250%22%20y%3D%22120%22%20font-size%3D%2225%22%20fill%3D%22white%22%20opacity%3D%220.175%22%3E🕊️%3C/text%3E%3Ctext%20x%3D%22850%22%20y%3D%22130%22%20font-size%3D%2220%22%20fill%3D%22white%22%20opacity%3D%220.15%22%3E🕊️%3C/text%3E%3Ctext%20x%3D%22350%22%20y%3D%22140%22%20font-size%3D%2228%22%20fill%3D%22white%22%20opacity%3D%220.2%22%3E🦄%3C/text%3E%3Ctext%20x%3D%22750%22%20y%3D%22160%22%20font-size%3D%2235%22%20fill%3D%22white%22%20opacity%3D%220.125%22%3E🦄%3C/text%3E%3Ctext%20x%3D%22450%22%20y%3D%22180%22%20font-size%3D%2222%22%20fill%3D%22white%22%20opacity%3D%220.15%22%3E🦄%3C/text%3E%3Ctext%20x%3D%22650%22%20y%3D%22170%22%20font-size%3D%2218%22%20fill%3D%22white%22%20opacity%3D%220.1%22%3E🦄%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22700%22%20font-size%3D%2240%22%20fill%3D%22white%22%20opacity%3D%220.2%22%3E🌸%3C/text%3E%3Ctext%20x%3D%22950%22%20y%3D%22720%22%20font-size%3D%2235%22%20fill%3D%22white%22%20opacity%3D%220.175%22%3E🌺%3C/text%3E%3Ctext%20x%3D%22300%22%20y%3D%22680%22%20font-size%3D%2230%22%20fill%3D%22white%22%20opacity%3D%220.15%22%3E🌼%3C/text%3E%3Ctext%20x%3D%22850%22%20y%3D%22690%22%20font-size%3D%2225%22%20fill%3D%22white%22%20opacity%3D%220.125%22%3E🌻%3C/text%3E%3Ctext%20x%3D%22400%22%20y%3D%22710%22%20font-size%3D%2220%22%20fill%3D%22white%22%20opacity%3D%220.15%22%3E🌹%3C/text%3E%3Ccircle%20cx%3D%22300%22%20cy%3D%22250%22%20r%3D%224%22%20fill%3D%22%23f9a8d4%22%20opacity%3D%220.3%22%20/%3E%3Ccircle%20cx%3D%22750%22%20cy%3D%22200%22%20r%3D%223%22%20fill%3D%22%2393c5fd%22%20opacity%3D%220.25%22%20/%3E%3Ccircle%20cx%3D%22500%22%20cy%3D%22300%22%20r%3D%223.5%22%20fill%3D%22%23fde047%22%20opacity%3D%220.35%22%20/%3E%3C/svg%3E')] bg-cover bg-center opacity-20"></div>
+        
+        {/* Masalsı elementler */}
+        <div className="absolute inset-0">
+          {/* Yıldızlar */}
+          <div className="absolute top-20 left-20 w-2 h-2 bg-yellow-300 rounded-full animate-pulse opacity-80"></div>
+          <div className="absolute top-32 right-32 w-1 h-1 bg-yellow-300 rounded-full animate-pulse opacity-60"></div>
+          <div className="absolute top-16 left-1/2 w-1.5 h-1.5 bg-yellow-300 rounded-full animate-pulse opacity-70"></div>
+          <div className="absolute top-40 right-1/4 w-1 h-1 bg-yellow-300 rounded-full animate-pulse opacity-50"></div>
+          <div className="absolute top-24 left-1/3 w-1 h-1 bg-yellow-300 rounded-full animate-pulse opacity-80"></div>
+          
+          {/* Büyülü ışıklar */}
+          <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-pink-300 rounded-full animate-pulse opacity-60"></div>
+          <div className="absolute top-1/3 right-1/4 w-3 h-3 bg-blue-300 rounded-full animate-pulse opacity-50"></div>
+          <div className="absolute top-1/2 left-1/3 w-3.5 h-3.5 bg-yellow-300 rounded-full animate-pulse opacity-70"></div>
+        </div>
         
         {/* Hero Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-32">
@@ -25,32 +42,13 @@ export default function HomePage() {
               </span>
             </h1>
             
-            {/* Subtitle */}
+            {/* Subtitle - Eski güzel yazı geri getirildi */}
             <p className="text-2xl lg:text-3xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
-              Hikayelerinizi paylaşın, başkalarının hikayelerini devam ettirin. 
-              <span className="text-purple-400 font-semibold"> Birlikte yaratın!</span>
+              Hayal Gücünü{' '}
+              <span className="text-yellow-300 animate-pulse drop-shadow-lg font-bold">Serbest Bırak!</span>
             </p>
             
-            {/* Stats Cards - Modern Design */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-4xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 hover:bg-white/15">
-                <div className="text-4xl mb-4">📚</div>
-                <div className="text-3xl font-bold text-purple-400 mb-2">1000+</div>
-                <div className="text-gray-300">Hikaye</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 hover:bg-white/15">
-                <div className="text-4xl mb-4">✍️</div>
-                <div className="text-3xl font-bold text-pink-400 mb-2">500+</div>
-                <div className="text-gray-300">Yazar</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 hover:border-white/40 transition-all duration-300 hover:bg-white/15">
-                <div className="text-4xl mb-4">❤️</div>
-                <div className="text-3xl font-bold text-blue-400 mb-2">10K+</div>
-                <div className="text-gray-300">Beğeni</div>
-              </div>
-            </div>
-            
-            {/* CTA Buttons - Modern Design */}
+            {/* CTA Buttons - Modern Design ve Ortalandı */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               {user ? (
                 <Link 
