@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-[url('/hero-background.png')] bg-cover bg-center opacity-65"></div>
+      <div className="absolute inset-0 bg-[url('/hero-background.png')] bg-cover bg-center opacity-80"></div>
       
       {/* Animated Background Overlay */}
       <div className="absolute inset-0">
@@ -57,8 +57,7 @@ export default function HomePage() {
 
             {/* Description */}
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Binlerce yazarın katıldığı kolektif hikaye yazma platformu. 
-              Birlikte benzersiz hikayeler yaratın, hayal gücünüzü paylaşın.
+              Arkadaşlarınla birlikte sürükleyici hikâyeler yaz, kelime sınırını zorla, eğlenceli sürprizlerle hikâyeni tamamla!
             </p>
             
             {/* CTA Buttons */}
@@ -66,49 +65,33 @@ export default function HomePage() {
               {user ? (
                 <Link 
                   href="/themes" 
-                  className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 flex items-center gap-4 overflow-hidden"
+                  className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 flex items-center gap-4 overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                   <span className="text-2xl relative z-10">✏️</span>
-                  <span className="relative z-10">Hikaye Yazmaya Başla</span>
+                  <span className="relative z-10">Yazmaya Başla</span>
                   <span className="group-hover:translate-x-2 transition-transform duration-300 relative z-10">→</span>
                 </Link>
               ) : (
                 <Link 
                   href="/register" 
-                  className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-110 flex items-center gap-4 overflow-hidden"
+                  className="group relative bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 flex items-center gap-4 overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                  <span className="text-2xl relative z-10">🚀</span>
-                  <span className="relative z-10">Hazır mısın?</span>
+                  <span className="text-2xl relative z-10">✏️</span>
+                  <span className="relative z-10">Yazmaya Başla</span>
                   <span className="group-hover:translate-x-2 transition-transform duration-300 relative z-10">→</span>
                 </Link>
               )}
               
               <Link 
-                href="/stories" 
-                className="group bg-gray-800 hover:bg-gray-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-600 hover:border-gray-500 backdrop-blur-sm flex items-center gap-4 hover:scale-105"
+                href="/how-it-works" 
+                className="group bg-white/90 hover:bg-white text-gray-800 px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-200 hover:border-gray-300 backdrop-blur-sm flex items-center gap-4 hover:scale-105 shadow-lg"
               >
-                <span className="text-2xl">📖</span>
-                <span>Hikayeleri Keşfet</span>
+                <span className="text-2xl">❓</span>
+                <span>Nasıl Çalışır?</span>
                 <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
               </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white/90 shadow-lg">
-                <div className="text-3xl font-bold text-purple-600 mb-2">1000+</div>
-                <div className="text-gray-700">Aktif Yazar</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white/90 shadow-lg">
-                <div className="text-3xl font-bold text-pink-600 mb-2">5000+</div>
-                <div className="text-gray-700">Tamamlanan Hikaye</div>
-              </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white/90 shadow-lg">
-                <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
-                <div className="text-gray-700">Farklı Tema</div>
-              </div>
             </div>
           </div>
         </div>

@@ -53,24 +53,34 @@ export default function Header() {
               Hikayeler
             </Link>
             <Link 
-              href="/leaderboard" 
+              href="/themes" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                pathname === '/leaderboard' 
+                pathname === '/themes' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
             >
-              Lider Tablosu
+              Hikaye Oluştur
             </Link>
             <Link 
-              href="/how-it-works" 
+              href="/about" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                pathname === '/how-it-works' 
+                pathname === '/about' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
                   : 'text-gray-300 hover:text-white hover:bg-white/10'
               }`}
             >
-              Nasıl Çalışır
+              Hakkımızda
+            </Link>
+            <Link 
+              href="/contact" 
+              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                pathname === '/contact' 
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              İletişim
             </Link>
           </nav>
 
@@ -89,12 +99,6 @@ export default function Header() {
                     Admin Panel
                   </Link>
                 )}
-                <Link 
-                  href="/themes" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  ✏️ Hikaye Yaz
-                </Link>
                 <Link 
                   href="/profile" 
                   className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-white/20 hover:border-white/40 backdrop-blur-sm"
