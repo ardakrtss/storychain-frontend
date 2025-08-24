@@ -19,13 +19,13 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-gradient-to-r from-gray-900/95 to-purple-900/95 backdrop-blur-xl text-white shadow-2xl border-b border-white/10 sticky top-0 z-50">
+    <header className="bg-white/95 backdrop-blur-xl text-gray-900 shadow-2xl border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="text-3xl group-hover:scale-110 transition-transform duration-300">✏️</div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:via-pink-300 group-hover:to-purple-300 transition-all duration-300">
+            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-purple-500 transition-all duration-300">
               StoryChain
             </span>
           </Link>
@@ -37,7 +37,7 @@ export default function Header() {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               Ana Sayfa
@@ -47,7 +47,7 @@ export default function Header() {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/stories' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               Hikayeler
@@ -57,7 +57,7 @@ export default function Header() {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/themes' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               Hikaye Oluştur
@@ -67,7 +67,7 @@ export default function Header() {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/about' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               Hakkımızda
@@ -77,7 +77,7 @@ export default function Header() {
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/contact' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
               İletişim
@@ -88,7 +88,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center space-x-3">
             {user ? (
               <div className="flex items-center space-x-3">
-                <span className="text-gray-300 font-medium px-4 py-2 bg-white/5 rounded-xl backdrop-blur-sm">
+                <span className="text-gray-700 font-medium px-4 py-2 bg-gray-100 rounded-xl backdrop-blur-sm">
                   Merhaba, {user.nickname || 'Yazar'}! 👋
                 </span>
                 {user.role === 'admin' && (
@@ -101,13 +101,13 @@ export default function Header() {
                 )}
                 <Link 
                   href="/profile" 
-                  className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-gray-300 backdrop-blur-sm"
                 >
                   👤 Profilim
                 </Link>
                 <button 
                   onClick={handleLogout} 
-                  className="bg-white/10 hover:bg-red-500/20 text-white hover:text-red-300 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-white/20 hover:border-red-500/40 backdrop-blur-sm"
+                  className="bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-red-300 backdrop-blur-sm"
                 >
                   🚪 Çıkış
                 </button>
@@ -116,7 +116,7 @@ export default function Header() {
               <div className="flex items-center space-x-3">
                 <Link 
                   href="/register" 
-                  className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-white/20 hover:border-white/40 backdrop-blur-sm"
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-gray-300 backdrop-blur-sm"
                 >
                   📝 Kayıt Ol
                 </Link>

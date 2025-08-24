@@ -15,7 +15,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 overflow-hidden">
       {/* Background Image */}
-      <div className="absolute inset-0 bg-[url('/hero-background.png')] bg-cover bg-center opacity-80"></div>
+      <div className="absolute inset-0 bg-[url('/hero-background.png')] bg-cover bg-center opacity-90"></div>
       
       {/* Animated Background Overlay */}
       <div className="absolute inset-0">
@@ -92,6 +92,22 @@ export default function HomePage() {
                 <span>Nasıl Çalışır?</span>
                 <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
               </Link>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white shadow-lg">
+                <div className="text-3xl font-bold text-purple-600 mb-2">1000+</div>
+                <div className="text-gray-700">Aktif Yazar</div>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white shadow-lg">
+                <div className="text-3xl font-bold text-pink-600 mb-2">5000+</div>
+                <div className="text-gray-700">Tamamlanan Hikaye</div>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:bg-white shadow-lg">
+                <div className="text-3xl font-bold text-blue-600 mb-2">50+</div>
+                <div className="text-gray-700">Farklı Tema</div>
+              </div>
             </div>
           </div>
         </div>
