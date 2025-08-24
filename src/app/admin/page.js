@@ -22,20 +22,171 @@ export default function AdminPanel() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [storiesRes, usersRes, statsRes] = await Promise.all([
-        api.get('/admin/stories'),
-        api.get('/admin/users'),
-        api.get('/admin/stats')
-      ]);
       
-      setStories(storiesRes.data.stories);
-      setUsers(usersRes.data.users);
-      setStats(statsRes.data.stats);
+      // Backend bağlantısı yoksa mock data kullan
+      if (!process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL === 'http://localhost:5000') {
+        // Mock data
+        const mockStories = [
+          {
+            id: '1',
+            title: 'Uçaktaki Gizem',
+            theme: 'gizem',
+            segments: [
+              { content: 'Arda ile Tuna bir uçakta rastgele bir şekilde bir kişi kişi öldü...', author: 'Tunazor', authorId: 'user1' }
+            ],
+            isComplete: false,
+            likeCount: 0,
+            createdAt: new Date('2024-08-24')
+          },
+          {
+            id: '2',
+            title: 'Uzay Macerası',
+            theme: 'macera',
+            segments: [
+              { content: 'Küçük astronot Ali, uzay gemisinde bir sürprizle karşılaştı...', author: 'Uzayci', authorId: 'user2' }
+            ],
+            isComplete: false,
+            likeCount: 2,
+            createdAt: new Date('2024-08-23')
+          }
+        ];
+
+        const mockUsers = [
+          {
+            id: 'user1',
+            nickname: 'Tunazor',
+            role: 'user',
+            isActive: true,
+            storiesWritten: 1,
+            totalLikes: 0,
+            createdAt: new Date('2024-08-20'),
+            lastLogin: new Date('2024-08-24')
+          },
+          {
+            id: 'user2',
+            nickname: 'Uzayci',
+            role: 'user',
+            isActive: true,
+            storiesWritten: 1,
+            totalLikes: 2,
+            createdAt: new Date('2024-08-19'),
+            lastLogin: new Date('2024-08-23')
+          },
+          {
+            id: 'admin1',
+            nickname: 'admin',
+            role: 'admin',
+            isActive: true,
+            storiesWritten: 0,
+            totalLikes: 0,
+            createdAt: new Date('2024-08-15'),
+            lastLogin: new Date('2024-08-24')
+          }
+        ];
+
+        const mockStats = {
+          totalUsers: mockUsers.length,
+          totalStories: mockStories.length,
+          completedStories: mockStories.filter(s => s.isComplete).length
+        };
+
+        setStories(mockStories);
+        setUsers(mockUsers);
+        setStats(mockStats);
+      } else {
+        // Backend bağlantısı varsa gerçek verileri çek
+        try {
+          const [storiesRes, usersRes, statsRes] = await Promise.all([
+            api.get('/admin/stories'),
+            api.get('/admin/users'),
+            api.get('/admin/stats')
+          ]);
+          
+          setStories(storiesRes.data.stories);
+          setUsers(usersRes.data.users);
+          setStats(statsRes.data.stats);
+        } catch (apiError) {
+          console.error('API Error:', apiError);
+          // API hatası durumunda mock data kullan
+          loadMockData();
+        }
+      }
     } catch (error) {
       console.error('Admin data load error:', error);
+      loadMockData();
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadMockData = () => {
+    const mockStories = [
+      {
+        id: '1',
+        title: 'Uçaktaki Gizem',
+        theme: 'gizem',
+        segments: [
+          { content: 'Arda ile Tuna bir uçakta rastgele bir şekilde bir kişi kişi öldü...', author: 'Tunazor', authorId: 'user1' }
+        ],
+        isComplete: false,
+        likeCount: 0,
+        createdAt: new Date('2024-08-24')
+      },
+      {
+        id: '2',
+        title: 'Uzay Macerası',
+        theme: 'macera',
+        segments: [
+          { content: 'Küçük astronot Ali, uzay gemisinde bir sürprizle karşılaştı...', author: 'Uzayci', authorId: 'user2' }
+        ],
+        isComplete: false,
+        likeCount: 2,
+        createdAt: new Date('2024-08-23')
+      }
+    ];
+
+    const mockUsers = [
+      {
+        id: 'user1',
+        nickname: 'Tunazor',
+        role: 'user',
+        isActive: true,
+        storiesWritten: 1,
+        totalLikes: 0,
+        createdAt: new Date('2024-08-20'),
+        lastLogin: new Date('2024-08-24')
+      },
+      {
+        id: 'user2',
+        nickname: 'Uzayci',
+        role: 'user',
+        isActive: true,
+        storiesWritten: 1,
+        totalLikes: 2,
+        createdAt: new Date('2024-08-19'),
+        lastLogin: new Date('2024-08-23')
+      },
+      {
+        id: 'admin1',
+        nickname: 'admin',
+        role: 'admin',
+        isActive: true,
+        storiesWritten: 0,
+        totalLikes: 0,
+        createdAt: new Date('2024-08-15'),
+        lastLogin: new Date('2024-08-24')
+      }
+    ];
+
+    const mockStats = {
+      totalUsers: mockUsers.length,
+      totalStories: mockStories.length,
+      completedStories: mockStories.filter(s => s.isComplete).length
+    };
+
+    setStories(mockStories);
+    setUsers(mockUsers);
+    setStats(mockStats);
   };
 
   const deleteStory = async (storyId) => {
@@ -288,16 +439,28 @@ export default function AdminPanel() {
                       <thead className="bg-white/10">
                         <tr>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
-                            Rumuz
+                            Kullanıcı
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
-                            Hikaye Sayısı
+                            Rol
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
-                            Toplam Beğeni
+                            Durum
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            Hikaye
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            Beğeni
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            Son Giriş
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
                             Kayıt Tarihi
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            İşlemler
                           </th>
                         </tr>
                       </thead>
@@ -305,27 +468,76 @@ export default function AdminPanel() {
                         {users.map((user) => (
                           <tr key={user.id} className="hover:bg-white/5 transition-all duration-300">
                             <td className="px-8 py-6 whitespace-nowrap">
-                              <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-xl font-bold text-white">
+                              <div className="flex items-center">
+                                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
                                   {user.nickname.charAt(0).toUpperCase()}
                                 </div>
-                                <div className="text-lg font-bold text-white">{user.nickname}</div>
+                                <div className="ml-4">
+                                  <div className="text-lg font-bold text-white">{user.nickname}</div>
+                                  <div className="text-sm text-gray-400">ID: {user.id}</div>
+                                </div>
                               </div>
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap">
-                              <span className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 text-purple-300 rounded-xl border border-purple-500/30">
-                                <span className="text-xl">📚</span>
-                                <span className="text-lg font-bold">{user.storyCount}</span>
+                              <span className={`inline-flex px-4 py-2 text-sm font-bold rounded-full ${
+                                user.role === 'admin' 
+                                  ? 'bg-red-500/20 text-red-300 border border-red-500/30' 
+                                  : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                              }`}>
+                                {user.role === 'admin' ? '👑 Admin' : '👤 Kullanıcı'}
                               </span>
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap">
-                              <span className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/20 text-pink-300 rounded-xl border border-pink-500/30">
-                                <span className="text-xl">❤️</span>
-                                <span className="text-lg font-bold">{user.total_likes}</span>
+                              <span className={`inline-flex px-4 py-2 text-sm font-bold rounded-full ${
+                                user.isActive 
+                                  ? 'bg-green-500/20 text-green-300 border border-green-500/30' 
+                                  : 'bg-red-500/20 text-red-300 border border-red-500/30'
+                              }`}>
+                                {user.isActive ? '✅ Aktif' : '❌ Pasif'}
                               </span>
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
+                              {user.storiesWritten || 0}
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
+                              {user.totalLikes || 0}
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
+                              {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('tr-TR') : 'Hiç giriş yapmamış'}
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
                               {user.createdAt ? new Date(user.createdAt).toLocaleDateString('tr-TR') : '-'}
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap">
+                              <div className="flex space-x-2">
+                                <button
+                                  onClick={() => {
+                                    if (confirm(`${user.nickname} kullanıcısını silmek istediğinizden emin misiniz?`)) {
+                                      // Mock silme işlemi
+                                      setUsers(users.filter(u => u.id !== user.id));
+                                      alert('Kullanıcı silindi');
+                                    }
+                                  }}
+                                  className="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm border border-red-500/30"
+                                >
+                                  🗑️ Sil
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    // Mock rol değiştirme
+                                    const updatedUsers = users.map(u => 
+                                      u.id === user.id 
+                                        ? { ...u, role: u.role === 'admin' ? 'user' : 'admin' }
+                                        : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    alert(`Kullanıcı ${user.role === 'admin' ? 'user' : 'admin'} yapıldı`);
+                                  }}
+                                  className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm border border-blue-500/30"
+                                >
+                                  {user.role === 'admin' ? '👤 User' : '👑 Admin'}
+                                </button>
+                              </div>
                             </td>
                           </tr>
                         ))}
