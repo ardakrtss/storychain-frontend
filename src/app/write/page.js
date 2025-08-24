@@ -52,7 +52,7 @@ function WritePageContent() {
         }
       } catch (error) {
         console.error('Error initializing page:', error);
-        setError('Sayfa yüklenirken bir hata oluştu');
+        setError('Bu hikaye henüz tamamlanmamış! Sabırlı ol, diğer yazarlar hikayeyi tamamlayana kadar bekle!');
       } finally {
         setLoading(false);
       }
@@ -116,8 +116,8 @@ function WritePageContent() {
       router.push('/stories');
     } catch (error) {
       console.error('Error submitting story:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Hikaye gönderilirken bir hata oluştu';
-      setError(errorMessage);
+      // Tüm hata mesajlarını çocuk dostu mesajlarla değiştir
+      setError('Hikaye henüz tamamlanmamış! Sabırlı ol, diğer yazarlar hikayeyi tamamlayana kadar bekle!');
     } finally {
       setSubmitting(false);
     }
@@ -153,19 +153,44 @@ function WritePageContent() {
   }
 
   if (error || (!theme && !story)) {
+    // Rastgele çocuk dostu mesajlar
+    const messages = [
+      {
+        emoji: "🎭",
+        title: "Hikaye Devam Ediyor!",
+        message: "Bu hikaye henüz tamamlanmamış! Diğer yazarlar hikayeyi bitirmeye çalışıyor. Sabırlı ol! ⏰"
+      },
+      {
+        emoji: "📖",
+        title: "Hikaye Yazılıyor!",
+        message: "Bu hikaye şu anda yazılıyor! Hikaye tamamen bitmeden okuyamazsın. Biraz daha bekle! 🎨"
+      },
+      {
+        emoji: "✨",
+        title: "Sihir Devam Ediyor!",
+        message: "Hikaye sihiri henüz tamamlanmadı! Diğer yazarlar hikayeyi tamamlayana kadar bekle! 🪄"
+      },
+      {
+        emoji: "🚀",
+        title: "Hikaye Uzayda!",
+        message: "Bu hikaye uzayda seyahat ediyor! Henüz dünyaya dönmedi. Biraz daha bekle! 🌟"
+      }
+    ];
+    
+    const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-gray-200 p-12 hover:bg-white transition-all duration-300 shadow-2xl max-w-2xl mx-4">
-            <div className="text-9xl mb-6 animate-bounce">📚</div>
+            <div className="text-9xl mb-6 animate-bounce">{randomMessage.emoji}</div>
             <h2 className="text-4xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-3">
               <span className="text-5xl">🤔</span>
-              <span>Ooops!</span>
+              <span>{randomMessage.title}</span>
             </h2>
             <p className="text-gray-700 text-xl mb-8 leading-relaxed">
-              Bu hikaye henüz tamamlanmamış! 🎭<br/>
-              <span className="text-purple-600 font-semibold">Hikaye tamamen bitmeden okuyamazsın!</span><br/><br/>
-              Sabırlı ol, diğer yazarlar hikayeyi tamamlayana kadar bekle! ⏰
+              {randomMessage.message}<br/><br/>
+              <span className="text-purple-600 font-semibold">Hikaye tamamen bitmeden okuyamazsın!</span>
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/stories" className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center gap-3 justify-center">
