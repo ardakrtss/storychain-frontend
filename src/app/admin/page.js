@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../lib/api';
+import Link from 'next/link';
 
 export default function AdminPanel() {
   const { user } = useAuth();
@@ -158,6 +159,13 @@ export default function AdminPanel() {
                 <span className="text-2xl">📊</span>
                 <span>İstatistikler</span>
               </button>
+              <Link
+                href="/admin/users"
+                className="py-6 px-4 border-b-2 font-bold text-lg transition-all duration-300 flex items-center gap-3 border-transparent text-blue-400 hover:text-blue-300 hover:border-blue-400/30"
+              >
+                <span className="text-2xl">👥</span>
+                <span>Kullanıcı Yönetimi</span>
+              </Link>
             </nav>
           </div>
 
