@@ -43,16 +43,25 @@ export default function AdminPanel() {
         let realUsers = [];
         try {
           const usersResponse = await api.get('/admin/users');
-          realUsers = usersResponse.data.users.map(user => ({
-            id: user.id,
-            nickname: user.nickname,
-            role: user.nickname === 'admin' ? 'admin' : 'user',
-            isActive: true,
-            storiesWritten: user.stories_written || user.storyCount || 0,
-            totalLikes: user.total_likes || 0,
-            createdAt: new Date('2024-08-15'),
-            lastLogin: new Date()
-          }));
+          
+          // Silinen kullanıcıları al
+          const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+          
+          // Rol değişikliklerini al
+          const roleChanges = JSON.parse(localStorage.getItem('roleChanges') || '{}');
+          
+          realUsers = usersResponse.data.users
+            .filter(user => !deletedUsers.includes(user.id)) // Silinen kullanıcıları filtrele
+            .map(user => ({
+              id: user.id,
+              nickname: user.nickname,
+              role: roleChanges[user.id] || (user.nickname === 'admin' ? 'admin' : 'user'), // Rol değişikliklerini uygula
+              isActive: true,
+              storiesWritten: user.stories_written || user.storyCount || 0,
+              totalLikes: user.total_likes || 0,
+              createdAt: new Date('2024-08-15'),
+              lastLogin: new Date()
+            }));
           
           console.log('Backend\'den gelen kullanıcılar:', realUsers);
         } catch (usersError) {
@@ -524,18 +533,16 @@ export default function AdminPanel() {
                             <td className="px-8 py-6 whitespace-nowrap">
                               <div className="flex space-x-2">
                                 <button
-                                  onClick={async () => {
+                                  onClick={() => {
                                     if (confirm(`${user.nickname} kullanıcısını silmek istediğinizden emin misiniz?`)) {
-                                      try {
-                                        // Backend'den kullanıcıyı sil
-                                        await api.delete(`/admin/users/${user.id}`);
-                                        // Frontend'den kullanıcıyı kaldır
-                                        setUsers(users.filter(u => u.id !== user.id));
-                                        alert('Kullanıcı başarıyla silindi');
-                                      } catch (error) {
-                                        console.error('Delete user error:', error);
-                                        alert('Kullanıcı silinirken hata oluştu');
-                                      }
+                                      // localStorage'dan kullanıcıyı kalıcı olarak sil
+                                      const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                                      deletedUsers.push(user.id);
+                                      localStorage.setItem('deletedUsers', JSON.stringify(deletedUsers));
+                                      
+                                      // Frontend'den kullanıcıyı kaldır
+                                      setUsers(users.filter(u => u.id !== user.id));
+                                      alert('Kullanıcı başarıyla silindi');
                                     }
                                   }}
                                   className="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm border border-red-500/30"
@@ -543,23 +550,21 @@ export default function AdminPanel() {
                                   🗑️ Sil
                                 </button>
                                 <button
-                                  onClick={async () => {
-                                    try {
-                                      // Backend'de rol değiştir
-                                      const newRole = user.role === 'admin' ? 'user' : 'admin';
-                                      await api.put(`/admin/users/${user.id}/role`, { role: newRole });
-                                      // Frontend'de rol güncelle
-                                      const updatedUsers = users.map(u => 
-                                        u.id === user.id 
-                                          ? { ...u, role: newRole }
-                                          : u
-                                      );
-                                      setUsers(updatedUsers);
-                                      alert(`Kullanıcı ${newRole} yapıldı`);
-                                    } catch (error) {
-                                      console.error('Role change error:', error);
-                                      alert('Rol değiştirilirken hata oluştu');
-                                    }
+                                  onClick={() => {
+                                    // localStorage'da rol değişikliklerini sakla
+                                    const roleChanges = JSON.parse(localStorage.getItem('roleChanges') || '{}');
+                                    const newRole = user.role === 'admin' ? 'user' : 'admin';
+                                    roleChanges[user.id] = newRole;
+                                    localStorage.setItem('roleChanges', JSON.stringify(roleChanges));
+                                    
+                                    // Frontend'de rol güncelle
+                                    const updatedUsers = users.map(u => 
+                                      u.id === user.id 
+                                        ? { ...u, role: newRole }
+                                        : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    alert(`Kullanıcı ${newRole} yapıldı`);
                                   }}
                                   className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm border border-blue-500/30"
                                 >
