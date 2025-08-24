@@ -53,14 +53,14 @@ export default function Header() {
               Hikayeler
             </Link>
             <Link 
-              href="/themes" 
+              href="/write" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                pathname === '/themes' 
+                pathname === '/write' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
                   : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
-              Hikaye Oluştur
+              Hikaye Yaz
             </Link>
             <Link 
               href="/about" 
@@ -72,88 +72,93 @@ export default function Header() {
             >
               Hakkımızda
             </Link>
-            <Link 
-              href="/contact" 
-              className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                pathname === '/contact' 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-              }`}
-            >
-              İletişim
-            </Link>
-          </nav>
-
-          {/* User Menu */}
-          <div className="hidden lg:flex items-center space-x-3">
-            {user ? (
-              <div className="flex items-center space-x-3">
-                <span className="text-gray-700 font-medium px-4 py-2 bg-gray-100 rounded-xl backdrop-blur-sm">
-                  Merhaba, {user.nickname || 'Yazar'}! 👋
-                </span>
-                {user.role === 'admin' && (
-                  <Link 
-                    href="/admin" 
-                    className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  >
-                    Admin Panel
-                  </Link>
-                )}
-                <Link 
-                  href="/profile" 
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-gray-300 backdrop-blur-sm"
-                >
-                  👤 Profilim
-                </Link>
-                <button 
-                  onClick={handleLogout} 
-                  className="bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-red-300 backdrop-blur-sm"
-                >
-                  🚪 Çıkış
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-3">
+            {!user && (
+              <>
                 <Link 
                   href="/register" 
-                  className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-gray-300 backdrop-blur-sm"
+                  className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                    pathname === '/register' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  📝 Kayıt Ol
+                  Kayıt Ol
                 </Link>
                 <Link 
                   href="/nickname" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
+                    pathname === '/nickname' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  🔑 Giriş Yap
+                  Giriş Yap
                 </Link>
-              </div>
+              </>
             )}
-          </div>
+          </nav>
+
+          {/* User Menu - Only show when logged in */}
+          {user && (
+            <div className="hidden lg:flex items-center space-x-3">
+              <span className="text-gray-700 font-medium px-4 py-2 bg-gray-100 rounded-xl backdrop-blur-sm">
+                Merhaba, {user.nickname || 'Yazar'}! 👋
+              </span>
+              {user.role === 'admin' && (
+                <Link 
+                  href="/admin" 
+                  className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  Admin Panel
+                </Link>
+              )}
+              <Link 
+                href="/profile" 
+                className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-gray-300 backdrop-blur-sm"
+              >
+                👤 Profilim
+              </Link>
+              <button 
+                onClick={handleLogout} 
+                className="bg-gray-100 hover:bg-red-100 text-gray-700 hover:text-red-600 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-200 hover:border-red-300 backdrop-blur-sm"
+              >
+                🚪 Çıkış
+              </button>
+            </div>
+          )}
 
           {/* Mobile Navigation - Simplified */}
           <div className="lg:hidden flex items-center space-x-2">
             {user ? (
               <>
                 <Link 
-                  href="/themes" 
+                  href="/write" 
                   className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg"
                 >
                   ✏️
                 </Link>
                 <Link 
                   href="/profile" 
-                  className="bg-white/10 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 border border-white/20"
+                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 border border-gray-200"
                 >
                   👤
                 </Link>
               </>
             ) : (
-              <Link 
-                href="/nickname" 
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg"
-              >
-                🔑
-              </Link>
+              <>
+                <Link 
+                  href="/register" 
+                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 border border-gray-200"
+                >
+                  📝
+                </Link>
+                <Link 
+                  href="/nickname" 
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg"
+                >
+                  🔑
+                </Link>
+              </>
             )}
           </div>
         </div>
