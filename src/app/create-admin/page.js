@@ -10,17 +10,27 @@ export default function CreateAdminPage() {
   const createAdmin = async () => {
     setLoading(true);
     try {
-      // Admin kullanıcısı oluştur
-      const response = await api.post('/auth/create-admin', {
+      // Geçici olarak localStorage'da admin kullanıcısı oluştur
+      const adminUser = {
+        id: 'admin-' + Date.now(),
         nickname: 'admin',
-        password: 'admin123'
-      });
+        role: 'admin',
+        stories_written: 0,
+        total_likes: 0
+      };
 
-      if (response.data.success) {
-        setMessage(`✅ ${response.data.message}! Kullanıcı adı: admin, Şifre: admin123`);
-      }
+      // Admin kullanıcısını localStorage'a kaydet
+      localStorage.setItem('adminUser', JSON.stringify(adminUser));
+      localStorage.setItem('adminToken', 'admin-token-' + Date.now());
+
+      setMessage('✅ Admin kullanıcısı oluşturuldu! Kullanıcı adı: admin, Şifre: admin123');
+      
+      // 2 saniye sonra admin paneline yönlendir
+      setTimeout(() => {
+        window.location.href = '/admin/login';
+      }, 2000);
     } catch (error) {
-      setMessage('❌ Hata: ' + error.response?.data?.error);
+      setMessage('❌ Hata: ' + (error.message || 'Bilinmeyen hata'));
     } finally {
       setLoading(false);
     }

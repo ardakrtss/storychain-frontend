@@ -37,16 +37,25 @@ export default function AdminLoginPage() {
     setErrors({});
 
     try {
-      const response = await signIn(formData.nickname, formData.password);
-      
-      if (response.user.role === 'admin') {
+      // Geçici olarak localStorage'dan admin kontrolü yap
+      const adminUser = localStorage.getItem('adminUser');
+      const adminToken = localStorage.getItem('adminToken');
+
+      if (formData.nickname === 'admin' && formData.password === 'admin123' && adminUser && adminToken) {
+        // Admin girişi başarılı
+        const user = JSON.parse(adminUser);
+        
+        // AuthContext'e admin kullanıcısını set et
+        localStorage.setItem('user', adminUser);
+        localStorage.setItem('token', adminToken);
+        
         router.push('/admin');
       } else {
-        setErrors({ general: 'Bu sayfaya erişim yetkiniz bulunmamaktadır. Sadece admin kullanıcıları giriş yapabilir.' });
+        setErrors({ general: 'Kullanıcı adı veya şifre hatalı. Önce admin kullanıcısı oluşturmanız gerekiyor.' });
       }
     } catch (error) {
       console.error('Admin login error:', error);
-      setErrors({ general: error.response?.data?.error || 'Giriş yapılırken bir hata oluştu' });
+      setErrors({ general: 'Giriş yapılırken bir hata oluştu' });
     } finally {
       setLoading(false);
     }
