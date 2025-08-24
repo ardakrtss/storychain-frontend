@@ -23,93 +23,92 @@ export default function AdminPanel() {
     try {
       setLoading(true);
       
-      // Backend bağlantısı yoksa mock data kullan
-      if (!process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL === 'http://localhost:5000') {
-        // Mock data
-        const mockStories = [
-          {
-            id: '1',
-            title: 'Uçaktaki Gizem',
-            theme: 'gizem',
-            segments: [
-              { content: 'Arda ile Tuna bir uçakta rastgele bir şekilde bir kişi kişi öldü...', author: 'Tunazor', authorId: 'user1' }
-            ],
-            isComplete: false,
-            likeCount: 0,
-            createdAt: new Date('2024-08-24')
-          },
-          {
-            id: '2',
-            title: 'Uzay Macerası',
-            theme: 'macera',
-            segments: [
-              { content: 'Küçük astronot Ali, uzay gemisinde bir sürprizle karşılaştı...', author: 'Uzayci', authorId: 'user2' }
-            ],
-            isComplete: false,
-            likeCount: 2,
-            createdAt: new Date('2024-08-23')
-          }
-        ];
+      // Gerçek verileri çekmeye çalış
+      try {
+        // Hikayeleri çek
+        const storiesResponse = await api.get('/stories/available');
+        const realStories = storiesResponse.data.map(story => ({
+          id: story.id || story._id,
+          title: story.title,
+          theme: story.theme,
+          segments: story.segments || [],
+          isComplete: story.segments && story.segments.length >= 3,
+          likeCount: story.likeCount || 0,
+          createdAt: new Date(story.createdAt || story.created_at || Date.now()),
+          author: story.author || story.authorName,
+          authorId: story.authorId || story.author_id
+        }));
 
-        const mockUsers = [
-          {
-            id: 'user1',
-            nickname: 'Tunazor',
-            role: 'user',
-            isActive: true,
-            storiesWritten: 1,
-            totalLikes: 0,
-            createdAt: new Date('2024-08-20'),
-            lastLogin: new Date('2024-08-24')
-          },
-          {
-            id: 'user2',
-            nickname: 'Uzayci',
-            role: 'user',
-            isActive: true,
-            storiesWritten: 1,
-            totalLikes: 2,
-            createdAt: new Date('2024-08-19'),
-            lastLogin: new Date('2024-08-23')
-          },
-          {
-            id: 'admin1',
+        // Kullanıcıları localStorage'dan çek (geçici çözüm)
+        const storedUsers = localStorage.getItem('users');
+        let realUsers = [];
+        
+        if (storedUsers) {
+          realUsers = JSON.parse(storedUsers);
+        } else {
+          // Eğer localStorage'da kullanıcı yoksa, hikayelerden kullanıcıları çıkar
+          const userMap = new Map();
+          realStories.forEach(story => {
+            if (story.author && story.authorId) {
+              if (!userMap.has(story.authorId)) {
+                userMap.set(story.authorId, {
+                  id: story.authorId,
+                  nickname: story.author,
+                  role: 'user',
+                  isActive: true,
+                  storiesWritten: 1,
+                  totalLikes: story.likeCount || 0,
+                  createdAt: story.createdAt,
+                  lastLogin: new Date()
+                });
+              } else {
+                const existingUser = userMap.get(story.authorId);
+                existingUser.storiesWritten += 1;
+                existingUser.totalLikes += story.likeCount || 0;
+              }
+            }
+          });
+          realUsers = Array.from(userMap.values());
+          
+          // Admin kullanıcısını ekle
+          const adminUser = {
+            id: 'admin',
             nickname: 'admin',
             role: 'admin',
             isActive: true,
             storiesWritten: 0,
             totalLikes: 0,
             createdAt: new Date('2024-08-15'),
-            lastLogin: new Date('2024-08-24')
-          }
-        ];
+            lastLogin: new Date()
+          };
+          realUsers.push(adminUser);
+          
+          // localStorage'a kaydet
+          localStorage.setItem('users', JSON.stringify(realUsers));
+        }
 
-        const mockStats = {
-          totalUsers: mockUsers.length,
-          totalStories: mockStories.length,
-          completedStories: mockStories.filter(s => s.isComplete).length
+        // İstatistikleri hesapla
+        const realStats = {
+          totalUsers: realUsers.length,
+          totalStories: realStories.length,
+          completedStories: realStories.filter(s => s.isComplete).length,
+          ongoingStories: realStories.filter(s => !s.isComplete).length,
+          totalSegments: realStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0),
+          averageSegmentsPerStory: realStories.length > 0 
+            ? Math.round((realStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0) / realStories.length) * 10) / 10
+            : 0
         };
 
-        setStories(mockStories);
-        setUsers(mockUsers);
-        setStats(mockStats);
-      } else {
-        // Backend bağlantısı varsa gerçek verileri çek
-        try {
-          const [storiesRes, usersRes, statsRes] = await Promise.all([
-            api.get('/admin/stories'),
-            api.get('/admin/users'),
-            api.get('/admin/stats')
-          ]);
-          
-          setStories(storiesRes.data.stories);
-          setUsers(usersRes.data.users);
-          setStats(statsRes.data.stats);
-        } catch (apiError) {
-          console.error('API Error:', apiError);
-          // API hatası durumunda mock data kullan
-          loadMockData();
-        }
+        setStories(realStories);
+        setUsers(realUsers);
+        setStats(realStats);
+        
+        console.log('Gerçek veriler yüklendi:', { realStories, realUsers, realStats });
+        
+      } catch (apiError) {
+        console.error('API Error:', apiError);
+        // API hatası durumunda mock data kullan
+        loadMockData();
       }
     } catch (error) {
       console.error('Admin data load error:', error);
@@ -181,7 +180,12 @@ export default function AdminPanel() {
     const mockStats = {
       totalUsers: mockUsers.length,
       totalStories: mockStories.length,
-      completedStories: mockStories.filter(s => s.isComplete).length
+      completedStories: mockStories.filter(s => s.isComplete).length,
+      ongoingStories: mockStories.filter(s => !s.isComplete).length,
+      totalSegments: mockStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0),
+      averageSegmentsPerStory: mockStories.length > 0 
+        ? Math.round((mockStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0) / mockStories.length) * 10) / 10
+        : 0
     };
 
     setStories(mockStories);
@@ -327,13 +331,6 @@ export default function AdminPanel() {
                 <span className="text-2xl">📊</span>
                 <span>İstatistikler</span>
               </button>
-              <Link
-                href="/admin/users"
-                className="py-6 px-4 border-b-2 font-bold text-lg transition-all duration-300 flex items-center gap-3 border-transparent text-blue-400 hover:text-blue-300 hover:border-blue-400/30"
-              >
-                <span className="text-2xl">👥</span>
-                <span>Kullanıcı Yönetimi</span>
-              </Link>
             </nav>
           </div>
 
@@ -357,10 +354,16 @@ export default function AdminPanel() {
                             Tema
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            Yazar
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
                             Segment
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
                             Durum
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            Beğeni
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
                             Tarih
@@ -382,16 +385,22 @@ export default function AdminPanel() {
                               </span>
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
-                              {story.segmentCount}/5
+                              {story.author || 'Bilinmeyen'}
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
+                              {story.segments?.length || 0}/5
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap">
                               <span className={`inline-flex px-4 py-2 text-sm font-bold rounded-full ${
-                                story.isCompleted 
+                                story.isComplete 
                                   ? 'bg-green-500/20 text-green-300 border border-green-500/30' 
                                   : 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
                               }`}>
-                                {story.isCompleted ? '✅ Tamamlandı' : '⏳ Devam Ediyor'}
+                                {story.isComplete ? '✅ Tamamlandı' : '⏳ Devam Ediyor'}
                               </span>
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
+                              {story.likeCount || 0}
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
                               {new Date(story.createdAt).toLocaleDateString('tr-TR')}
@@ -399,23 +408,19 @@ export default function AdminPanel() {
                             <td className="px-8 py-6 whitespace-nowrap text-lg font-bold">
                               <div className="flex space-x-4">
                                 <button
-                                  onClick={() => approveStory(story.id)}
-                                  className="group bg-green-500/20 hover:bg-green-500/30 text-green-300 hover:text-green-200 px-4 py-2 rounded-xl border border-green-500/30 transition-all duration-300 hover:scale-105"
-                                >
-                                  <span className="flex items-center gap-2">
-                                    <span className="text-xl">✅</span>
-                                    <span>Onayla</span>
-                                  </span>
-                                </button>
-                                <button
                                   onClick={() => deleteStory(story.id)}
-                                  className="group bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-200 px-4 py-2 rounded-xl border border-red-500/30 transition-all duration-300 hover:scale-105"
+                                  className="px-4 py-2 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors border border-red-500/30"
                                 >
-                                  <span className="flex items-center gap-2">
-                                    <span className="text-xl">🗑️</span>
-                                    <span>Sil</span>
-                                  </span>
+                                  🗑️ Sil
                                 </button>
+                                {!story.isComplete && (
+                                  <button
+                                    onClick={() => approveStory(story.id)}
+                                    className="px-4 py-2 bg-green-500/20 text-green-300 rounded-lg hover:bg-green-500/30 transition-colors border border-green-500/30"
+                                  >
+                                    ✅ Onayla
+                                  </button>
+                                )}
                               </div>
                             </td>
                           </tr>
