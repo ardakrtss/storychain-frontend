@@ -66,15 +66,32 @@ export default function AdminPanel() {
     }
   };
 
-  if (!user || user.role !== 'admin') {
+  if (!user) {
+    // Kullanıcı giriş yapmamışsa admin login sayfasına yönlendir
+    if (typeof window !== 'undefined') {
+      window.location.href = '/admin/login';
+    }
+    return null;
+  }
+
+  if (user.role !== 'admin') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="bg-red-500/20 backdrop-blur-sm rounded-3xl border border-red-500/30 p-12 hover:bg-red-500/30 transition-all duration-300">
-          <h1 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="bg-red-100 backdrop-blur-sm rounded-3xl border border-red-300 p-12 hover:bg-red-200 transition-all duration-300">
+          <h1 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
             <span className="text-4xl">🚫</span>
             <span>Erişim Reddedildi</span>
           </h1>
-          <p className="text-gray-300 text-lg">Bu sayfaya erişim yetkiniz bulunmamaktadır.</p>
+          <p className="text-gray-700 text-lg">Bu sayfaya erişim yetkiniz bulunmamaktadır. Sadece admin kullanıcıları erişebilir.</p>
+          <div className="mt-6">
+            <a 
+              href="/admin/login" 
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 inline-flex items-center gap-2"
+            >
+              <span>🔐</span>
+              <span>Admin Girişi</span>
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -82,9 +99,9 @@ export default function AdminPanel() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-12 hover:bg-white/10 transition-all duration-300">
-          <div className="text-3xl text-white flex items-center gap-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200 p-12 hover:bg-white/90 transition-all duration-300">
+          <div className="text-3xl text-gray-900 flex items-center gap-4">
             <span className="animate-spin text-4xl">⏳</span>
             <span>Yükleniyor...</span>
           </div>
