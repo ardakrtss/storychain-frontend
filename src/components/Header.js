@@ -127,54 +127,82 @@ export default function Header() {
             </div>
           )}
 
-          {/* Mobile Navigation - Simplified */}
-          <div className="md:hidden flex items-center space-x-2">
+          {/* Mobile Navigation - Text Links */}
+          <div className="md:hidden flex items-center space-x-1">
             {user ? (
               <>
                 <Link 
                   href="/stories" 
-                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-medium text-xs transition-all duration-300 border border-gray-200"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/stories' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  📚
+                  Hikayeler
                 </Link>
                 <Link 
                   href="/write" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 shadow-lg"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/write' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  ✏️
+                  Yaz
                 </Link>
                 <Link 
                   href="/profile" 
-                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 border border-gray-200"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/profile' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  👤
+                  Profil
                 </Link>
               </>
             ) : (
               <>
                 <Link 
                   href="/stories" 
-                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-medium text-xs transition-all duration-300 border border-gray-200"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/stories' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  📚
+                  Hikayeler
                 </Link>
                 <Link 
                   href="/write" 
-                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-medium text-xs transition-all duration-300 border border-gray-200"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/write' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  ✏️
+                  Yaz
                 </Link>
                 <Link 
                   href="/register" 
-                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 border border-gray-200"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/register' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  📝
+                  Kayıt
                 </Link>
                 <Link 
                   href="/nickname" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 shadow-lg"
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                    pathname === '/nickname' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
                 >
-                  🔑
+                  Giriş
                 </Link>
               </>
             )}
