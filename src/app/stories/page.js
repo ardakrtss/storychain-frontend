@@ -20,7 +20,19 @@ export default function StoriesPage() {
     const fetchStories = async () => {
       try {
         const response = await api.get('/stories/available');
-        setStories(response.data);
+        let storiesData = response.data;
+        
+        // localStorage'dan beğeni sayılarını al
+        const storyLikes = JSON.parse(localStorage.getItem('storyLikes') || '{}');
+        storiesData = storiesData.map(story => {
+          const storyKey = `story_${story.id}`;
+          return {
+            ...story,
+            likeCount: storyLikes[storyKey] || story.likeCount || 0
+          };
+        });
+        
+        setStories(storiesData);
       } catch (error) {
         console.error('Error fetching stories:', error);
         setError('Hikayeler yüklenirken bir hata oluştu');

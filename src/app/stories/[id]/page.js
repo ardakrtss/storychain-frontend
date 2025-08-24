@@ -24,7 +24,14 @@ export default function StoryDetailPage() {
     const fetchStory = async () => {
       try {
         const response = await api.get(`/stories/${storyId}`);
-        setStory(response.data);
+        let storyData = response.data;
+        
+        // localStorage'dan beğeni sayısını al
+        const storyLikes = JSON.parse(localStorage.getItem('storyLikes') || '{}');
+        const storyKey = `story_${storyId}`;
+        storyData.likeCount = storyLikes[storyKey] || storyData.likeCount || 0;
+        
+        setStory(storyData);
       } catch (error) {
         console.error('Error fetching story:', error);
         setError('Hikaye yüklenirken bir hata oluştu');
@@ -46,21 +53,41 @@ export default function StoryDetailPage() {
     }
   };
 
-  const handleLikeStory = async () => {
+  const handleLikeStory = () => {
     if (!user) {
       alert('Beğenmek için giriş yapmanız gerekiyor!');
       return;
     }
 
-    try {
-      await api.post(`/stories/${storyId}/like`);
-      // Refresh story data
-      const response = await api.get(`/stories/${storyId}`);
-      setStory(response.data);
-    } catch (error) {
-      console.error('Error liking story:', error);
-      alert('Beğeni işlemi başarısız oldu');
+    // localStorage'dan beğeni verilerini al
+    const storyLikes = JSON.parse(localStorage.getItem('storyLikes') || '{}');
+    const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+    
+    const storyKey = `story_${storyId}`;
+    const userKey = `${user.id}_${storyId}`;
+    
+    // Kullanıcı daha önce beğenmiş mi kontrol et
+    if (userLikes[userKey]) {
+      // Beğeniyi geri al
+      delete userLikes[userKey];
+      storyLikes[storyKey] = (storyLikes[storyKey] || 1) - 1;
+      alert('Beğeniniz geri alındı!');
+    } else {
+      // Beğeni ekle
+      userLikes[userKey] = true;
+      storyLikes[storyKey] = (storyLikes[storyKey] || 0) + 1;
+      alert('Hikayeyi beğendiniz!');
     }
+    
+    // localStorage'a kaydet
+    localStorage.setItem('storyLikes', JSON.stringify(storyLikes));
+    localStorage.setItem('userLikes', JSON.stringify(userLikes));
+    
+    // Story state'ini güncelle
+    setStory(prevStory => ({
+      ...prevStory,
+      likeCount: storyLikes[storyKey] || 0
+    }));
   };
 
   if (loading) {
@@ -137,14 +164,36 @@ export default function StoryDetailPage() {
             </button>
           )}
           
-          <button
-            onClick={handleLikeStory}
-            className="group relative bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-pink-500/50 transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-            <span className="text-2xl relative z-10">❤️</span>
-            <span className="relative z-10">Beğen ({story.likeCount || 0})</span>
-          </button>
+          {story.isCompleted && (
+            <button
+              onClick={handleLikeStory}
+              className={`group relative text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden ${
+                (() => {
+                  const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+                  const userKey = `${user?.id}_${storyId}`;
+                  return userLikes[userKey] 
+                    ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 hover:shadow-red-500/50' 
+                    : 'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 hover:shadow-pink-500/50';
+                })()
+              }`}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+              <span className="text-2xl relative z-10">
+                {(() => {
+                  const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+                  const userKey = `${user?.id}_${storyId}`;
+                  return userLikes[userKey] ? '💖' : '❤️';
+                })()}
+              </span>
+              <span className="relative z-10">
+                {(() => {
+                  const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+                  const userKey = `${user?.id}_${storyId}`;
+                  return userLikes[userKey] ? 'Beğendiniz' : 'Beğen';
+                })()} ({story.likeCount || 0})
+              </span>
+            </button>
+          )}
           
           <Link 
             href="/stories" 
