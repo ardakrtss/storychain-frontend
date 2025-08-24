@@ -184,6 +184,76 @@ router.post('/login-legacy', async (req, res) => {
   }
 });
 
+// Create admin user endpoint
+router.post('/create-admin', async (req, res) => {
+  try {
+    const { nickname, password } = req.body;
+
+    // Validation
+    if (!nickname || nickname.trim().length < 2) {
+      return res.status(400).json({ error: 'Rumuz en az 2 karakter olmalıdır' });
+    }
+
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: 'Şifre en az 6 karakter olmalıdır' });
+    }
+
+    // Case insensitive nickname check
+    const normalizedNickname = nickname.trim().toLowerCase();
+    
+    // Check if user already exists (case insensitive)
+    const existingUser = await User.findOne({ 
+      nickname: { $regex: new RegExp(`^${normalizedNickname}$`, 'i') }
+    });
+
+    if (existingUser) {
+      // If user exists, make them admin
+      existingUser.role = 'admin';
+      await existingUser.save();
+      
+      return res.json({
+        success: true,
+        message: 'Kullanıcı admin yapıldı',
+        user: {
+          id: existingUser._id,
+          nickname: existingUser.nickname,
+          role: existingUser.role
+        }
+      });
+    }
+
+    // Hash password
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create new admin user
+    const user = new User({
+      nickname: normalizedNickname,
+      password: hashedPassword,
+      storiesWritten: 0,
+      totalLikes: 0,
+      role: 'admin',
+      isActive: true,
+      createdAt: new Date()
+    });
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Admin kullanıcısı oluşturuldu',
+      user: {
+        id: user._id,
+        nickname: user.nickname,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error('Create admin error:', error);
+    res.status(500).json({ error: 'Admin kullanıcısı oluştururken bir hata oluştu' });
+  }
+});
+
 // Get current user
 router.get('/me', auth, async (req, res) => {
   try {
