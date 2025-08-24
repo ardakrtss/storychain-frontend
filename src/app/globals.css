@@ -1130,3 +1130,19 @@ button:disabled {
 .theme-iklim-degisikligi {
   background-color: #a7f3d0;
 }
+
+/* Input field fixes - Force visible text */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+textarea {
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="email"]::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
