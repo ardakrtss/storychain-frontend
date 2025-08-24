@@ -175,8 +175,8 @@ export default function Header() {
                   href="/register" 
                   className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap shadow-lg transform hover:scale-105 ${
                     pathname === '/register' 
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-xl' 
-                      : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 hover:shadow-xl'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-black shadow-xl' 
+                      : 'bg-gradient-to-r from-blue-500 to-blue-600 text-black hover:from-blue-600 hover:to-blue-700 hover:shadow-xl'
                   }`}
                 >
                   ✨ Kayıt Ol
