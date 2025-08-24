@@ -50,18 +50,42 @@ export default function AdminPanel() {
           // Rol değişikliklerini al
           const roleChanges = JSON.parse(localStorage.getItem('roleChanges') || '{}');
           
-          realUsers = usersResponse.data.users
-            .filter(user => !deletedUsers.includes(user.id)) // Silinen kullanıcıları filtrele
-            .map(user => ({
-              id: user.id,
-              nickname: user.nickname,
-              role: roleChanges[user.id] || (user.nickname === 'admin' ? 'admin' : 'user'), // Rol değişikliklerini uygula
-              isActive: true,
-              storiesWritten: user.stories_written || user.storyCount || 0,
-              totalLikes: user.total_likes || 0,
-              createdAt: new Date('2024-08-15'),
-              lastLogin: new Date()
-            }));
+          // Kullanıcı istatistiklerini hikaye verilerinden hesapla
+          const userStats = new Map();
+          
+          // Her kullanıcı için başlangıç değerleri
+          usersResponse.data.users.forEach(user => {
+            if (!deletedUsers.includes(user.id)) {
+              userStats.set(user.id, {
+                id: user.id,
+                nickname: user.nickname,
+                role: roleChanges[user.id] || (user.nickname === 'admin' ? 'admin' : 'user'),
+                isActive: true,
+                storiesWritten: 0,
+                totalLikes: 0,
+                totalCharacters: 0,
+                createdAt: new Date('2024-08-15'),
+                lastLogin: new Date()
+              });
+            }
+          });
+          
+          // Hikaye verilerinden kullanıcı istatistiklerini hesapla
+          realStories.forEach(story => {
+            if (story.segments && story.segments.length > 0) {
+              story.segments.forEach(segment => {
+                const userId = segment.authorId;
+                const user = userStats.get(userId);
+                if (user) {
+                  user.storiesWritten += 1;
+                  user.totalLikes += story.likeCount || 0;
+                  user.totalCharacters += segment.content?.length || 0;
+                }
+              });
+            }
+          });
+          
+          realUsers = Array.from(userStats.values());
           
           console.log('Backend\'den gelen kullanıcılar:', realUsers);
         } catch (usersError) {
@@ -476,6 +500,9 @@ export default function AdminPanel() {
                             Beğeni
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
+                            Karakter
+                          </th>
+                          <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
                             Son Giriş
                           </th>
                           <th className="px-8 py-6 text-left text-lg font-bold text-white uppercase tracking-wider">
@@ -523,6 +550,9 @@ export default function AdminPanel() {
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
                               {user.totalLikes || 0}
+                            </td>
+                            <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
+                              {user.totalCharacters || 0}
                             </td>
                             <td className="px-8 py-6 whitespace-nowrap text-lg text-gray-300">
                               {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('tr-TR') : 'Hiç giriş yapmamış'}

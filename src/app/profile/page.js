@@ -71,7 +71,12 @@ export default function ProfilePage() {
             // Hikaye içeriğini hesapla (segments varsa segments'lerden, yoksa content'ten)
             let contentLength = 0;
             if (story.segments && story.segments.length > 0) {
-              contentLength = story.segments.reduce((segSum, segment) => 
+              // Sadece kullanıcının yazdığı segmentleri say
+              const userSegments = story.segments.filter(segment => 
+                segment.author === user.nickname || 
+                segment.authorId === user.id
+              );
+              contentLength = userSegments.reduce((segSum, segment) => 
                 segSum + (segment.content?.length || 0), 0
               );
             } else if (story.content) {
