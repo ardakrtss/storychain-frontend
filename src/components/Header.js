@@ -128,81 +128,82 @@ export default function Header() {
           )}
 
           {/* Mobile Navigation - Text Links */}
-          <div className="md:hidden flex items-center space-x-1">
-            {user ? (
+          <div className="md:hidden flex items-center space-x-1 overflow-x-auto">
+            <Link 
+              href="/" 
+              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                pathname === '/' 
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Ana Sayfa
+            </Link>
+            <Link 
+              href="/stories" 
+              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                pathname === '/stories' 
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Hikayeler
+            </Link>
+            <Link 
+              href="/write" 
+              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                pathname === '/write' 
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Hikaye Yaz
+            </Link>
+            <Link 
+              href="/about" 
+              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                pathname === '/about' 
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+              }`}
+            >
+              Hakkımızda
+            </Link>
+            {!user && (
               <>
-                <Link 
-                  href="/stories" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
-                    pathname === '/stories' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Hikayeler
-                </Link>
-                <Link 
-                  href="/write" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
-                    pathname === '/write' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Yaz
-                </Link>
-                <Link 
-                  href="/profile" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
-                    pathname === '/profile' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Profil
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link 
-                  href="/stories" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
-                    pathname === '/stories' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Hikayeler
-                </Link>
-                <Link 
-                  href="/write" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
-                    pathname === '/write' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Yaz
-                </Link>
                 <Link 
                   href="/register" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
                     pathname === '/register' 
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  Kayıt
+                  Kayıt Ol
                 </Link>
                 <Link 
                   href="/nickname" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 ${
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
                     pathname === '/nickname' 
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
-                  Giriş
+                  Giriş Yap
+                </Link>
+              </>
+            )}
+            {user && (
+              <>
+                <Link 
+                  href="/profile" 
+                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                    pathname === '/profile' 
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  Profilim
                 </Link>
               </>
             )}
