@@ -128,43 +128,43 @@ export default function Header() {
           )}
 
           {/* Mobile Navigation - Text Links */}
-          <div className="md:hidden flex items-center space-x-1 overflow-x-auto">
+          <div className="md:hidden flex items-center space-x-2 overflow-x-auto px-2">
             <Link 
               href="/" 
-              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
                 pathname === '/' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  : 'text-gray-700'
               }`}
             >
               Ana Sayfa
             </Link>
             <Link 
               href="/stories" 
-              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
                 pathname === '/stories' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  : 'text-gray-700'
               }`}
             >
               Hikayeler
             </Link>
             <Link 
               href="/write" 
-              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
                 pathname === '/write' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  : 'text-gray-700'
               }`}
             >
               Hikaye Yaz
             </Link>
             <Link 
               href="/about" 
-              className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+              className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
                 pathname === '/about' 
                   ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  : 'text-gray-700'
               }`}
             >
               Hakkımızda
@@ -173,20 +173,20 @@ export default function Header() {
               <>
                 <Link 
                   href="/register" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap ${
                     pathname === '/register' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-sm' 
+                      : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700'
                   }`}
                 >
                   Kayıt Ol
                 </Link>
                 <Link 
                   href="/nickname" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
                     pathname === '/nickname' 
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-gray-700'
                   }`}
                 >
                   Giriş Yap
@@ -197,10 +197,10 @@ export default function Header() {
               <>
                 <Link 
                   href="/profile" 
-                  className={`px-2 py-1 rounded text-xs font-medium transition-all duration-300 whitespace-nowrap ${
+                  className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
                     pathname === '/profile' 
                       ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      : 'text-gray-700'
                   }`}
                 >
                   Profilim
