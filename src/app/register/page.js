@@ -157,8 +157,8 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.nickname}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important' }}
-                    className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important' }}
+                    className={`w-full pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.nickname 
                         ? 'border-red-500 focus:ring-red-500' 
                         : 'border-gray-300 hover:border-gray-400'
@@ -186,8 +186,8 @@ export default function RegisterPage() {
                     type="password"
                     value={formData.password}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important' }}
-                    className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important' }}
+                    className={`w-full pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.password 
                         ? 'border-red-500 focus:ring-red-500' 
                         : 'border-gray-300 hover:border-gray-400'
@@ -215,8 +215,8 @@ export default function RegisterPage() {
                     type="password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important' }}
-                    className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important' }}
+                    className={`w-full pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.confirmPassword 
                         ? 'border-red-500 focus:ring-red-500' 
                         : 'border-gray-300 hover:border-gray-400'
