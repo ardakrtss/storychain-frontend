@@ -125,10 +125,10 @@ function WritePageContent() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-12 hover:bg-white/10 transition-all duration-300">
-            <h2 className="text-3xl font-bold text-white mb-6">Giriş Yapmanız Gerekiyor</h2>
+          <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-gray-200 p-12 hover:bg-white transition-all duration-300 shadow-2xl">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Giriş Yapmanız Gerekiyor</h2>
             <Link href="/nickname" className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center gap-3 mx-auto w-fit">
               <span className="text-2xl">🔑</span>
               <span>Giriş Yap</span>
@@ -141,9 +141,9 @@ function WritePageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
-        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-12 hover:bg-white/10 transition-all duration-300">
-          <div className="text-3xl text-white flex items-center gap-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-gray-200 p-12 hover:bg-white transition-all duration-300 shadow-2xl">
+          <div className="text-3xl text-gray-900 flex items-center gap-4">
             <span className="animate-spin text-4xl">⏳</span>
             <span>Sayfa yükleniyor...</span>
           </div>
@@ -154,18 +154,29 @@ function WritePageContent() {
 
   if (error || (!theme && !story)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="bg-red-500/20 backdrop-blur-sm rounded-3xl border border-red-500/30 p-12 hover:bg-red-500/30 transition-all duration-300">
-            <h2 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-              <span className="text-4xl">⚠️</span>
-              <span>Hata</span>
+          <div className="bg-white/90 backdrop-blur-sm rounded-3xl border border-gray-200 p-12 hover:bg-white transition-all duration-300 shadow-2xl max-w-2xl mx-4">
+            <div className="text-9xl mb-6 animate-bounce">📚</div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 flex items-center justify-center gap-3">
+              <span className="text-5xl">🤔</span>
+              <span>Ooops!</span>
             </h2>
-            <p className="text-gray-300 text-lg mb-8">{error || 'Gerekli bilgiler bulunamadı'}</p>
-            <Link href="/themes" className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center gap-3 mx-auto w-fit">
-              <span className="text-2xl">🏠</span>
-              <span>Temalara Dön</span>
-            </Link>
+            <p className="text-gray-700 text-xl mb-8 leading-relaxed">
+              Bu hikaye henüz tamamlanmamış! 🎭<br/>
+              <span className="text-purple-600 font-semibold">Hikaye tamamen bitmeden okuyamazsın!</span><br/><br/>
+              Sabırlı ol, diğer yazarlar hikayeyi tamamlayana kadar bekle! ⏰
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/stories" className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 flex items-center gap-3 justify-center">
+                <span className="text-2xl">📖</span>
+                <span>Hikayelere Dön</span>
+              </Link>
+              <Link href="/themes" className="group bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-4 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-200 hover:border-gray-300 transform hover:scale-105 flex items-center gap-3 justify-center">
+                <span className="text-2xl">✏️</span>
+                <span>Yeni Hikaye Yaz</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -191,23 +202,23 @@ function WritePageContent() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-full border border-purple-500/30 mb-8">
-            <span className="text-purple-300 text-sm font-semibold">
+            <span className="text-purple-700 text-sm font-semibold">
               {mode === 'new' ? '✏️ Yeni Hikaye Yazma' : '📝 Hikayeye Devam Etme'}
             </span>
           </div>
           
-          <h1 className="text-5xl lg:text-6xl font-black text-white mb-6 leading-none">
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-none">
+            <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent">
               {mode === 'new' ? 'Yeni Hikaye' : 'Hikayeye Devam Et'}
             </span>
           </h1>
           
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Merhaba <span className="font-bold text-purple-400">{user.nickname}</span>! 
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            Merhaba <span className="font-bold text-purple-600">{user.nickname}</span>! 
             {mode === 'new' ? (
               <span className="font-semibold" style={{ color: theme?.color }}> {theme?.name}</span>
             ) : (
-              <span> Sen bu hikayede <span className="font-bold text-purple-400">{story?.currentAuthorNumber}. yazar</span>sın!</span>
+              <span> Sen bu hikayede <span className="font-bold text-purple-600">{story?.currentAuthorNumber}. yazar</span>sın!</span>
             )}
           </p>
         </div>
