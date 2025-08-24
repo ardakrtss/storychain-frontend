@@ -53,6 +53,8 @@ export default function AdminPanel() {
             createdAt: new Date('2024-08-15'),
             lastLogin: new Date()
           }));
+          
+          console.log('Backend\'den gelen kullanıcılar:', realUsers);
         } catch (usersError) {
           console.error('Users API Error:', usersError);
           // Backend'den kullanıcı çekilemezse, hikayelerden çıkar
@@ -522,13 +524,18 @@ export default function AdminPanel() {
                             <td className="px-8 py-6 whitespace-nowrap">
                               <div className="flex space-x-2">
                                 <button
-                                  onClick={() => {
+                                  onClick={async () => {
                                     if (confirm(`${user.nickname} kullanıcısını silmek istediğinizden emin misiniz?`)) {
-                                      // localStorage'dan kullanıcıyı sil
-                                      const updatedUsers = users.filter(u => u.id !== user.id);
-                                      localStorage.setItem('users', JSON.stringify(updatedUsers));
-                                      setUsers(updatedUsers);
-                                      alert('Kullanıcı başarıyla silindi');
+                                      try {
+                                        // Backend'den kullanıcıyı sil
+                                        await api.delete(`/admin/users/${user.id}`);
+                                        // Frontend'den kullanıcıyı kaldır
+                                        setUsers(users.filter(u => u.id !== user.id));
+                                        alert('Kullanıcı başarıyla silindi');
+                                      } catch (error) {
+                                        console.error('Delete user error:', error);
+                                        alert('Kullanıcı silinirken hata oluştu');
+                                      }
                                     }
                                   }}
                                   className="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm border border-red-500/30"
@@ -536,17 +543,23 @@ export default function AdminPanel() {
                                   🗑️ Sil
                                 </button>
                                 <button
-                                  onClick={() => {
-                                    // localStorage'da rol değiştir
-                                    const newRole = user.role === 'admin' ? 'user' : 'admin';
-                                    const updatedUsers = users.map(u => 
-                                      u.id === user.id 
-                                        ? { ...u, role: newRole }
-                                        : u
-                                    );
-                                    localStorage.setItem('users', JSON.stringify(updatedUsers));
-                                    setUsers(updatedUsers);
-                                    alert(`Kullanıcı ${newRole} yapıldı`);
+                                  onClick={async () => {
+                                    try {
+                                      // Backend'de rol değiştir
+                                      const newRole = user.role === 'admin' ? 'user' : 'admin';
+                                      await api.put(`/admin/users/${user.id}/role`, { role: newRole });
+                                      // Frontend'de rol güncelle
+                                      const updatedUsers = users.map(u => 
+                                        u.id === user.id 
+                                          ? { ...u, role: newRole }
+                                          : u
+                                      );
+                                      setUsers(updatedUsers);
+                                      alert(`Kullanıcı ${newRole} yapıldı`);
+                                    } catch (error) {
+                                      console.error('Role change error:', error);
+                                      alert('Rol değiştirilirken hata oluştu');
+                                    }
                                   }}
                                   className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm border border-blue-500/30"
                                 >
