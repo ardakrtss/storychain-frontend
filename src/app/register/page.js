@@ -110,25 +110,25 @@ export default function RegisterPage() {
           <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-2xl">
             ✨
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Hesap Oluştur
           </h2>
-          <p className="text-gray-300">
+          <p className="text-gray-700">
             StoryChain'e katılın ve hikaye yazma macerasına başlayın!
           </p>
         </div>
 
         {/* Form Card - Vuexy Style */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 p-8">
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-200 p-8">
           {success ? (
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-green-400 rounded-full flex items-center justify-center text-white text-2xl mx-auto mb-4">
                 ✓
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
                 Hesap Başarıyla Oluşturuldu!
               </h3>
-              <p className="text-gray-300 mb-6">
+              <p className="text-gray-700 mb-6">
                 Otomatik olarak giriş yapılıyor...
               </p>
               <div className="animate-spin w-8 h-8 border-4 border-purple-400 border-t-transparent rounded-full mx-auto"></div>
@@ -137,14 +137,14 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* General Error */}
               {errors.general && (
-                <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 text-red-400 text-sm">
+                <div className="bg-red-100 border border-red-300 rounded-xl p-4 text-red-700 text-sm">
                   {errors.general}
                 </div>
               )}
 
               {/* Nickname Field */}
               <div>
-                <label htmlFor="nickname" className="block text-sm font-medium text-gray-300 mb-3">
+                <label htmlFor="nickname" className="block text-sm font-medium text-gray-900 mb-3">
                   Rumuz
                 </label>
                 <div className="relative">
@@ -157,22 +157,22 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.nickname}
                     onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-4 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.nickname 
-                        ? 'border-red-500/50 focus:ring-red-500' 
-                        : 'border-white/20 hover:border-white/40'
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 hover:border-gray-400'
                     }`}
                     placeholder="Rumuzunuzu girin"
                   />
                 </div>
                 {errors.nickname && (
-                  <p className="mt-2 text-sm text-red-400">{errors.nickname}</p>
+                  <p className="mt-2 text-sm text-red-600">{errors.nickname}</p>
                 )}
               </div>
 
               {/* Password Field */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-3">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-3">
                   Şifre
                 </label>
                 <div className="relative">
@@ -185,22 +185,22 @@ export default function RegisterPage() {
                     type="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-4 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.password 
-                        ? 'border-red-500/50 focus:ring-red-500' 
-                        : 'border-white/20 hover:border-white/40'
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 hover:border-gray-400'
                     }`}
                     placeholder="Şifrenizi girin"
                   />
                 </div>
                 {errors.password && (
-                  <p className="mt-2 text-sm text-red-400">{errors.password}</p>
+                  <p className="mt-2 text-sm text-red-600">{errors.password}</p>
                 )}
               </div>
 
               {/* Confirm Password Field */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-3">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-900 mb-3">
                   Şifre Tekrarı
                 </label>
                 <div className="relative">
@@ -213,16 +213,16 @@ export default function RegisterPage() {
                     type="password"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className={`w-full pl-12 pr-4 py-4 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.confirmPassword 
-                        ? 'border-red-500/50 focus:ring-red-500' 
-                        : 'border-white/20 hover:border-white/40'
+                        ? 'border-red-500 focus:ring-red-500' 
+                        : 'border-gray-300 hover:border-gray-400'
                     }`}
                     placeholder="Şifrenizi tekrar girin"
                   />
                 </div>
                 {errors.confirmPassword && (
-                  <p className="mt-2 text-sm text-red-400">{errors.confirmPassword}</p>
+                  <p className="mt-2 text-sm text-red-600">{errors.confirmPassword}</p>
                 )}
               </div>
 
@@ -249,11 +249,11 @@ export default function RegisterPage() {
 
           {/* Login Link */}
           <div className="mt-8 text-center">
-            <p className="text-gray-300">
+            <p className="text-gray-700">
               Zaten hesabınız var mı?{' '}
               <Link 
                 href="/nickname" 
-                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors duration-300"
+                className="text-purple-600 hover:text-purple-700 font-semibold transition-colors duration-300"
               >
                 Giriş Yapın
               </Link>
@@ -265,7 +265,7 @@ export default function RegisterPage() {
         <div className="mt-8 text-center">
           <Link 
             href="/" 
-            className="text-gray-400 hover:text-white transition-colors duration-300 flex items-center justify-center gap-2"
+            className="text-gray-600 hover:text-gray-900 transition-colors duration-300 flex items-center justify-center gap-2"
           >
             <span>←</span>
             <span>Ana Sayfaya Dön</span>

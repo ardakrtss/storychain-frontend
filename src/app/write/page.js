@@ -249,7 +249,7 @@ function WritePageContent() {
         </div>
 
         {/* Story Info */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 mb-8 hover:bg-white/10 transition-all duration-300 hover:border-white/20">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200 p-8 mb-8 hover:bg-white/90 transition-all duration-300 hover:border-gray-300 shadow-lg">
           {mode === 'new' && theme ? (
             <div className="flex items-center mb-6">
               <div 
@@ -259,14 +259,14 @@ function WritePageContent() {
                 {theme.icon}
               </div>
               <div>
-                <h2 className="text-3xl font-bold text-white mb-2">{theme.name}</h2>
-                <p className="text-gray-300 text-lg">{theme.description}</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">{theme.name}</h2>
+                <p className="text-gray-700 text-lg">{theme.description}</p>
               </div>
             </div>
           ) : mode === 'continue' && story ? (
             <div className="mb-6">
-              <h2 className="text-3xl font-bold text-white mb-3">{story.title}</h2>
-              <div className="flex items-center gap-6 text-lg text-gray-300 mb-4">
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">{story.title}</h2>
+              <div className="flex items-center gap-6 text-lg text-gray-700 mb-4">
                 <span className="flex items-center gap-2">
                   <span className="text-2xl">👤</span>
                   <span>{story.currentAuthorNumber}. yazar (5 yazardan)</span>
@@ -281,19 +281,19 @@ function WritePageContent() {
           
           {theme && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                <h3 className="font-bold text-white text-xl mb-3 flex items-center gap-2">
+              <div className="bg-white/90 rounded-2xl p-6 border border-gray-200 shadow-lg">
+                <h3 className="font-bold text-gray-900 text-xl mb-3 flex items-center gap-2">
                   <span className="text-2xl">🎭</span>
                   Karakterler
                 </h3>
-                <p className="text-gray-300 leading-relaxed">{theme.characters}</p>
+                <p className="text-gray-700 leading-relaxed">{theme.characters}</p>
               </div>
-              <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
-                <h3 className="font-bold text-white text-xl mb-3 flex items-center gap-2">
+              <div className="bg-white/90 rounded-2xl p-6 border border-gray-200 shadow-lg">
+                <h3 className="font-bold text-gray-900 text-xl mb-3 flex items-center gap-2">
                   <span className="text-2xl">💡</span>
                   Hikaye İpuçları
                 </h3>
-                <p className="text-gray-300 leading-relaxed">{theme.plotHints}</p>
+                <p className="text-gray-700 leading-relaxed">{theme.plotHints}</p>
               </div>
             </div>
           )}
@@ -317,12 +317,12 @@ function WritePageContent() {
         )}
 
         {/* Writing Form */}
-        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-8 hover:bg-white/10 transition-all duration-300">
+        <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200 p-8 hover:bg-white/90 transition-all duration-300 shadow-lg">
           <form onSubmit={handleSubmit}>
             {/* Title Input (only for new stories) */}
             {mode === 'new' && (
               <div className="mb-8">
-                <label htmlFor="title" className="block text-xl font-bold text-white mb-4 flex items-center gap-3">
+                <label htmlFor="title" className="block text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                   <span className="text-2xl">📝</span>
                   Hikaye Başlığı
                 </label>
@@ -331,16 +331,16 @@ function WritePageContent() {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-6 py-4 bg-white/10 border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 text-lg backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
+                  className="w-full px-6 py-4 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-500 text-lg transition-all duration-300 hover:bg-gray-50"
                   placeholder="Hikayenin başlığını yaz..."
                   maxLength={100}
                   disabled={submitting}
                 />
                 <div className="flex justify-between items-center mt-3">
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-600">
                     En az 3 karakter olmalıdır
                   </span>
-                  <span className={`text-sm ${title.length > 80 ? 'text-red-400' : 'text-gray-400'}`}>
+                  <span className={`text-sm ${title.length > 80 ? 'text-red-600' : 'text-gray-600'}`}>
                     {title.length}/100
                   </span>
                 </div>
@@ -349,7 +349,7 @@ function WritePageContent() {
 
             {/* Content Textarea */}
             <div className="mb-8">
-              <label htmlFor="content" className="block text-xl font-bold text-white mb-4 flex items-center gap-3">
+              <label htmlFor="content" className="block text-xl font-bold text-gray-900 mb-4 flex items-center gap-3">
                 <span className="text-2xl">✍️</span>
                 {mode === 'new' ? 'Hikayeni Yaz' : 'Hikayeye Devam Et'} ({content.length}/1000 karakter)
               </label>
@@ -357,7 +357,7 @@ function WritePageContent() {
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full h-80 px-6 py-4 bg-white/10 border border-white/20 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white placeholder-gray-400 text-lg resize-none backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
+                className="w-full h-80 px-6 py-4 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-500 text-lg resize-none transition-all duration-300 hover:bg-gray-50"
                 placeholder={mode === 'new' 
                   ? "Hikayenin başlangıcını yaz... Karakterleri tanıt, atmosferi yarat, heyecan başlat!"
                   : "Hikayenin devamını yaz... Bir önceki yazarın yazdığına uygun şekilde devam et!"
@@ -366,10 +366,10 @@ function WritePageContent() {
                 disabled={submitting}
               />
               <div className="flex justify-between items-center mt-3">
-                <span className="text-sm text-gray-400">
+                <span className="text-sm text-gray-600">
                   En az 100 karakter yazman önerilir
                 </span>
-                <span className={`text-sm ${content.length > 900 ? 'text-red-400' : 'text-gray-400'}`}>
+                <span className={`text-sm ${content.length > 900 ? 'text-red-600' : 'text-gray-600'}`}>
                   {content.length}/1000
                 </span>
               </div>
@@ -377,8 +377,8 @@ function WritePageContent() {
 
             {/* Error Message */}
             {error && (
-              <div className="mb-8 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-2xl p-4">
-                <p className="text-red-300 text-lg flex items-center gap-2">
+              <div className="mb-8 bg-red-100 border border-red-300 rounded-2xl p-4">
+                <p className="text-red-700 text-lg flex items-center gap-2">
                   <span className="text-xl">⚠️</span>
                   {error}
                 </p>
@@ -409,7 +409,7 @@ function WritePageContent() {
               
               <Link
                 href="/themes"
-                className="group flex-1 bg-white/10 hover:bg-white/20 text-white py-4 px-8 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-white/20 hover:border-white/40 backdrop-blur-sm flex items-center justify-center gap-3 hover:scale-105"
+                className="group flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-4 px-8 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-300 hover:border-gray-400 flex items-center justify-center gap-3 hover:scale-105"
               >
                 <span className="text-2xl">←</span>
                 <span>Geri Dön</span>

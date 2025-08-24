@@ -100,14 +100,14 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error */}
             {errors.general && (
-              <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 text-red-400 text-sm">
+              <div className="bg-red-100 border border-red-300 rounded-xl p-4 text-red-700 text-sm">
                 {errors.general}
               </div>
             )}
 
             {/* Nickname Field */}
             <div>
-              <label htmlFor="nickname" className="block text-sm font-medium text-gray-300 mb-3">
+              <label htmlFor="nickname" className="block text-sm font-medium text-gray-900 mb-3">
                 Rumuz
               </label>
               <div className="relative">
@@ -120,22 +120,22 @@ export default function LoginPage() {
                   type="text"
                   value={formData.nickname}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-4 py-4 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                  className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                     errors.nickname 
-                      ? 'border-red-500/50 focus:ring-red-500' 
-                      : 'border-white/20 hover:border-white/40'
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 hover:border-gray-400'
                   }`}
                   placeholder="Rumuzunuzu girin"
                 />
               </div>
               {errors.nickname && (
-                <p className="mt-2 text-sm text-red-400">{errors.nickname}</p>
+                <p className="mt-2 text-sm text-red-600">{errors.nickname}</p>
               )}
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-3">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-3">
                 Şifre
               </label>
               <div className="relative">
@@ -148,16 +148,16 @@ export default function LoginPage() {
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`w-full pl-12 pr-4 py-4 bg-white/5 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                  className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                     errors.password 
-                      ? 'border-red-500/50 focus:ring-red-500' 
-                      : 'border-white/20 hover:border-white/40'
+                      ? 'border-red-500 focus:ring-red-500' 
+                      : 'border-gray-300 hover:border-gray-400'
                   }`}
                   placeholder="Şifrenizi girin"
                 />
               </div>
               {errors.password && (
-                <p className="mt-2 text-sm text-red-400">{errors.password}</p>
+                <p className="mt-2 text-sm text-red-600">{errors.password}</p>
               )}
             </div>
 
