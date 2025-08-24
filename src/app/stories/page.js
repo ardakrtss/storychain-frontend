@@ -182,13 +182,33 @@ export default function StoriesPage() {
                           <span className="text-lg">📖</span>
                           {story.segments ? story.segments.length : 0} bölüm
                         </span>
-                        <Link 
-                          href={`/stories/${story.id}`}
-                          className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl transform hover:scale-110 overflow-hidden"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                          <span className="relative z-10">Devamını Oku →</span>
-                        </Link>
+                        {story.segments && story.segments.length < 3 ? (
+                          <button 
+                            onClick={() => {
+                              const messages = [
+                                "Oops! Hikaye bitmeden okuma ki heyecanı kaçmasın! 😄",
+                                "Hey! Hikaye henüz tamamlanmadı, sabırlı ol! 🎭",
+                                "Hikaye devam ediyor... Biraz daha bekle! ⏳",
+                                "Heyecan dorukta! Hikaye henüz bitmedi! 🎪",
+                                "Hikaye tamamlanana kadar beklemek zorundasın! 🎯"
+                              ];
+                              const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                              alert(randomMessage);
+                            }}
+                            className="group relative bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl transform hover:scale-110 overflow-hidden"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            <span className="relative z-10">Devamını Oku →</span>
+                          </button>
+                        ) : (
+                          <Link 
+                            href={`/stories/${story.id}`}
+                            className="group relative bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl transform hover:scale-110 overflow-hidden"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            <span className="relative z-10">Devamını Oku →</span>
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>
