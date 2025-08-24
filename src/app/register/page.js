@@ -160,7 +160,7 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.nickname}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important' }}
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important', textIndent: '0 !important' }}
                     className={`w-full pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.nickname 
                         ? 'border-red-500 focus:ring-red-500' 
@@ -189,7 +189,7 @@ export default function RegisterPage() {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important' }}
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important', textIndent: '0 !important' }}
                     className={`w-full pr-12 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.password 
                         ? 'border-red-500 focus:ring-red-500' 
@@ -229,7 +229,7 @@ export default function RegisterPage() {
                     type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important' }}
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important', textIndent: '0 !important' }}
                     className={`w-full pr-12 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.confirmPassword 
                         ? 'border-red-500 focus:ring-red-500' 

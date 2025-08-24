@@ -1138,6 +1138,7 @@ input[type="email"],
 textarea {
   color: #000000 !important;
   background-color: #ffffff !important;
+  text-indent: 0 !important;
 }
 
 input[type="text"]::placeholder,
