@@ -205,9 +205,9 @@ export default function RegisterPage() {
                 <label htmlFor="nickname" className="block text-sm font-medium text-gray-900 mb-3">
                   Rumuz
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span className="text-gray-400 text-lg">👤</span>
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <span className="text-gray-600 text-lg">👤</span>
                   </div>
                   <input
                     id="nickname"
@@ -215,8 +215,8 @@ export default function RegisterPage() {
                     type="text"
                     value={formData.nickname}
                     onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important', textIndent: '0 !important' }}
-                    className={`w-full pr-4 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', textIndent: '0 !important' }}
+                    className={`flex-1 py-4 px-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.nickname 
                         ? 'border-red-500 focus:ring-red-500' 
                         : 'border-gray-300 hover:border-gray-400'
@@ -253,35 +253,37 @@ export default function RegisterPage() {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-3">
                   Şifre
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span className="text-gray-400 text-lg">🔒</span>
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <span className="text-gray-600 text-lg">🔒</span>
                   </div>
-                  <input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important', textIndent: '0 !important' }}
-                    className={`w-full pr-12 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
-                      errors.password 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="Şifrenizi girin"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
+                  <div className="relative flex-1">
+                    <input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleChange}
+                      style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', textIndent: '0 !important' }}
+                      className={`w-full pr-12 py-4 px-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                        errors.password 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="Şifrenizi girin"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {errors.password && (
                   <p className="mt-2 text-sm text-red-600">{errors.password}</p>
@@ -293,35 +295,37 @@ export default function RegisterPage() {
                 <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-900 mb-3">
                   Şifre Tekrarı
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span className="text-gray-400 text-lg">🔐</span>
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <span className="text-gray-600 text-lg">🔐</span>
                   </div>
-                  <input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', paddingLeft: '3rem !important', textIndent: '0 !important' }}
-                    className={`w-full pr-12 py-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
-                      errors.confirmPassword 
-                        ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="Şifrenizi tekrar girin"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors"
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
+                  <div className="relative flex-1">
+                    <input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', textIndent: '0 !important' }}
+                      className={`w-full pr-12 py-4 px-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                        errors.confirmPassword 
+                          ? 'border-red-500 focus:ring-red-500' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="Şifrenizi tekrar girin"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5" />
+                      ) : (
+                        <Eye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {errors.confirmPassword && (
                   <p className="mt-2 text-sm text-red-600">{errors.confirmPassword}</p>
