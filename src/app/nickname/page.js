@@ -120,6 +120,7 @@ export default function LoginPage() {
                   type="text"
                   value={formData.nickname}
                   onChange={handleChange}
+                  style={{ color: '#111827' }}
                   className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                     errors.nickname 
                       ? 'border-red-500 focus:ring-red-500' 
@@ -148,6 +149,7 @@ export default function LoginPage() {
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
+                  style={{ color: '#111827' }}
                   className={`w-full pl-12 pr-4 py-4 bg-white border rounded-xl text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                     errors.password 
                       ? 'border-red-500 focus:ring-red-500' 
