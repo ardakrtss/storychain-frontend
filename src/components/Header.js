@@ -31,7 +31,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex space-x-1">
+          <nav className="hidden md:flex space-x-1">
             <Link 
               href="/" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
@@ -100,7 +100,7 @@ export default function Header() {
 
           {/* User Menu - Only show when logged in */}
           {user && (
-            <div className="hidden lg:flex items-center space-x-3">
+            <div className="hidden md:flex items-center space-x-3">
               <span className="text-gray-700 font-medium px-4 py-2 bg-gray-100 rounded-xl backdrop-blur-sm">
                 Merhaba, {user.nickname || 'Yazar'}! 👋
               </span>
@@ -128,18 +128,24 @@ export default function Header() {
           )}
 
           {/* Mobile Navigation - Simplified */}
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className="md:hidden flex items-center space-x-2">
             {user ? (
               <>
                 <Link 
+                  href="/stories" 
+                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-medium text-xs transition-all duration-300 border border-gray-200"
+                >
+                  📚
+                </Link>
+                <Link 
                   href="/write" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 shadow-lg"
                 >
                   ✏️
                 </Link>
                 <Link 
                   href="/profile" 
-                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 border border-gray-200"
+                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 border border-gray-200"
                 >
                   👤
                 </Link>
@@ -147,14 +153,26 @@ export default function Header() {
             ) : (
               <>
                 <Link 
+                  href="/stories" 
+                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-medium text-xs transition-all duration-300 border border-gray-200"
+                >
+                  📚
+                </Link>
+                <Link 
+                  href="/write" 
+                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-medium text-xs transition-all duration-300 border border-gray-200"
+                >
+                  ✏️
+                </Link>
+                <Link 
                   href="/register" 
-                  className="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 border border-gray-200"
+                  className="bg-gray-100 text-gray-700 px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 border border-gray-200"
                 >
                   📝
                 </Link>
                 <Link 
                   href="/nickname" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-xl font-semibold text-sm transition-all duration-300 shadow-lg"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-2 rounded-lg font-semibold text-xs transition-all duration-300 shadow-lg"
                 >
                   🔑
                 </Link>
