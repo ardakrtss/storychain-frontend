@@ -30,17 +30,44 @@ export default function ProfilePage() {
       try {
         setLoading(true);
         
-        // Kullanıcının hikayelerini getir
-        const storiesResponse = await api.get(`/stories/user/${user.id || user.nickname}`);
-        setUserStories(storiesResponse.data || []);
+        // Tüm hikayeleri getir ve kullanıcının hikayelerini filtrele
+        let userStories = [];
+        try {
+          const storiesResponse = await api.get('/stories/available');
+          const allStories = storiesResponse.data || [];
+          
+          // Kullanıcının hikayelerini filtrele
+          userStories = allStories.filter(story => 
+            story.author === user.nickname || 
+            story.authorId === user.id ||
+            story.authorNickname === user.nickname
+          );
+          
+          setUserStories(userStories);
+        } catch (storiesError) {
+          console.error('Stories API Error:', storiesError);
+          // API hatası durumunda boş array kullan
+          setUserStories([]);
+        }
         
         // Kullanıcı istatistiklerini hesapla
         const stats = {
-          totalStories: storiesResponse.data?.length || 0,
-          totalLikes: storiesResponse.data?.reduce((sum, story) => sum + (story.likes || 0), 0) || 0,
-          totalCharacters: storiesResponse.data?.reduce((sum, story) => sum + (story.content?.length || 0), 0) || 0,
-          averageRating: storiesResponse.data?.length > 0 ? 
-            (storiesResponse.data?.reduce((sum, story) => sum + (story.rating || 0), 0) / storiesResponse.data?.length).toFixed(1) : 0
+          totalStories: userStories.length,
+          totalLikes: userStories.reduce((sum, story) => sum + (story.likeCount || story.likes || 0), 0),
+          totalCharacters: userStories.reduce((sum, story) => {
+            // Hikaye içeriğini hesapla (segments varsa segments'lerden, yoksa content'ten)
+            let contentLength = 0;
+            if (story.segments && story.segments.length > 0) {
+              contentLength = story.segments.reduce((segSum, segment) => 
+                segSum + (segment.content?.length || 0), 0
+              );
+            } else if (story.content) {
+              contentLength = story.content.length;
+            }
+            return sum + contentLength;
+          }, 0),
+          averageRating: userStories.length > 0 ? 
+            (userStories.reduce((sum, story) => sum + (story.rating || 0), 0) / userStories.length).toFixed(1) : 0
         };
         
         setUserStats(stats);
@@ -257,7 +284,15 @@ export default function ProfilePage() {
                                   </span>
                                 </div>
                                 <p className="text-gray-300 mb-6 line-clamp-3 text-lg leading-relaxed">
-                                  {story.content || story.segments?.map(s => s.content).join(' ') || 'Hikaye içeriği...'}
+                                  {(() => {
+                                    if (story.segments && story.segments.length > 0) {
+                                      return story.segments.map(s => s.content).join(' ');
+                                    } else if (story.content) {
+                                      return story.content;
+                                    } else {
+                                      return 'Hikaye içeriği...';
+                                    }
+                                  })()}
                                 </p>
                                 <div className="flex items-center gap-8 text-sm text-gray-400">
                                   <span className="flex items-center gap-2">
@@ -266,7 +301,7 @@ export default function ProfilePage() {
                                   </span>
                                   <span className="flex items-center gap-2">
                                     <span className="text-lg">❤️</span>
-                                    {story.likes || 0} beğeni
+                                    {story.likeCount || story.likes || 0} beğeni
                                   </span>
                                   <span className="flex items-center gap-2">
                                     <span className="text-lg">⭐</span>
@@ -274,7 +309,15 @@ export default function ProfilePage() {
                                   </span>
                                   <span className="flex items-center gap-2">
                                     <span className="text-lg">📝</span>
-                                    {story.content?.length || 0} karakter
+                                    {(() => {
+                                      if (story.segments && story.segments.length > 0) {
+                                        return story.segments.reduce((sum, segment) => sum + (segment.content?.length || 0), 0);
+                                      } else if (story.content) {
+                                        return story.content.length;
+                                      } else {
+                                        return 0;
+                                      }
+                                    })()} karakter
                                   </span>
                                 </div>
                               </div>
