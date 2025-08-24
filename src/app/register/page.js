@@ -124,27 +124,6 @@ export default function RegisterPage() {
       if (response.data.success) {
         setSuccess(true);
         
-        // Yeni kullanıcıyı localStorage'a ekle (admin panel için)
-        const newUser = {
-          id: response.data.user?.id || `user-${Date.now()}`,
-          nickname: formData.nickname.trim().toLowerCase(),
-          role: 'user',
-          isActive: true,
-          storiesWritten: 0,
-          totalLikes: 0,
-          createdAt: new Date(),
-          lastLogin: new Date()
-        };
-        
-        // Mevcut kullanıcıları al ve yenisini ekle
-        const existingUsers = localStorage.getItem('users');
-        let users = [];
-        if (existingUsers) {
-          users = JSON.parse(existingUsers);
-        }
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        
         // Auto login after successful registration
         try {
           await signIn(formData.nickname.trim().toLowerCase(), formData.password);

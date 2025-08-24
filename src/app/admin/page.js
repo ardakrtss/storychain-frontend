@@ -39,14 +39,14 @@ export default function AdminPanel() {
           authorId: story.authorId || story.author_id
         }));
 
-        // Kullanıcıları localStorage'dan çek (geçici çözüm)
-        const storedUsers = localStorage.getItem('users');
+        // Kullanıcıları backend'den çek
         let realUsers = [];
-        
-        if (storedUsers) {
-          realUsers = JSON.parse(storedUsers);
-        } else {
-          // Eğer localStorage'da kullanıcı yoksa, hikayelerden kullanıcıları çıkar
+        try {
+          const usersResponse = await api.get('/admin/users');
+          realUsers = usersResponse.data.users || usersResponse.data;
+        } catch (usersError) {
+          console.error('Users API Error:', usersError);
+          // Backend'den kullanıcı çekilemezse, hikayelerden çıkar
           const userMap = new Map();
           realStories.forEach(story => {
             if (story.author && story.authorId) {
@@ -82,9 +82,6 @@ export default function AdminPanel() {
             lastLogin: new Date()
           };
           realUsers.push(adminUser);
-          
-          // localStorage'a kaydet
-          localStorage.setItem('users', JSON.stringify(realUsers));
         }
 
         // İstatistikleri hesapla
@@ -516,11 +513,16 @@ export default function AdminPanel() {
                             <td className="px-8 py-6 whitespace-nowrap">
                               <div className="flex space-x-2">
                                 <button
-                                  onClick={() => {
+                                  onClick={async () => {
                                     if (confirm(`${user.nickname} kullanıcısını silmek istediğinizden emin misiniz?`)) {
-                                      // Mock silme işlemi
-                                      setUsers(users.filter(u => u.id !== user.id));
-                                      alert('Kullanıcı silindi');
+                                      try {
+                                        await api.delete(`/admin/users/${user.id}`);
+                                        setUsers(users.filter(u => u.id !== user.id));
+                                        alert('Kullanıcı başarıyla silindi');
+                                      } catch (error) {
+                                        console.error('Delete user error:', error);
+                                        alert('Kullanıcı silinirken hata oluştu');
+                                      }
                                     }
                                   }}
                                   className="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm border border-red-500/30"
@@ -528,15 +530,21 @@ export default function AdminPanel() {
                                   🗑️ Sil
                                 </button>
                                 <button
-                                  onClick={() => {
-                                    // Mock rol değiştirme
-                                    const updatedUsers = users.map(u => 
-                                      u.id === user.id 
-                                        ? { ...u, role: u.role === 'admin' ? 'user' : 'admin' }
-                                        : u
-                                    );
-                                    setUsers(updatedUsers);
-                                    alert(`Kullanıcı ${user.role === 'admin' ? 'user' : 'admin'} yapıldı`);
+                                  onClick={async () => {
+                                    try {
+                                      const newRole = user.role === 'admin' ? 'user' : 'admin';
+                                      await api.put(`/admin/users/${user.id}/role`, { role: newRole });
+                                      const updatedUsers = users.map(u => 
+                                        u.id === user.id 
+                                          ? { ...u, role: newRole }
+                                          : u
+                                      );
+                                      setUsers(updatedUsers);
+                                      alert(`Kullanıcı ${newRole} yapıldı`);
+                                    } catch (error) {
+                                      console.error('Role change error:', error);
+                                      alert('Rol değiştirilirken hata oluştu');
+                                    }
                                   }}
                                   className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm border border-blue-500/30"
                                 >

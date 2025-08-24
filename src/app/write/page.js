@@ -103,32 +103,6 @@ function WritePageContent() {
           authorNickname: user?.nickname
         });
         
-        // Hikayeyi localStorage'a ekle (admin panel için)
-        const newStory = {
-          id: storyResponse.data?.id || `story-${Date.now()}`,
-          title: title.trim(),
-          theme: theme?.id,
-          segments: [{
-            content: content.trim(),
-            author: user?.nickname,
-            authorId: user?.id
-          }],
-          isComplete: false,
-          likeCount: 0,
-          createdAt: new Date(),
-          author: user?.nickname,
-          authorId: user?.id
-        };
-        
-        // Mevcut hikayeleri al ve yenisini ekle
-        const existingStories = localStorage.getItem('stories');
-        let stories = [];
-        if (existingStories) {
-          stories = JSON.parse(existingStories);
-        }
-        stories.push(newStory);
-        localStorage.setItem('stories', JSON.stringify(stories));
-        
         alert('Yeni hikaye başarıyla oluşturuldu! Diğer yazarların katkılarını bekleyin.');
       } else {
         // Mevcut hikayeye devam et
