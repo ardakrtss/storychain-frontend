@@ -59,7 +59,7 @@ export default function LoginPage() {
     setErrors({});
 
     try {
-      const result = await signIn(formData.nickname.trim(), formData.password);
+      const result = await signIn(formData.nickname.trim().toLowerCase(), formData.password);
       if (result.success) {
         router.push('/profile');
       } else {

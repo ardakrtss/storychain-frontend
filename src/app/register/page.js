@@ -20,6 +20,8 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [nicknameSuggestions, setNicknameSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +36,48 @@ export default function RegisterPage() {
         [name]: ''
       }));
     }
+    
+    // Generate nickname suggestions when typing
+    if (name === 'nickname' && value.trim().length > 0) {
+      generateNicknameSuggestions(value.trim());
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  const generateNicknameSuggestions = (baseNickname) => {
+    const suggestions = [];
+    const base = baseNickname.toLowerCase();
+    
+    // Add numbers
+    for (let i = 1; i <= 5; i++) {
+      suggestions.push(`${base}${i}`);
+    }
+    
+    // Add common suffixes
+    const suffixes = ['_', '.', 'x', 'pro', '2024', 'real', 'official', 'tr'];
+    suffixes.forEach(suffix => {
+      suggestions.push(`${base}${suffix}`);
+    });
+    
+    // Add random combinations
+    const randomWords = ['cool', 'awesome', 'super', 'mega', 'ultra', 'star', 'king', 'queen'];
+    randomWords.forEach(word => {
+      suggestions.push(`${base}_${word}`);
+    });
+    
+    // Shuffle and take first 8
+    const shuffled = suggestions.sort(() => 0.5 - Math.random());
+    setNicknameSuggestions(shuffled.slice(0, 8));
+    setShowSuggestions(true);
+  };
+
+  const selectSuggestion = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      nickname: suggestion
+    }));
+    setShowSuggestions(false);
   };
 
   const validateForm = () => {
@@ -73,7 +117,7 @@ export default function RegisterPage() {
 
     try {
       const response = await api.post('/auth/register', {
-        nickname: formData.nickname.trim(),
+        nickname: formData.nickname.trim().toLowerCase(), // Case insensitive
         password: formData.password
       });
 
@@ -82,7 +126,7 @@ export default function RegisterPage() {
         
         // Auto login after successful registration
         try {
-          await signIn(formData.nickname.trim(), formData.password);
+          await signIn(formData.nickname.trim().toLowerCase(), formData.password);
           router.push('/profile');
         } catch (loginError) {
           console.error('Auto login failed:', loginError);
@@ -92,7 +136,18 @@ export default function RegisterPage() {
     } catch (error) {
       console.error('Register error:', error);
       if (error.response?.data?.error) {
-        setErrors({ general: error.response.data.error });
+        const errorMessage = error.response.data.error;
+        
+        // Check if it's a duplicate nickname error
+        if (errorMessage.includes('nickname') || errorMessage.includes('kullanıcı adı') || errorMessage.includes('rumuz')) {
+          setErrors({ 
+            nickname: 'Bu kullanıcı adı zaten kullanılıyor. Aşağıdaki önerilerden birini seçebilirsiniz:',
+            suggestions: nicknameSuggestions 
+          });
+          setShowSuggestions(true);
+        } else {
+          setErrors({ general: errorMessage });
+        }
       } else {
         setErrors({ general: 'Kayıt olurken bir hata oluştu. Lütfen tekrar deneyin.' });
       }
@@ -169,10 +224,29 @@ export default function RegisterPage() {
                     placeholder="Rumuzunuzu girin"
                   />
                 </div>
-                {errors.nickname && (
-                  <p className="mt-2 text-sm text-red-600">{errors.nickname}</p>
-                )}
-              </div>
+                              {errors.nickname && (
+                <p className="mt-2 text-sm text-red-600">{errors.nickname}</p>
+              )}
+              
+              {/* Nickname Suggestions */}
+              {showSuggestions && nicknameSuggestions.length > 0 && (
+                <div className="mt-3">
+                  <p className="text-sm text-gray-600 mb-2">💡 Benzer kullanıcı adı önerileri:</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {nicknameSuggestions.map((suggestion, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => selectSuggestion(suggestion)}
+                        className="px-3 py-2 text-sm bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors border border-purple-200 hover:border-purple-300"
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
 
               {/* Password Field */}
               <div>

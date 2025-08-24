@@ -49,12 +49,15 @@ export const AuthProvider = ({ children }) => {
     try {
       let response;
       
+      // Case insensitive nickname
+      const normalizedNickname = nickname.toLowerCase();
+      
       if (password) {
         // Şifre ile giriş
-        response = await api.post('/auth/login', { nickname, password });
+        response = await api.post('/auth/login', { nickname: normalizedNickname, password });
       } else {
         // Sadece rumuz ile giriş (eski yöntem)
-        response = await api.post('/auth/login', { nickname });
+        response = await api.post('/auth/login', { nickname: normalizedNickname });
       }
       
       const { token, user } = response.data;
