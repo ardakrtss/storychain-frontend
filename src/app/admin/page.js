@@ -39,14 +39,23 @@ export default function AdminPanel() {
           authorId: story.authorId || story.author_id
         }));
 
-        // Kullanıcıları localStorage'dan çek (geçici çözüm)
+        // Kullanıcıları backend'den çek
         let realUsers = [];
-        const storedUsers = localStorage.getItem('users');
-        
-        if (storedUsers) {
-          realUsers = JSON.parse(storedUsers);
-        } else {
-          // Eğer localStorage'da kullanıcı yoksa, hikayelerden çıkar
+        try {
+          const usersResponse = await api.get('/admin/users');
+          realUsers = usersResponse.data.users.map(user => ({
+            id: user.id,
+            nickname: user.nickname,
+            role: user.nickname === 'admin' ? 'admin' : 'user',
+            isActive: true,
+            storiesWritten: user.stories_written || user.storyCount || 0,
+            totalLikes: user.total_likes || 0,
+            createdAt: new Date('2024-08-15'),
+            lastLogin: new Date()
+          }));
+        } catch (usersError) {
+          console.error('Users API Error:', usersError);
+          // Backend'den kullanıcı çekilemezse, hikayelerden çıkar
           const userMap = new Map();
           realStories.forEach(story => {
             if (story.author && story.authorId) {
@@ -82,9 +91,6 @@ export default function AdminPanel() {
             lastLogin: new Date()
           };
           realUsers.push(adminUser);
-          
-          // localStorage'a kaydet
-          localStorage.setItem('users', JSON.stringify(realUsers));
         }
 
         // İstatistikleri hesapla
