@@ -39,14 +39,14 @@ export default function AdminPanel() {
           authorId: story.authorId || story.author_id
         }));
 
-        // Kullanıcıları backend'den çek
+        // Kullanıcıları localStorage'dan çek (geçici çözüm)
         let realUsers = [];
-        try {
-          const usersResponse = await api.get('/admin/users');
-          realUsers = usersResponse.data.users || usersResponse.data;
-        } catch (usersError) {
-          console.error('Users API Error:', usersError);
-          // Backend'den kullanıcı çekilemezse, hikayelerden çıkar
+        const storedUsers = localStorage.getItem('users');
+        
+        if (storedUsers) {
+          realUsers = JSON.parse(storedUsers);
+        } else {
+          // Eğer localStorage'da kullanıcı yoksa, hikayelerden çıkar
           const userMap = new Map();
           realStories.forEach(story => {
             if (story.author && story.authorId) {
@@ -82,6 +82,9 @@ export default function AdminPanel() {
             lastLogin: new Date()
           };
           realUsers.push(adminUser);
+          
+          // localStorage'a kaydet
+          localStorage.setItem('users', JSON.stringify(realUsers));
         }
 
         // İstatistikleri hesapla
@@ -513,16 +516,13 @@ export default function AdminPanel() {
                             <td className="px-8 py-6 whitespace-nowrap">
                               <div className="flex space-x-2">
                                 <button
-                                  onClick={async () => {
+                                  onClick={() => {
                                     if (confirm(`${user.nickname} kullanıcısını silmek istediğinizden emin misiniz?`)) {
-                                      try {
-                                        await api.delete(`/admin/users/${user.id}`);
-                                        setUsers(users.filter(u => u.id !== user.id));
-                                        alert('Kullanıcı başarıyla silindi');
-                                      } catch (error) {
-                                        console.error('Delete user error:', error);
-                                        alert('Kullanıcı silinirken hata oluştu');
-                                      }
+                                      // localStorage'dan kullanıcıyı sil
+                                      const updatedUsers = users.filter(u => u.id !== user.id);
+                                      localStorage.setItem('users', JSON.stringify(updatedUsers));
+                                      setUsers(updatedUsers);
+                                      alert('Kullanıcı başarıyla silindi');
                                     }
                                   }}
                                   className="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm border border-red-500/30"
@@ -530,21 +530,17 @@ export default function AdminPanel() {
                                   🗑️ Sil
                                 </button>
                                 <button
-                                  onClick={async () => {
-                                    try {
-                                      const newRole = user.role === 'admin' ? 'user' : 'admin';
-                                      await api.put(`/admin/users/${user.id}/role`, { role: newRole });
-                                      const updatedUsers = users.map(u => 
-                                        u.id === user.id 
-                                          ? { ...u, role: newRole }
-                                          : u
-                                      );
-                                      setUsers(updatedUsers);
-                                      alert(`Kullanıcı ${newRole} yapıldı`);
-                                    } catch (error) {
-                                      console.error('Role change error:', error);
-                                      alert('Rol değiştirilirken hata oluştu');
-                                    }
+                                  onClick={() => {
+                                    // localStorage'da rol değiştir
+                                    const newRole = user.role === 'admin' ? 'user' : 'admin';
+                                    const updatedUsers = users.map(u => 
+                                      u.id === user.id 
+                                        ? { ...u, role: newRole }
+                                        : u
+                                    );
+                                    localStorage.setItem('users', JSON.stringify(updatedUsers));
+                                    setUsers(updatedUsers);
+                                    alert(`Kullanıcı ${newRole} yapıldı`);
                                   }}
                                   className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors text-sm border border-blue-500/30"
                                 >
