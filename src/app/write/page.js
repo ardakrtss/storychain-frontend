@@ -331,8 +331,8 @@ function WritePageContent() {
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  style={{ color: '#111827' }}
-                  className="w-full px-6 py-4 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-500 text-lg transition-all duration-300 hover:bg-gray-50"
+                  style={{ color: '#000000 !important', backgroundColor: '#ffffff !important' }}
+                  className="w-full px-6 py-4 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-black placeholder-gray-500 text-lg transition-all duration-300 hover:bg-gray-50"
                   placeholder="Hikayenin başlığını yaz..."
                   maxLength={100}
                   disabled={submitting}
@@ -358,8 +358,8 @@ function WritePageContent() {
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                style={{ color: '#111827' }}
-                className="w-full h-80 px-6 py-4 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-900 placeholder-gray-500 text-lg resize-none transition-all duration-300 hover:bg-gray-50"
+                style={{ color: '#000000 !important', backgroundColor: '#ffffff !important' }}
+                className="w-full h-80 px-6 py-4 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-black placeholder-gray-500 text-lg resize-none transition-all duration-300 hover:bg-gray-50"
                 placeholder={mode === 'new' 
                   ? "Hikayenin başlangıcını yaz... Karakterleri tanıt, atmosferi yarat, heyecan başlat!"
                   : "Hikayenin devamını yaz... Bir önceki yazarın yazdığına uygun şekilde devam et!"
