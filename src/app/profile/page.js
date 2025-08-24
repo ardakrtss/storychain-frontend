@@ -37,11 +37,24 @@ export default function ProfilePage() {
           const allStories = storiesResponse.data || [];
           
           // Kullanıcının hikayelerini filtrele
-          userStories = allStories.filter(story => 
-            story.author === user.nickname || 
-            story.authorId === user.id ||
-            story.authorNickname === user.nickname
-          );
+          userStories = allStories.filter(story => {
+            // Ana hikaye objesinde author kontrolü
+            if (story.author === user.nickname || 
+                story.authorId === user.id ||
+                story.authorNickname === user.nickname) {
+              return true;
+            }
+            
+            // Segments içinde author kontrolü
+            if (story.segments && story.segments.length > 0) {
+              return story.segments.some(segment => 
+                segment.author === user.nickname || 
+                segment.authorId === user.id
+              );
+            }
+            
+            return false;
+          });
           
           setUserStories(userStories);
         } catch (storiesError) {
