@@ -36,26 +36,38 @@ export default function ProfilePage() {
           const storiesResponse = await api.get('/stories/available');
           const allStories = storiesResponse.data || [];
           
-          // Kullanıcının hikayelerini filtrele
+          console.log('Tüm hikayeler:', allStories);
+          console.log('Kullanıcı bilgileri:', user);
+          
+          // Kullanıcının hikayelerini filtrele - daha kapsamlı kontrol
           userStories = allStories.filter(story => {
-            // Ana hikaye objesinde author kontrolü
+            // 1. Ana hikaye objesinde author kontrolü
             if (story.author === user.nickname || 
                 story.authorId === user.id ||
-                story.authorNickname === user.nickname) {
+                story.authorNickname === user.nickname ||
+                story.author_id === user.id) {
+              console.log('Hikaye bulundu (ana author):', story.title);
               return true;
             }
             
-            // Segments içinde author kontrolü
+            // 2. Segments içinde author kontrolü
             if (story.segments && story.segments.length > 0) {
-              return story.segments.some(segment => 
-                segment.author === user.nickname || 
-                segment.authorId === user.id
-              );
+              const hasUserSegment = story.segments.some(segment => {
+                const isAuthor = segment.author === user.nickname || 
+                               segment.authorId === user.id ||
+                               segment.author_id === user.id;
+                if (isAuthor) {
+                  console.log('Hikaye bulundu (segment author):', story.title, 'Segment:', segment);
+                }
+                return isAuthor;
+              });
+              return hasUserSegment;
             }
             
             return false;
           });
           
+          console.log('Kullanıcının hikayeleri:', userStories);
           setUserStories(userStories);
         } catch (storiesError) {
           console.error('Stories API Error:', storiesError);
@@ -71,10 +83,11 @@ export default function ProfilePage() {
             // Hikaye içeriğini hesapla (segments varsa segments'lerden, yoksa content'ten)
             let contentLength = 0;
             if (story.segments && story.segments.length > 0) {
-              // Sadece kullanıcının yazdığı segmentleri say
+              // Sadece kullanıcının yazdığı segmentleri say - daha kapsamlı kontrol
               const userSegments = story.segments.filter(segment => 
                 segment.author === user.nickname || 
-                segment.authorId === user.id
+                segment.authorId === user.id ||
+                segment.author_id === user.id
               );
               contentLength = userSegments.reduce((segSum, segment) => 
                 segSum + (segment.content?.length || 0), 0
@@ -87,6 +100,8 @@ export default function ProfilePage() {
           averageRating: userStories.length > 0 ? 
             (userStories.reduce((sum, story) => sum + (story.rating || 0), 0) / userStories.length).toFixed(1) : 0
         };
+        
+        console.log('Hesaplanan istatistikler:', stats);
         
         setUserStats(stats);
       } catch (error) {
