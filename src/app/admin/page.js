@@ -23,21 +23,27 @@ export default function AdminPanel() {
     try {
       setLoading(true);
       
-      // Gerçek verileri çekmeye çalış
-      try {
-        // Hikayeleri çek
-        const storiesResponse = await api.get('/stories/available');
-        const realStories = storiesResponse.data.map(story => ({
-          id: story.id || story._id,
-          title: story.title,
-          theme: story.theme,
-          segments: story.segments || [],
-          isComplete: story.segments && story.segments.length >= 3,
-          likeCount: story.likeCount || 0,
-          createdAt: new Date(story.createdAt || story.created_at || Date.now()),
-          author: story.author || story.authorName,
-          authorId: story.authorId || story.author_id
-        }));
+              // Gerçek verileri çekmeye çalış
+        try {
+          // Hikayeleri çek
+          const storiesResponse = await api.get('/stories/available');
+          
+          // Silinen hikayeleri al
+          const deletedStories = JSON.parse(localStorage.getItem('deletedStories') || '[]');
+          
+          const realStories = storiesResponse.data
+            .filter(story => !deletedStories.includes(story.id)) // Silinen hikayeleri filtrele
+            .map(story => ({
+              id: story.id || story._id,
+              title: story.title,
+              theme: story.theme,
+              segments: story.segments || [],
+              isComplete: story.segments && story.segments.length >= 3,
+              likeCount: story.likeCount || 0,
+              createdAt: new Date(story.createdAt || story.created_at || Date.now()),
+              author: story.author || story.authorName,
+              authorId: story.authorId || story.author_id
+            }));
 
         // Kullanıcıları backend'den çek
         let realUsers = [];
@@ -240,8 +246,17 @@ export default function AdminPanel() {
     }
 
     try {
+      // Backend'den hikayeyi sil
       await api.delete(`/admin/stories/${storyId}`);
+      
+      // Frontend'den hikayeyi kaldır
       setStories(stories.filter(s => s.id !== storyId));
+      
+      // localStorage'dan da kaldır
+      const deletedStories = JSON.parse(localStorage.getItem('deletedStories') || '[]');
+      deletedStories.push(storyId);
+      localStorage.setItem('deletedStories', JSON.stringify(deletedStories));
+      
       alert('Hikaye başarıyla silindi');
     } catch (error) {
       console.error('Delete story error:', error);
@@ -563,16 +578,28 @@ export default function AdminPanel() {
                             <td className="px-8 py-6 whitespace-nowrap">
                               <div className="flex space-x-2">
                                 <button
-                                  onClick={() => {
+                                  onClick={async () => {
                                     if (confirm(`${user.nickname} kullanıcısını silmek istediğinizden emin misiniz?`)) {
-                                      // localStorage'dan kullanıcıyı kalıcı olarak sil
-                                      const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
-                                      deletedUsers.push(user.id);
-                                      localStorage.setItem('deletedUsers', JSON.stringify(deletedUsers));
-                                      
-                                      // Frontend'den kullanıcıyı kaldır
-                                      setUsers(users.filter(u => u.id !== user.id));
-                                      alert('Kullanıcı başarıyla silindi');
+                                      try {
+                                        // Backend'den kullanıcıyı silmeye çalış (eğer endpoint varsa)
+                                        try {
+                                          await api.delete(`/admin/users/${user.id}`);
+                                        } catch (backendError) {
+                                          console.log('Backend user delete endpoint not available, using localStorage');
+                                        }
+                                        
+                                        // localStorage'dan kullanıcıyı kalıcı olarak sil
+                                        const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                                        deletedUsers.push(user.id);
+                                        localStorage.setItem('deletedUsers', JSON.stringify(deletedUsers));
+                                        
+                                        // Frontend'den kullanıcıyı kaldır
+                                        setUsers(users.filter(u => u.id !== user.id));
+                                        alert('Kullanıcı başarıyla silindi');
+                                      } catch (error) {
+                                        console.error('Delete user error:', error);
+                                        alert('Kullanıcı silinirken hata oluştu');
+                                      }
                                     }
                                   }}
                                   className="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors text-sm border border-red-500/30"
