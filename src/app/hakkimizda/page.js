@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Heart, Users, Sparkles,
   ShieldCheck, Library, Smartphone, Target, BookOpen, PenLine
@@ -38,7 +39,7 @@ export default function HakkimizdaPage() {
         </div>
       </section>
 
-      {/* SAYFA ARASI GEÇİŞ - renk farkı */}
+      {/* SAYFA ARASI GEÇİŞ */}
       <div className="bg-gray-50 h-6 w-full"></div>
 
       {/* MİSYONUMUZ */}
@@ -67,10 +68,13 @@ export default function HakkimizdaPage() {
           </div>
 
           <div className="rounded-xl overflow-hidden shadow-md">
-            <img
+            <Image
               src="/images/about-mission.png"
               alt="Misyon görseli"
+              width={1200}
+              height={800}
               className="w-full h-[320px] object-cover"
+              priority
             />
           </div>
         </div>
@@ -182,8 +186,14 @@ function Feature({ icon, title, desc, tone }) {
 function TeamCard({ img, name, role, bio }) {
   return (
     <div className="text-center">
-      <div className="mx-auto w-64 h-64 rounded-2xl overflow-hidden shadow-md">
-        <img src={img} alt={name} className="w-full h-full object-cover" />
+      <div className="mx-auto w-64 h-64 rounded-2xl overflow-hidden shadow-md relative">
+        <Image
+          src={img}
+          alt={name}
+          fill
+          className="object-cover"
+          sizes="256px"
+        />
       </div>
       <h5 className="mt-4 text-lg font-extrabold">{name}</h5>
       <div className="text-sm text-purple-600 font-semibold">{role}</div>
