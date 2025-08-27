@@ -7,15 +7,15 @@ import { PenTool, Info } from 'lucide-react';
 export default function Hero() {
   return (
     <div 
-      className="relative min-h-screen flex items-center justify-center text-center text-white"
+      className="relative min-h-screen flex items-center justify-center text-center"
       style={{ 
         backgroundImage: "url('/images/hero-background.png')", 
         backgroundSize: "cover", 
         backgroundPosition: "center" 
       }}
     >
-      {/* Yarı saydam overlay */}
-      <div className="absolute inset-0 bg-black/40"></div>
+      {/* Beyaz overlay */}
+      <div className="absolute inset-0 bg-white/40"></div>
       
       {/* Ana İçerik */}
       <div className="relative z-10 max-w-3xl mx-auto text-center px-4 sm:px-6 lg:px-8">
