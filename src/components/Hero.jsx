@@ -24,25 +24,23 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Ana Başlık - Bulut Efekti */}
-          <motion.div
+          {/* Ana Başlık */}
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-block bg-white/70 backdrop-blur rounded-3xl px-8 py-4"
+            className="text-4xl lg:text-7xl font-extrabold leading-tight text-black"
           >
-            <h1 className="text-4xl lg:text-7xl font-extrabold leading-tight">
-              <span className="block text-orange-500">Hayal Gücünü</span>
-              <span className="block text-black">Serbest Bırak!</span>
-            </h1>
-          </motion.div>
+            <span className="block">Hayal Gücünü</span>
+            <span className="block">Serbest Bırak!</span>
+          </motion.h1>
 
           {/* Alt Başlık */}
           <motion.p 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-6 text-lg text-black"
+            className="mt-6 text-base lg:text-lg text-black"
           >
             Arkadaşlarınla birlikte sürükleyici hikâyeler yaz, kelime sınırını zorla, eğlenceli sürprizlerle hikâyeni tamamla!
           </motion.p>
