@@ -19,25 +19,25 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white/95 backdrop-blur-xl text-gray-900 shadow-2xl border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white text-black shadow-lg border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="text-3xl group-hover:scale-110 transition-transform duration-300">✏️</div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:via-pink-500 group-hover:to-purple-500 transition-all duration-300">
+            <span className="text-2xl font-bold text-black group-hover:text-gray-700 transition-all duration-300">
               StoryChain
             </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1">
+          <nav className="hidden md:flex space-x-2">
             <Link 
               href="/" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/' 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-black hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
               Ana Sayfa
@@ -46,8 +46,8 @@ export default function Header() {
               href="/stories" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/stories' 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-black hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
               Hikayeler
@@ -56,8 +56,8 @@ export default function Header() {
               href="/write" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/write' 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-black hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
               Hikaye Yaz
@@ -66,8 +66,8 @@ export default function Header() {
               href="/about" 
               className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                 pathname === '/about' 
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                  : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-blue-500 text-white shadow-lg' 
+                  : 'text-black hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
               Hakkımızda
@@ -78,8 +78,8 @@ export default function Header() {
                   href="/register" 
                   className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                     pathname === '/register' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-blue-500 text-white shadow-lg' 
+                      : 'text-black hover:text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Kayıt Ol
@@ -88,8 +88,8 @@ export default function Header() {
                   href="/nickname" 
                   className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
                     pathname === '/nickname' 
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-blue-500 text-white shadow-lg' 
+                      : 'text-black hover:text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Giriş Yap
