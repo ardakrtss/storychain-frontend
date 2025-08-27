@@ -9,7 +9,7 @@ export default function NasilCalisirPage() {
       <section
         className="relative min-h-[60vh] flex items-center justify-center text-center"
         style={{
-          backgroundImage: "url('/images/how-hero.jpg')", // buraya sonra kendi görselini koyacaksın
+          backgroundImage: "url('/images/how-hero.png')", // Üst görsel
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -101,10 +101,10 @@ export default function NasilCalisirPage() {
             </ul>
           </div>
 
-          {/* Sağ görsel placeholder — buraya sonra görsel yükleyeceksin */}
+          {/* Sağ görsel */}
           <div className="rounded-xl overflow-hidden">
             <img
-              src="/images/how-example.jpg" // SONRA kendi görselini aynı isimle koyabilirsin
+              src="/images/how-example.png" // Alt görsel
               alt="Örnek hikaye görseli"
               className="w-full h-[280px] sm:h-[360px] object-cover"
             />
