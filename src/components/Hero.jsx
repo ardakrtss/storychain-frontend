@@ -18,29 +18,31 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black/40"></div>
       
       {/* Ana İçerik */}
-      <div className="relative z-10 max-w-2xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          {/* Ana Başlık */}
-          <motion.h1 
+          {/* Ana Başlık - Bulut Efekti */}
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl lg:text-6xl font-bold leading-tight mb-6"
+            className="inline-block bg-white/70 backdrop-blur rounded-3xl px-8 py-4 mb-6"
           >
-            <span className="block text-purple-500">Hayal Gücünü</span>
-            <span className="block text-yellow-400">Serbest Bırak!</span>
-          </motion.h1>
+            <h1 className="text-4xl lg:text-7xl font-extrabold leading-tight">
+              <span className="block text-orange-500">Hayal Gücünü</span>
+              <span className="block text-black">Serbest Bırak!</span>
+            </h1>
+          </motion.div>
 
           {/* Alt Başlık */}
           <motion.p 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-4 text-base lg:text-lg text-black mb-8"
+            className="mt-6 text-lg text-black mb-8"
           >
             Arkadaşlarınla birlikte sürükleyici hikâyeler yaz, kelime sınırını zorla, eğlenceli sürprizlerle hikâyeni tamamla!
           </motion.p>
