@@ -1,7 +1,7 @@
 import "./globals.css";
 import { AuthProvider } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import GlobalFooter from '../components/footer/GlobalFooter';
 
 export const metadata = {
   title: 'StoryChain - Paylaşımlı Hikaye Yazma Platformu',
@@ -17,7 +17,7 @@ export default function RootLayout({
         <AuthProvider>
           <Navbar />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <GlobalFooter />
         </AuthProvider>
       </body>
     </html>

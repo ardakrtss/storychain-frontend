@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+// GÜVENLİK ÖNLEMİ: Eski footer devre dışı
+export const __LEGACY_FOOTER_DISABLED__ = true;
+
 export default function Footer() {
   return (
     <footer className="bg-slate-900 text-slate-200 mt-16">
