@@ -11,32 +11,35 @@ export default function HakkimizdaPage() {
 
       {/* HERO */}
       <section
-        className="relative rounded-xl overflow-hidden mx-3 sm:mx-6 mt-4"
+        className="relative rounded-b-3xl overflow-hidden"
         style={{
           backgroundImage: "url('/images/about-hero.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-white/70 backdrop-blur-sm"></div>
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+        <div className="absolute inset-0 bg-white/75 backdrop-blur-sm"></div>
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
           <h1 className="text-4xl sm:text-5xl font-extrabold">
             <span className="bg-gradient-to-r from-fuchsia-600 to-purple-600 bg-clip-text text-transparent">
-              HikayeZinciri Hakkında
+              StoryChain Hakkında
             </span>
           </h1>
-          <p className="mt-3 text-gray-700 max-w-3xl">
+          <p className="mt-3 text-gray-700 max-w-3xl mx-auto">
             Çocukların hayal gücünü keşfettiği, birlikte hikayeler yarattığı ve yaratıcılığın sınır tanımadığı büyülü bir platform
           </p>
 
           {/* Rozetler */}
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Badge icon={<Heart className="w-4 h-4 text-rose-500" />} text="Sevgiyle Tasarlandı" />
             <Badge icon={<Users className="w-4 h-4 text-sky-600" />} text="İşbirliği Odaklı" />
             <Badge icon={<Sparkles className="w-4 h-4 text-violet-500" />} text="Hayal Gücü Dostu" />
           </div>
         </div>
       </section>
+
+      {/* SAYFA ARASI GEÇİŞ - renk farkı */}
+      <div className="bg-gray-50 h-6 w-full"></div>
 
       {/* MİSYONUMUZ */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 mt-12">
