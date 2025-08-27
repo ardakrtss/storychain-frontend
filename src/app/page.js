@@ -14,8 +14,23 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      {/* Clean Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-white"></div>
+      {/* Minimal Background with Light Colors */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"></div>
+      
+      {/* Subtle Geometric Elements */}
+      <div className="absolute inset-0">
+        {/* Top Right Circle */}
+        <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-blue-100/30 to-purple-100/30 rounded-full blur-3xl"></div>
+        
+        {/* Bottom Left Circle */}
+        <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tr from-pink-100/30 to-yellow-100/30 rounded-full blur-3xl"></div>
+        
+        {/* Center Subtle Circle */}
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-100/20 to-blue-100/20 rounded-full blur-3xl"></div>
+        
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.02)_1px,transparent_0)] bg-[length:20px_20px]"></div>
+      </div>
 
       {/* Hero Section - SaaS Website Kit Style */}
       <div className="relative z-10 min-h-screen flex items-center justify-center">
