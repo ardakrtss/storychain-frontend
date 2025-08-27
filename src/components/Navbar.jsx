@@ -12,7 +12,7 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Ana Sayfa' },
-    { href: '/nasil-calisir', label: 'Nasıl Çalışır' },
+    { href: '/nasil-calisir', label: 'Nasıl Çalışır?' },
     { href: '/hakkimizda', label: 'Hakkımızda' },
     { href: '/iletisim', label: 'İletişim' },
   ];
@@ -38,34 +38,24 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                  pathname === link.href
-                    ? 'bg-blue-500 text-white shadow-md'
-                    : 'text-gray-700 hover:text-black hover:bg-gray-100'
-                }`}
+                className="hover:text-gray-900 transition-colors duration-200"
               >
                 {link.label}
               </Link>
             ))}
-          </div>
 
-          {/* Action Buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/giris"
-              className="text-gray-700 hover:text-gray-900"
-            >
+            <Link href="/giris" className="text-gray-700 hover:text-gray-900 transition-colors duration-200">
               Giriş Yap
             </Link>
-
+            
             <Link
               href="/kaydol"
-              className="rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 font-semibold shadow hover:opacity-90 transition"
+              className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 font-semibold shadow hover:opacity-90 transition-all duration-200"
             >
               Kaydol
             </Link>
@@ -94,11 +84,7 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                    pathname === link.href
-                      ? 'bg-blue-500 text-white'
-                      : 'text-gray-700 hover:text-black hover:bg-gray-100'
-                  }`}
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors duration-200"
                 >
                   {link.label}
                 </Link>
@@ -107,14 +93,14 @@ export default function Navbar() {
                 <Link
                   href="/giris"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors duration-200"
                 >
                   Giriş Yap
                 </Link>
                 <Link
                   href="/kaydol"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-center shadow hover:opacity-90"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white text-center font-semibold shadow hover:opacity-90 transition-all duration-200"
                 >
                   Kaydol
                 </Link>
