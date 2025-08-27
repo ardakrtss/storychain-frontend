@@ -1,236 +1,319 @@
-'use client';
+"use client";
+import { useEffect, useMemo, useState } from "react";
+import {
+  BookOpen,
+  Heart,
+  Search,
+  Sparkles,
+  Calendar,
+  Timer,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import Link from 'next/link';
-import api from '../../lib/api';
+/* ====== Tema / Yardımcılar ====== */
+const THEMES = [
+  { key: "hepsi", label: "Tümü" },
+  { key: "macera", label: "Macera" },
+  { key: "gizem", label: "Gizem" },
+  { key: "fantastik", label: "Fantastik" },
+  { key: "bilim-kurgu", label: "Bilim Kurgu" },
+  { key: "sifir-atik", label: "Sıfır Atık" },
+  { key: "iklim", label: "İklim Değişikliği" },
+];
 
+const THEME_COLORS = {
+  macera: "bg-orange-100 text-orange-800 ring-orange-200",
+  gizem: "bg-violet-100 text-violet-800 ring-violet-200",
+  fantastik: "bg-pink-100 text-pink-800 ring-pink-200",
+  "bilim-kurgu": "bg-sky-100 text-sky-800 ring-sky-200",
+  "sifir-atik": "bg-emerald-100 text-emerald-800 ring-emerald-200",
+  iklim: "bg-lime-100 text-lime-800 ring-lime-200",
+  hepsi: "bg-slate-100 text-slate-800 ring-slate-200",
+};
+
+function timeAgo(iso) {
+  const d = new Date(iso);
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return "az önce";
+  if (diff < 3600) return `${Math.floor(diff / 60)} dk önce`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)} sa önce`;
+  return d.toLocaleDateString("tr-TR");
+}
+
+/* ====== Sayfa ====== */
 export default function StoriesPage() {
-  const [stories, setStories] = useState([]);
+  // filtreler
+  const [q, setQ] = useState("");
+  const [theme, setTheme] = useState("hepsi");
+  const [sort, setSort] = useState("latest"); // latest | liked | parts
+  const [page, setPage] = useState(1);
+  const pageSize = 9;
+
+  // veri
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
-  const { user } = useAuth();
+  const [stories, setStories] = useState([]);
 
+  /* === DEMO VERİ ===
+     → Burayı kendi API'nle değiştir (ör. fetch("/api/stories?...")) */
   useEffect(() => {
-    setIsVisible(true);
+    setLoading(true);
+    const sample = Array.from({ length: 28 }).map((_, i) => ({
+      id: String(i + 1),
+      title: [
+        "Gökkuşağı Köprüsünün Sırrı",
+        "Zamanda Kayıp Not Defteri",
+        "Ormanın Fısıltısı",
+        "Mars'taki İlk Kamp",
+        "Deniz Feneri ve Minik Ejder",
+      ][i % 5],
+      excerpt:
+        [
+          "Köprünün taşlarında parıldayan işaretler bir anda canlandı...",
+          "Notların arasında açılan minik kapı başka bir güne işaret ediyordu...",
+          "Rüzgâr her yaprağa bambaşka bir hikâye anlattı...",
+          "Ufuk çizgisi turuncuya dönerken kamp ateşi garip bir ses çıkardı...",
+          "Fenerin ışığı, gökyüzündeki minik ejderin pullarında dans etti...",
+        ][i % 5] + " Devamını birlikte yazalım!",
+      theme: THEMES[(i % (THEMES.length - 1)) + 1].key,
+      likes: 25 + (i * 7) % 200,
+      parts: 3 + (i % 10),
+      words: 800 + ((i * 97) % 1200),
+      updatedAt: new Date(Date.now() - i * 2 * 3600_000).toISOString(),
+      emoji: ["🌈", "📓", "🌲", "🚀", "🐉"][i % 5],
+      author: ["Elif", "Deniz", "Arda", "Zeynep", "Can"][i % 5],
+    }));
+    const t = setTimeout(() => {
+      setStories(sample);
+      setLoading(false);
+    }, 350);
+    return () => clearTimeout(t);
   }, []);
 
-  useEffect(() => {
-    const fetchStories = async () => {
-      try {
-        const response = await api.get('/stories/available');
-        let storiesData = response.data;
-        
-        // localStorage'dan beğeni sayılarını al
-        const storyLikes = JSON.parse(localStorage.getItem('storyLikes') || '{}');
-        storiesData = storiesData.map(story => {
-          const storyKey = `story_${story.id}`;
-          return {
-            ...story,
-            likeCount: storyLikes[storyKey] || story.likeCount || 0
-          };
-        });
-        
-        setStories(storiesData);
-      } catch (error) {
-        console.error('Error fetching stories:', error);
-        setError('Hikayeler yüklenirken bir hata oluştu');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // filtreleme + arama + sıralama
+  const filtered = useMemo(() => {
+    let arr = [...stories];
+    if (theme !== "hepsi") arr = arr.filter((s) => s.theme === theme);
+    if (q.trim()) {
+      const needle = q.trim().toLowerCase();
+      arr = arr.filter(
+        (s) =>
+          s.title.toLowerCase().includes(needle) ||
+          s.author.toLowerCase().includes(needle) ||
+          s.excerpt.toLowerCase().includes(needle)
+      );
+    }
+    if (sort === "latest") arr.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    if (sort === "liked") arr.sort((a, b) => b.likes - a.likes);
+    if (sort === "parts") arr.sort((a, b) => b.parts - a.parts);
+    return arr;
+  }, [stories, q, theme, sort]);
 
-    fetchStories();
-  }, []);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const current = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return filtered.slice(start, start + pageSize);
+  }, [filtered, page, pageSize]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-2xl text-black">Hikayeler yükleniyor...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-black mb-4">Hata</h2>
-          <p className="text-black mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
-          >
-            Tekrar Dene
-          </button>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => setPage(1), [q, theme, sort]); // filtre değişince başa dön
 
   return (
-    <div className="min-h-screen bg-white py-12 overflow-hidden">
-      {/* Minimal Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"></div>
-      
-      {/* Subtle Geometric Elements */}
-      <div className="absolute inset-0">
-        {/* Top Right Circle */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-blue-100/30 to-purple-100/30 rounded-full blur-3xl"></div>
-        
-        {/* Bottom Left Circle */}
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-tr from-pink-100/30 to-yellow-100/30 rounded-full blur-3xl"></div>
-        
-        {/* Subtle Grid Pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.02)_1px,transparent_0)] bg-[length:20px_20px]"></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <h1 className="text-6xl lg:text-7xl font-black text-black mb-8">
-            Hikayeler
-          </h1>
-          <p className="text-xl text-black max-w-4xl mx-auto leading-relaxed font-medium">
-            Diğer yazarlarımızın birlikte yarattığı harika hikayeleri keşfet! 
-            Beğendiğin hikayelere kalp ver ve yeni hikayeler yazmaya ilham al.
+    <main className="min-h-screen bg-gradient-to-b from-indigo-50/40 to-pink-50/40">
+      {/* HERO */}
+      <section className="rounded-b-3xl bg-gradient-to-r from-sky-50 to-purple-50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white shadow">
+            <BookOpen className="h-7 w-7" />
+          </div>
+          <h1 className="mt-4 text-3xl sm:text-4xl font-extrabold">Hikayeler</h1>
+          <p className="mt-2 text-gray-700">
+            Tüm hikayeleri keşfet, filtrele ve sevdiğini devam ettir. Hayal gücü burada büyür!
           </p>
-        </div>
 
-        {/* Action Buttons */}
-        <div className={`flex flex-col sm:flex-row gap-6 justify-center mb-16 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          {user ? (
-            <Link 
-              href="/themes" 
-              className="group relative bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-              <span className="text-2xl relative z-10">✏️</span>
-              <span className="relative z-10">Yeni Hikaye Yaz</span>
-            </Link>
-          ) : (
-            <Link 
-              href="/nickname" 
-              className="group relative bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-              <span className="text-2xl relative z-10">✏️</span>
-              <span className="relative z-10">Hikaye Yazmaya Başla</span>
-            </Link>
-          )}
-          
-          <Link 
-            href="/leaderboard" 
-            className="group bg-white hover:bg-gray-50 text-black px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 border-2 border-gray-200 hover:border-gray-300 flex items-center justify-center gap-4 hover:scale-105 shadow-lg"
-          >
-            <span className="text-2xl">🏆</span>
-            <span>Lider Tablosu</span>
-          </Link>
-        </div>
+          {/* Filtre Çubuğu */}
+          <div className="mx-auto mt-6 max-w-5xl">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder="Başlık, yazar veya özetten ara..."
+                  className="w-full rounded-xl border border-gray-300 bg-white/90 px-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-300"
+                />
+              </div>
 
-        {/* Stories Grid */}
-        <div className={`transition-all duration-1000 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          {stories.length === 0 ? (
-            <div className="text-center py-20">
-              <div className="text-9xl mb-8 animate-bounce">📚</div>
-              <h3 className="text-3xl font-bold text-black mb-6">Henüz Hikaye Yok</h3>
-              <p className="text-black mb-10 text-xl leading-relaxed font-medium">İlk hikayeyi sen yazarak başlat!</p>
-              <Link 
-                href="/themes" 
-                className="group relative bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 inline-flex items-center gap-4 shadow-2xl hover:shadow-blue-500/50 transform hover:scale-110 overflow-hidden"
+              <select
+                value={theme}
+                onChange={(e) => setTheme(e.target.value)}
+                className="rounded-xl border border-gray-300 bg-white/90 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-300"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                <span className="text-2xl relative z-10">✏️</span>
-                <span className="relative z-10">İlk Hikayeyi Yaz</span>
-              </Link>
+                {THEMES.map((t) => (
+                  <option key={t.key} value={t.key}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="rounded-xl border border-gray-300 bg-white/90 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-300"
+              >
+                <option value="latest">En Yeni</option>
+                <option value="liked">En Beğenilen</option>
+                <option value="parts">En Çok Bölüm</option>
+              </select>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {stories.map((story, index) => (
-                <div 
-                  key={story.id} 
-                  className={`group relative transition-all duration-1000 delay-${index * 100}`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-                  <div className="relative bg-white rounded-3xl shadow-lg border border-gray-200 hover:border-gray-300 transition-all duration-500 hover:bg-gray-50 hover:scale-105 overflow-hidden">
-                    {/* Story Header */}
-                    <div className="p-8">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold bg-blue-100 text-blue-700 border border-blue-200">
-                          {story.theme}
-                        </span>
-                        <div className="flex items-center gap-2 text-pink-500">
-                          <span className="text-xl">❤️</span>
-                          <span className="text-lg font-bold">{story.likeCount || 0}</span>
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold text-black mb-4 line-clamp-2 leading-tight">
-                        {story.title}
-                      </h3>
-                      
-                      <p className="text-black text-base mb-6 line-clamp-3 leading-relaxed font-medium">
-                        {story.segments && story.segments.length > 0 
-                          ? story.segments[0].content 
-                          : 'Hikaye içeriği yükleniyor...'}
-                      </p>
-                      
-                      <div className="flex items-center justify-between text-sm text-black mb-6">
-                        <span className="flex items-center gap-2">
-                          <span className="text-lg">👤</span>
-                          <span className="font-semibold">{story.segments && story.segments.length > 0 ? story.segments[0].author : 'Anonim'}</span>
-                        </span>
-                        <span className="flex items-center gap-2">
-                          <span className="text-lg">📅</span>
-                          <span>{new Date(story.createdAt).toLocaleDateString('tr-TR')}</span>
-                        </span>
-                      </div>
-                    </div>
-                    
-                    {/* Story Footer */}
-                    <div className="px-8 py-6 bg-gray-50 border-t border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <span className="text-black font-semibold flex items-center gap-2">
-                          <span className="text-lg">📖</span>
-                          {story.segments ? story.segments.length : 0} bölüm
-                        </span>
-                        {story.segments && story.segments.length < 3 ? (
-                          <button 
-                            onClick={() => {
-                              const messages = [
-                                "Oops! Hikaye bitmeden okuma ki heyecanı kaçmasın! 😄",
-                                "Hey! Hikaye henüz tamamlanmadı, sabırlı ol! 🎭",
-                                "Hikaye devam ediyor... Biraz daha bekle! ⏳",
-                                "Heyecan dorukta! Hikaye henüz bitmedi! 🎪",
-                                "Hikaye tamamlanana kadar beklemek zorundasın! 🎯"
-                              ];
-                              const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-                              alert(randomMessage);
-                            }}
-                            className="group relative bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl transform hover:scale-110 overflow-hidden"
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                            <span className="relative z-10">Devamını Oku →</span>
-                          </button>
-                        ) : (
-                          <Link 
-                            href={`/stories/${story.id}`}
-                            className="group relative bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-500 shadow-lg hover:shadow-xl transform hover:scale-110 overflow-hidden"
-                          >
-                            <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                            <span className="relative z-10">Devamını Oku →</span>
-                          </Link>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          </div>
+        </div>
+      </section>
+
+      {/* LİSTE */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-10">
+        {loading ? (
+          <LoadingGrid />
+        ) : filtered.length === 0 ? (
+          <EmptyState query={q} />
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {current.map((s) => (
+                <StoryCard key={s.id} s={s} />
               ))}
             </div>
-          )}
+
+            {/* Sayfalama */}
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className={`flex items-center gap-1 rounded-xl px-3 py-2 text-sm ring-1 ring-black/10 shadow-sm ${
+                  page === 1 ? "bg-gray-200 text-gray-500" : "bg-white hover:bg-slate-50"
+                }`}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Geri
+              </button>
+              <span className="text-sm text-gray-600">
+                Sayfa <b>{page}</b> / {totalPages}
+              </span>
+              <button
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className={`flex items-center gap-1 rounded-xl px-3 py-2 text-sm ring-1 ring-black/10 shadow-sm ${
+                  page === totalPages
+                    ? "bg-gray-200 text-gray-500"
+                    : "bg-white hover:bg-slate-50"
+                }`}
+              >
+                İleri <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+          </>
+        )}
+      </section>
+    </main>
+  );
+}
+
+/* ====== Kart Bileşenleri ====== */
+function StoryCard({ s }) {
+  const badge = THEME_COLORS[s.theme] || THEME_COLORS.hepsi;
+
+  return (
+    <article className="group rounded-2xl bg-white p-5 shadow-lg ring-1 ring-black/5 hover:shadow-xl transition">
+      <div className="flex items-start justify-between">
+        <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 ${badge}`}>
+          <span>{s.emoji}</span>
+          {labelOf(s.theme)}
         </div>
+        <span className="inline-flex items-center gap-1 text-sm text-pink-600">
+          <Heart className="h-4 w-4" />
+          {s.likes}
+        </span>
+      </div>
+
+      <h3 className="mt-3 line-clamp-2 text-xl font-extrabold text-gray-900">
+        {s.title}
+      </h3>
+      <p className="mt-2 line-clamp-3 text-sm text-gray-700">{s.excerpt}</p>
+
+      <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-gray-600">
+        <div className="flex items-center gap-1">
+          <Sparkles className="h-4 w-4 text-fuchsia-600" />
+          {s.parts} bölüm
+        </div>
+        <div className="flex items-center gap-1">
+          <Timer className="h-4 w-4 text-indigo-600" />
+          {s.words.toLocaleString("tr-TR")} kelime
+        </div>
+        <div className="flex items-center gap-1 justify-end">
+          <Calendar className="h-4 w-4 text-emerald-600" />
+          {timeAgo(s.updatedAt)}
+        </div>
+      </div>
+
+      <div className="mt-5 flex items-center justify-between">
+        <div className="text-xs text-gray-500">Yazar: <b>{s.author}</b></div>
+        <div className="flex gap-2">
+          <a
+            href={`/hikaye/${s.id}`}
+            className="rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-3 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
+          >
+            Oku / Devam Et
+          </a>
+          <a
+            href={`/hikaye/${s.id}#paylas`}
+            className="rounded-xl ring-1 ring-black/10 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50"
+          >
+            Paylaş
+          </a>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function labelOf(key) {
+  const t = THEMES.find((x) => x.key === key);
+  return t ? t.label : "Tema";
+}
+
+/* ====== Yardımcı Bileşenler ====== */
+function LoadingGrid() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {Array.from({ length: 9 }).map((_, i) => (
+        <div
+          key={i}
+          className="h-48 rounded-2xl bg-white shadow ring-1 ring-black/5 animate-pulse"
+        />
+      ))}
+    </div>
+  );
+}
+
+function EmptyState({ query }) {
+  return (
+    <div className="rounded-2xl bg-white p-10 text-center shadow ring-1 ring-black/5">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white shadow">
+        <Search className="h-7 w-7" />
+      </div>
+      <h3 className="mt-4 text-xl font-extrabold">Sonuç bulunamadı</h3>
+      <p className="mt-2 text-gray-600">
+        {query
+          ? `"${query}" için eşleşen hikaye yok. Farklı bir arama deneyebilirsin.`
+          : "Henüz burada listelenecek hikaye yok gibi görünüyor."}
+      </p>
+      <div className="mt-4">
+        <a
+          href="/hikaye-yaz"
+          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
+        >
+          <Sparkles className="h-4 w-4" />
+          İlk hikayeyi sen başlat!
+        </a>
       </div>
     </div>
   );
