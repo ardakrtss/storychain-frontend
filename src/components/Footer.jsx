@@ -1,5 +1,3 @@
-'use client';
-
 import Link from "next/link";
 
 function MiniCard({ emoji, title, desc }) {
@@ -31,7 +29,7 @@ export default function Footer() {
         {/* Hızlı Linkler */}
         <div>
           <h4 className="text-white text-xl font-bold">Hızlı Linkler</h4>
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-3 space-y-3">
             <li><Link href="/" className="hover:underline">Ana Sayfa</Link></li>
             <li><Link href="/temalar" className="hover:underline">Temalar</Link></li>
             <li><Link href="/hikayeler" className="hover:underline">Hikayeler</Link></li>
@@ -43,7 +41,7 @@ export default function Footer() {
         {/* Destek */}
         <div>
           <h4 className="text-white text-xl font-bold">Destek</h4>
-          <ul className="mt-3 space-y-2">
+          <ul className="mt-3 space-y-3">
             <li><Link href="/hakkimizda" className="hover:underline">Hakkımızda</Link></li>
             <li><Link href="/iletisim" className="hover:underline">İletişim</Link></li>
             <li><Link href="/kullanim-sartlari" className="hover:underline">Kullanım Şartları</Link></li>
