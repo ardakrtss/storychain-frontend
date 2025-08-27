@@ -4,167 +4,172 @@ import Link from "next/link";
 
 export default function KaydolPage() {
   const [form, setForm] = useState({
-    username: "",
+    name: "",
+    email: "",
     password: "",
-    confirm: "",
-    invite: "",
-    terms: false,
+    terms: false,     // Kullanım Şartları
+    privacy: false,   // Gizlilik Politikası
+    kvkk: false,      // KVKK Aydınlatma/Onay
   });
-  const [msg, setMsg] = useState({ type: "", text: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const allAccepted = form.terms && form.privacy && form.kvkk;
 
   function onChange(e) {
-    const { name, value, type, checked } = e.target;
-    setForm((f) => ({ ...f, [name]: type === "checkbox" ? checked : value }));
-  }
-
-  function validate() {
-    if (form.username.trim().length < 3)
-      return "Kullanıcı adı en az 3 karakter olmalı.";
-    if (form.password.length < 6)
-      return "Şifre en az 6 karakter olmalı.";
-    if (form.password !== form.confirm)
-      return "Şifreler eşleşmiyor.";
-    if (!form.terms)
-      return "Kullanım Şartları'nı kabul etmelisin.";
-    return "";
+    const { name, type, value, checked } = e.target;
+    setForm((s) => ({ ...s, [name]: type === "checkbox" ? checked : value }));
   }
 
   async function onSubmit(e) {
     e.preventDefault();
-    const err = validate();
-    if (err) {
-      setMsg({ type: "error", text: err });
+    setError("");
+
+    if (!allAccepted) {
+      setError("Kayıt için Kullanım Şartları, Gizlilik Politikası ve KVKK onaylarını kabul etmelisiniz.");
       return;
     }
-    // Backend bağlanınca burayı /api/register'a POST edeceğiz.
-    console.log("REGISTER_PAYLOAD", {
-      username: form.username,
-      password: form.password,
-      invite: form.invite || null,
-    });
-    setMsg({
-      type: "success",
-      text:
-        "Hesap oluşturuldu (örnek). Backend eklendiğinde kayıt tamamlanacak.",
-    });
+
+    try {
+      setLoading(true);
+      // Backend'in varsa buraya POST et:
+      // const res = await fetch("/api/register", { method: "POST", body: JSON.stringify({ ...form }), headers:{ "Content-Type":"application/json" }});
+      // if (!res.ok) throw new Error((await res.json()).message || "Kayıt başarısız");
+      // window.location.href = "/"; // veya yönlendirmek istediğin sayfa
+      alert("Demo: Onaylar alındı, kayıt akışı burada backend'e gönderilecek.");
+    } catch (err) {
+      setError(err.message || "Beklenmeyen bir hata oluştu.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <main className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
-        <h1 className="text-2xl font-extrabold text-gray-900 text-center">
-          StoryChain'e Katıl
-        </h1>
-        <p className="mt-1 text-center text-gray-600">
-          E-posta yok. Sadece kullanıcı adı ve şifreyle kaydol.
-        </p>
+    <main className="min-h-screen bg-gradient-to-b from-purple-50/40 to-pink-50/40">
+      <div className="max-w-md mx-auto px-4 sm:px-6 py-12">
+        <div className="rounded-2xl bg-white p-6 sm:p-8 shadow-xl ring-1 ring-black/5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-center">Kaydol</h1>
+          <p className="text-center text-gray-600 mt-2">Hemen hesabını oluştur.</p>
 
-        {msg.text && (
-          <div
-            className={`mt-4 rounded-md p-3 text-sm ${
-              msg.type === "success"
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
-          >
-            {msg.text}
-          </div>
-        )}
+          <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Ad Soyad</label>
+              <input
+                name="name"
+                value={form.name}
+                onChange={onChange}
+                placeholder="Adın ve soyadın"
+                className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
 
-        <form onSubmit={onSubmit} className="mt-5 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Kullanıcı Adı
-            </label>
-            <input
-              name="username"
-              value={form.username}
-              onChange={onChange}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              placeholder="ör. Tuna123"
-              autoComplete="username"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">E-posta</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={onChange}
+                placeholder="ornek@email.com"
+                className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Şifre
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={onChange}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              placeholder="••••••"
-              autoComplete="new-password"
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Şifre</label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={onChange}
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                minLength={6}
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Şifre (Tekrar)
-            </label>
-            <input
-              type="password"
-              name="confirm"
-              value={form.confirm}
-              onChange={onChange}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              placeholder="••••••"
-              autoComplete="new-password"
-            />
-          </div>
+            {/* ZORUNLU ONAYLAR */}
+            <div className="mt-4 space-y-3">
+              <label className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  name="terms"
+                  checked={form.terms}
+                  onChange={onChange}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  aria-describedby="terms-help"
+                  required
+                />
+                <span className="text-sm text-gray-700" id="terms-help">
+                  <Link href="/kullanim-sartlari" className="font-semibold text-purple-700 underline">Kullanım Şartları</Link>'nı okudum ve kabul ediyorum.
+                </span>
+              </label>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Davet Kodu (opsiyonel)
-            </label>
-            <input
-              name="invite"
-              value={form.invite}
-              onChange={onChange}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              placeholder="(varsa)"
-            />
-          </div>
+              <label className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  name="privacy"
+                  checked={form.privacy}
+                  onChange={onChange}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  aria-describedby="privacy-help"
+                  required
+                />
+                <span className="text-sm text-gray-700" id="privacy-help">
+                  <Link href="/gizlilik" className="font-semibold text-purple-700 underline">Gizlilik Politikası</Link>'nı okudum ve kabul ediyorum.
+                </span>
+              </label>
 
-          <label className="flex items-center gap-2 text-sm text-gray-700">
-            <input
-              type="checkbox"
-              name="terms"
-              checked={form.terms}
-              onChange={onChange}
-              className="h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-400"
-            />
-            <span>
-              <Link
-                href="/kullanim-sartlari"
-                className="underline text-purple-600 hover:text-purple-700"
-              >
-                Kullanım Şartları
-              </Link>
-              'nı kabul ediyorum.
-            </span>
-          </label>
+              <label className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  name="kvkk"
+                  checked={form.kvkk}
+                  onChange={onChange}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  aria-describedby="kvkk-help"
+                  required
+                />
+                <span className="text-sm text-gray-700" id="kvkk-help">
+                  <Link href="/kvkk" className="font-semibold text-purple-700 underline">KVKK Aydınlatma Metni</Link>'ni okudum; kişisel verilerimin işlenmesine <b>açık rıza</b> veriyorum.
+                </span>
+              </label>
 
-          <button
-            type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2.5 font-semibold shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-purple-400"
-          >
-            Kaydol
-          </button>
-        </form>
+              {!allAccepted && (
+                <p className="text-xs text-rose-600">
+                  * Kayıt işlemi için tüm onay kutularını işaretlemeniz gerekir.
+                </p>
+              )}
+            </div>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Zaten hesabın var mı?{" "}
-          <Link
-            href="/giris"
-            className="font-semibold text-purple-600 hover:text-purple-700 underline"
-          >
-            Giriş Yap
-          </Link>
-        </p>
+            {/* HATA */}
+            {error && (
+              <div className="rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm p-3">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={!allAccepted || loading}
+              className={`w-full rounded-xl py-2.5 font-semibold text-white shadow
+                          ${!allAccepted || loading
+                            ? "bg-gray-300 cursor-not-allowed"
+                            : "bg-gradient-to-r from-indigo-500 to-fuchsia-500 hover:opacity-95"}`}
+              aria-disabled={!allAccepted || loading}
+            >
+              {loading ? "Kaydediliyor..." : "Kaydol"}
+            </button>
+
+            <p className="text-center text-sm text-gray-600">
+              Zaten hesabın var mı?{" "}
+              <Link href="/giris" className="font-semibold text-purple-700 underline">Giriş Yap</Link>
+            </p>
+          </form>
+        </div>
       </div>
     </main>
   );
