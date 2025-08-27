@@ -55,16 +55,17 @@ export default function Navbar() {
           </div>
 
           {/* Action Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href="/giris"
-              className="px-6 py-2 rounded-lg font-medium transition-all duration-300 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400"
+              className="text-gray-700 hover:text-gray-900"
             >
               Giriş Yap
             </Link>
+
             <Link
               href="/kaydol"
-              className="px-6 py-2 rounded-lg font-medium transition-all duration-300 !bg-orange-500 hover:!bg-orange-600 !text-white shadow-md"
+              className="rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 font-semibold shadow hover:opacity-90 transition"
             >
               Kaydol
             </Link>
@@ -106,14 +107,14 @@ export default function Navbar() {
                 <Link
                   href="/giris"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-700 hover:text-gray-900"
                 >
                   Giriş Yap
                 </Link>
                 <Link
                   href="/kaydol"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 !bg-orange-500 hover:!bg-orange-600 !text-white text-center"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-center shadow hover:opacity-90"
                 >
                   Kaydol
                 </Link>
