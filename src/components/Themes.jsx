@@ -2,56 +2,55 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
 
 const themes = [
   {
     id: 1,
     title: 'Macera',
     description: 'Heyecan dolu yolculuklar ve keşifler',
-    image: '/images/adventure.jpg',
+    image: '/images/adventure.png',
     color: 'bg-orange-500',
-    icon: '🗺️'
+    hoverColor: 'hover:bg-orange-600'
   },
   {
     id: 2,
     title: 'Gizem',
     description: 'Sırlarla dolu esrarengiz hikayeler',
-    image: '/images/mystery.jpg',
+    image: '/images/mystery.png',
     color: 'bg-purple-500',
-    icon: '🔍'
+    hoverColor: 'hover:bg-purple-600'
   },
   {
     id: 3,
     title: 'Fantastik',
     description: 'Büyülü dünyalar ve efsanevi yaratıklar',
-    image: '/images/fantasy.jpg',
+    image: '/images/fantasy.png',
     color: 'bg-blue-400',
-    icon: '🐉'
+    hoverColor: 'hover:bg-blue-500'
   },
   {
     id: 4,
     title: 'Bilim Kurgu',
     description: 'Gelecekte geçen teknolojik maceralar',
-    image: '/images/scifi.jpg',
+    image: '/images/scifi.png',
     color: 'bg-blue-600',
-    icon: '🚀'
+    hoverColor: 'hover:bg-blue-700'
   },
   {
     id: 5,
     title: 'Sıfır Atık',
     description: 'Çevre dostu ve sürdürülebilir hikayeler',
-    image: '/images/zerowaste.jpg',
+    image: '/images/zerowaste.png',
     color: 'bg-green-500',
-    icon: '🌱'
+    hoverColor: 'hover:bg-green-600'
   },
   {
     id: 6,
     title: 'İklim Değişikliği',
     description: 'Doğa ve çevre temalı hikayeler',
-    image: '/images/climate.jpg',
+    image: '/images/climate.png',
     color: 'bg-blue-700',
-    icon: '🌍'
+    hoverColor: 'hover:bg-blue-800'
   }
 ];
 
@@ -82,39 +81,48 @@ export default function Themes() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              whileHover={{ y: -10 }}
               className="group cursor-pointer"
             >
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-all duration-300">
-                {/* Tema Görseli */}
-                <div className="h-48 bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center text-6xl">
-                    {theme.icon}
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              <div
+                className="
+                  bg-white rounded-2xl shadow-lg overflow-hidden
+                  transition-all duration-300 ease-out
+                  hover:shadow-2xl hover:-translate-y-0.5
+                  max-w-sm mx-auto
+                "
+              >
+                {/* Görsel */}
+                <div className="h-40 w-full overflow-hidden bg-gray-100">
+                  <img
+                    src={theme.image}
+                    alt={theme.title}
+                    className="
+                      h-40 w-full object-cover
+                      transition-transform duration-300 ease-out
+                      hover:scale-105
+                    "
+                    loading="lazy"
+                  />
                 </div>
 
-                {/* Tema İçeriği */}
+                {/* İçerik */}
                 <div className="p-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    {theme.title}
-                  </h3>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
+                  <h3 className="text-2xl font-extrabold text-gray-900">{theme.title}</h3>
+                  <p className="mt-2 text-gray-600">
                     {theme.description}
                   </p>
 
-                  {/* Keşfet Butonu */}
                   <Link href={`/themes/${theme.id}`}>
-                    <motion.div
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-full text-center py-4 rounded-xl text-white font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl ${theme.color}`}
+                    <button
+                      className={`
+                        mt-5 w-full rounded-xl px-6 py-3 font-semibold
+                        text-white shadow-md transition-all duration-300
+                        ${theme.color} ${theme.hoverColor}
+                        focus:outline-none focus:ring-2 focus:ring-orange-300
+                      `}
                     >
-                      <div className="flex items-center justify-center gap-2">
-                        <span>Keşfet</span>
-                        <ArrowRight size={20} />
-                      </div>
-                    </motion.div>
+                      Keşfet →
+                    </button>
                   </Link>
                 </div>
               </div>
