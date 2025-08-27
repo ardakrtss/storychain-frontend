@@ -18,7 +18,7 @@ export default function Hero() {
       <div className="absolute inset-0 bg-black/40"></div>
       
       {/* Ana İçerik */}
-      <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-3xl mx-auto text-center px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -29,7 +29,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="inline-block bg-white/70 backdrop-blur rounded-3xl px-8 py-4 mb-6"
+            className="inline-block bg-white/70 backdrop-blur rounded-3xl px-8 py-4"
           >
             <h1 className="text-4xl lg:text-7xl font-extrabold leading-tight">
               <span className="block text-orange-500">Hayal Gücünü</span>
@@ -42,7 +42,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-6 text-lg text-black mb-8"
+            className="mt-6 text-lg text-black"
           >
             Arkadaşlarınla birlikte sürükleyici hikâyeler yaz, kelime sınırını zorla, eğlenceli sürprizlerle hikâyeni tamamla!
           </motion.p>
