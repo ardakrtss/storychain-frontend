@@ -29,9 +29,10 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl lg:text-6xl font-bold mb-6"
+            className="text-4xl lg:text-6xl font-bold leading-tight mb-6"
           >
-            Hayal Gücünü <span className="text-yellow-400">Serbest Bırak!</span>
+            <span className="block text-purple-500">Hayal Gücünü</span>
+            <span className="block text-yellow-400">Serbest Bırak!</span>
           </motion.h1>
 
           {/* Alt Başlık */}
@@ -39,7 +40,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-4 text-lg text-gray-200 mb-8"
+            className="mt-4 text-base lg:text-lg text-black mb-8"
           >
             Arkadaşlarınla birlikte sürükleyici hikâyeler yaz, kelime sınırını zorla, eğlenceli sürprizlerle hikâyeni tamamla!
           </motion.p>
@@ -64,7 +65,7 @@ export default function Hero() {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link 
                 href="/nasil-calisir" 
-                className="px-6 py-3 rounded-full border border-white text-white hover:bg-white hover:text-black font-semibold transition-all duration-300 flex items-center gap-2 justify-center"
+                className="px-6 py-3 rounded-full bg-pink-500 hover:bg-pink-600 text-white font-semibold transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 justify-center"
               >
                 <Info size={20} />
                 <span>Nasıl Çalışır?</span>
