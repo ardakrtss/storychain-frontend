@@ -640,10 +640,30 @@ export default function AdminPanel() {
 
             {activeTab === 'stats' && stats && (
               <div>
-                <h2 className="text-3xl font-bold text-white mb-8 flex items-center gap-3">
-                  <span className="text-4xl">📊</span>
-                  <span>Platform İstatistikleri</span>
-                </h2>
+                <div className="flex justify-between items-center mb-8">
+                  <h2 className="text-3xl font-bold text-white flex items-center gap-3">
+                    <span className="text-4xl">📊</span>
+                    <span>Platform İstatistikleri</span>
+                  </h2>
+                  
+                  {/* Sıfırlama Butonu */}
+                  <button
+                    onClick={() => {
+                      if (confirm('⚠️ DİKKAT: Bu işlem tüm verileri sıfırlayacak!\n\n- Tüm kullanıcılar silinecek\n- Tüm hikayeler silinecek\n- localStorage temizlenecek\n\nBu işlem geri alınamaz! Devam etmek istiyor musunuz?')) {
+                        // localStorage'ı temizle
+                        localStorage.clear();
+                        
+                        // Sayfayı yenile
+                        window.location.reload();
+                        
+                        alert('✅ Tüm veriler sıfırlandı! Sayfa yenileniyor...');
+                      }
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-red-500/50"
+                  >
+                    🗑️ Tüm Verileri Sıfırla
+                  </button>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   <div className="group bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-3xl border border-purple-500/30 p-8 hover:bg-purple-600/30 transition-all duration-300 hover:scale-105">
                     <div className="flex items-center gap-4 mb-4">
