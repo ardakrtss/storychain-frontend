@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Font imports */
 @font-face {
   font-family: 'Osnabruck';
@@ -1106,31 +1110,6 @@ button:disabled {
   z-index: -10;
 }
 
-/* Specific theme colors for our app */
-.theme-fantastik {
-  background-color: #f3e8ff;
-}
-
-.theme-gizem {
-  background-color: #dbeafe;
-}
-
-.theme-bilim-kurgu {
-  background-color: #ccfbf1;
-}
-
-.theme-macera {
-  background-color: #dcfce7;
-}
-
-.theme-sifir-atik {
-  background-color: #bbf7d0;
-}
-
-.theme-iklim-degisikligi {
-  background-color: #a7f3d0;
-}
-
 /* Input field fixes - Force visible text */
 input[type="text"],
 input[type="password"],
@@ -1174,4 +1153,29 @@ textarea::placeholder {
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Specific theme colors for our app */
+.theme-fantastik {
+  background-color: #f3e8ff;
+}
+
+.theme-gizem {
+  background-color: #dbeafe;
+}
+
+.theme-bilim-kurgu {
+  background-color: #ccfbf1;
+}
+
+.theme-macera {
+  background-color: #dcfce7;
+}
+
+.theme-sifir-atik {
+  background-color: #bbf7d0;
+}
+
+.theme-iklim-degisikligi {
+  background-color: #a7f3d0;
 }

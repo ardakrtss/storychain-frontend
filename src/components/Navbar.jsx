@@ -64,7 +64,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/kaydol"
-              className="px-6 py-2 rounded-lg font-medium transition-all duration-300 bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:from-pink-600 hover:to-purple-600 shadow-md"
+              className="px-6 py-2 rounded-lg font-medium transition-all duration-300 !bg-orange-500 hover:!bg-orange-600 !text-white shadow-md"
             >
               Kaydol
             </Link>
@@ -113,7 +113,7 @@ export default function Navbar() {
                 <Link
                   href="/kaydol"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gradient-to-r from-pink-500 to-purple-500 text-white text-center"
+                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 !bg-orange-500 hover:!bg-orange-600 !text-white text-center"
                 >
                   Kaydol
                 </Link>
