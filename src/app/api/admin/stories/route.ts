@@ -1,4 +1,5 @@
-// 10) app/api/admin/stories/route.ts — hikaye listele
+export const runtime = "nodejs";
+
 import { prisma } from "@/lib/prisma";
 export async function GET() {
   const stories = await prisma.story.findMany({

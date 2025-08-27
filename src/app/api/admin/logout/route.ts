@@ -1,4 +1,5 @@
-// 7) app/api/admin/logout/route.ts — çıkış
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { clearAdminSession } from "@/lib/adminAuth";
 export async function POST() {

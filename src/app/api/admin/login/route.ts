@@ -1,5 +1,5 @@
-// 6) app/api/admin/login/route.ts — giriş
-// create app/api/admin/login/route.ts
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import { setAdminSession, clearAdminSession } from "@/lib/adminAuth";
 
