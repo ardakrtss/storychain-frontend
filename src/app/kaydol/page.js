@@ -32,11 +32,19 @@ export default function KaydolPage() {
 
     try {
       setLoading(true);
-      // Backend'in varsa buraya POST et:
-      // const res = await fetch("/api/register", { method: "POST", body: JSON.stringify({ ...form }), headers:{ "Content-Type":"application/json" }});
-      // if (!res.ok) throw new Error((await res.json()).message || "Kayıt başarısız");
-      // window.location.href = "/"; // veya yönlendirmek istediğin sayfa
-      alert("Demo: Onaylar alındı, kayıt akışı burada backend'e gönderilecek.");
+      const res = await fetch("/api/register", { 
+        method: "POST", 
+        body: JSON.stringify({ ...form }), 
+        headers: { "Content-Type": "application/json" }
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Kayıt başarısız");
+      }
+      
+      // Başarılı kayıt sonrası yönlendirme
+      window.location.href = "/giris?registered=true";
     } catch (err) {
       setError(err.message || "Beklenmeyen bir hata oluştu.");
     } finally {
