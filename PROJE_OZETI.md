@@ -44,10 +44,10 @@
 #### **Tamamlanan Sayfalar:**
 1. ✅ **Anasayfa** (`/`) - Minimal tasarım, siyah yazılar
 2. ✅ **Hikayeler Sayfası** (`/stories`) - Minimal tasarım, siyah yazılar
+3. ✅ **Tema Seçim Sayfası** (`/themes`) - Minimal tasarım, siyah yazılar
 
 #### **Sıradaki Sayfalar:**
-3. 🔄 **Tema Seçim Sayfası** (`/themes`) - Şu anda burada
-4. ⏳ **Profil Sayfası** (`/profile`)
+4. 🔄 **Profil Sayfası** (`/profile`) - Şu anda burada
 5. ⏳ **Admin Paneli** (`/admin`)
 6. ⏳ **Diğer sayfalar**
 
@@ -131,7 +131,7 @@ storychain-frontend/
 
 - **Proje Sahibi**: Kullanıcı
 - **Geliştirici**: AI Assistant
-- **Son Güncelleme**: 2024-12-19
+- **Son Güncelleme**: 2024-12-19 (Tema Seçim Sayfası tamamlandı)
 
 ---
 
