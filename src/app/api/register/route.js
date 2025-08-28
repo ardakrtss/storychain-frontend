@@ -1,18 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
-import { v4 as uuidv4 } from "uuid";
 
-// Basit kullanıcı veritabanı (gerçek projede Firebase/Database kullanılır)
-let users = [
-  {
-    id: "1",
-    nickname: "demo",
-    password: "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    createdAt: new Date().toISOString()
-  }
-];
 
 export async function POST(req) {
   try {
@@ -40,31 +29,13 @@ export async function POST(req) {
       );
     }
 
-    // Kullanıcı adı zaten var mı kontrol et (case-insensitive)
-    const existingUser = users.find(u => 
-      u.nickname.toLowerCase() === nickname.toLowerCase()
-    );
-
-    if (existingUser) {
-      return NextResponse.json(
-        { error: "Bu kullanıcı adı zaten kullanılıyor" },
-        { status: 409 }
-      );
-    }
-
-    // Şifreyi hashle
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Yeni kullanıcı oluştur
+    // Basit kullanıcı oluşturma (geçici)
     const newUser = {
-      id: uuidv4(),
+      id: Date.now().toString(),
       nickname: nickname.trim(),
-      password: hashedPassword,
+      password: password,
       createdAt: new Date().toISOString()
     };
-
-    // Kullanıcıyı kaydet
-    users.push(newUser);
 
     // Başarılı kayıt
     const response = NextResponse.json({
