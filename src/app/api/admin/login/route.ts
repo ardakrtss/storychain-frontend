@@ -1,7 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-import { setAdminSession, clearAdminSession } from "../../../../lib/adminAuth";
+import { setAdminSession, clearAdminSession } from "@/lib/adminAuth";
 
 export async function POST(req: Request) {
   const { username, password } = await req.json();
