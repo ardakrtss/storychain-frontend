@@ -29,6 +29,37 @@ export const userStorage = {
       return updatedUser;
     }
     return null;
+  },
+  
+  // Case-insensitive kullanıcı adı kontrolü
+  isNicknameTaken: (nickname) => {
+    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    const normalizedNickname = nickname.toLowerCase().trim();
+    return users.some(user => user.nickname.toLowerCase() === normalizedNickname);
+  },
+  
+  // Kullanıcı kaydetme (case-insensitive kontrol ile)
+  registerUser: (userData) => {
+    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    const normalizedNickname = userData.nickname.toLowerCase().trim();
+    
+    // Kullanıcı adı zaten var mı kontrol et
+    if (users.some(user => user.nickname.toLowerCase() === normalizedNickname)) {
+      return { success: false, error: 'Bu kullanıcı adı zaten kullanılıyor.' };
+    }
+    
+    // Yeni kullanıcıyı kaydet
+    const newUser = {
+      ...userData,
+      nickname: userData.nickname.trim(), // Orijinal yazımı koru
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString()
+    };
+    
+    users.push(newUser);
+    localStorage.setItem('storychain_users', JSON.stringify(users));
+    
+    return { success: true, user: newUser };
   }
 };
 

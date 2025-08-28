@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { moderateNickname } from "../../lib/moderation";
+import { userStorage } from "../../lib/storage";
 
 /* -------------------------------------------------------
    Basit Modal bileşeni (Tailwind ile)
@@ -118,24 +119,31 @@ export default function KaydolPage() {
     // Moderasyon kontrolü
     const moderationResult = moderateNickname(form.nickname.trim());
     if (!moderationResult.ok) {
-      setError(`Rumuz: ${moderationResult.reason}`);
+      let errorMessage = moderationResult.reason;
+      if (moderationResult.suggestions) {
+        errorMessage += `\n\nÖneriler:\n${moderationResult.suggestions.join(', ')}`;
+      }
+      setError(errorMessage);
+      return;
+    }
+    
+    // Kullanıcı adı zaten kullanılıyor mu kontrol et
+    if (userStorage.isNicknameTaken(form.nickname.trim())) {
+      setError(`Bu kullanıcı adı zaten kullanılıyor.\n\nÖneriler:\n${moderationResult.suggestions?.join(', ') || 'Farklı bir kullanıcı adı deneyin.'}`);
       return;
     }
     
     try {
       setLoading(true);
-      const res = await fetch("/api/register", { 
-        method: "POST", 
-        body: JSON.stringify({ 
-          nickname: form.nickname.trim().toLowerCase(),
-          password: form.password 
-        }), 
-        headers: { "Content-Type": "application/json" }
+      
+      // LocalStorage'a kaydet
+      const result = userStorage.registerUser({
+        nickname: form.nickname.trim(),
+        password: form.password
       });
       
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Kayıt başarısız");
+      if (!result.success) {
+        throw new Error(result.error);
       }
       
       // Başarılı kayıt sonrası yönlendirme

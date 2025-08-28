@@ -93,16 +93,44 @@ export function moderateStory(story) {
 export function moderateNickname(nickname) {
   const check = moderateText(nickname);
   if (!check.ok) {
-    return { ok: false, reason: `Kullanıcı adı: ${check.reason}` };
+    return { 
+      ok: false, 
+      reason: `Uygun olmayan kullanıcı adı: ${check.reason}`,
+      suggestions: [
+        "GokkusagiYazari",
+        "MaceraPrensi", 
+        "HikayeUstasi",
+        "FantastikKaleci",
+        "ZamanYolcusu"
+      ]
+    };
   }
   
   // Kullanıcı adı için ek kurallar
   if (nickname.length < 2) {
-    return { ok: false, reason: "Kullanıcı adı en az 2 karakter olmalıdır." };
+    return { 
+      ok: false, 
+      reason: "Kullanıcı adı en az 2 karakter olmalıdır.",
+      suggestions: [
+        "Tuna",
+        "Ali",
+        "Ayse",
+        "Can",
+        "Ela"
+      ]
+    };
   }
   
   if (nickname.length > 20) {
-    return { ok: false, reason: "Kullanıcı adı en fazla 20 karakter olabilir." };
+    return { 
+      ok: false, 
+      reason: "Kullanıcı adı en fazla 20 karakter olabilir.",
+      suggestions: [
+        "KisaAd",
+        "UzunAdYazmayin",
+        "Maksimum20Karakter"
+      ]
+    };
   }
   
   return { ok: true };

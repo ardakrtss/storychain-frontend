@@ -43,7 +43,11 @@ export default function LoginPage() {
       // Moderasyon kontrolü
       const moderationResult = moderateNickname(formData.nickname.trim());
       if (!moderationResult.ok) {
-        newErrors.nickname = moderationResult.reason;
+        let errorMessage = moderationResult.reason;
+        if (moderationResult.suggestions) {
+          errorMessage += `\n\nÖneriler: ${moderationResult.suggestions.join(', ')}`;
+        }
+        newErrors.nickname = errorMessage;
       }
     }
 
