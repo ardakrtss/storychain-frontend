@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../lib/api';
+import { moderateNickname } from '../../lib/moderation';
 import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
@@ -38,6 +39,12 @@ export default function LoginPage() {
 
     if (!formData.nickname.trim()) {
       newErrors.nickname = 'Rumuz gereklidir';
+    } else {
+      // Moderasyon kontrolü
+      const moderationResult = moderateNickname(formData.nickname.trim());
+      if (!moderationResult.ok) {
+        newErrors.nickname = moderationResult.reason;
+      }
     }
 
     if (!formData.password) {

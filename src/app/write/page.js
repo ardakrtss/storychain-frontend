@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { PenLine, Clock, BookOpen, History, Sparkles } from "lucide-react";
+import { PenLine, Clock, BookOpen, History, Sparkles, AlertTriangle } from "lucide-react";
+import { moderateStory } from "../../lib/moderation";
 
 // Yardımcı
 const countWords = (t) =>
@@ -50,24 +51,42 @@ export default function WritePage() {
     if (!canSubmit) return;
     setLoading(true);
 
-    /* === KENDİ İŞ MANTIĞINI BURAYA KOY ======================================
-       - Burada var olan kayıt/submit API isteğini çağır.
-       - Örn:
-       await fetch("/api/story/submit", {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify(
-           tab === "new"
-             ? { mode: "new", title, theme, opening }
-             : { mode: "continue", lastSentence, previousPart, yourPart }
-         ),
-       });
-    ========================================================================= */
+    try {
+      // Moderasyon kontrolü
+      const storyData = tab === "new" 
+        ? { title, content: opening }
+        : { title: "Hikaye Devamı", content: yourPart };
+      
+      const moderationResult = moderateStory(storyData);
+      
+      if (!moderationResult.ok) {
+        alert(`Moderasyon Hatası: ${moderationResult.reason}`);
+        setLoading(false);
+        return;
+      }
 
-    // Demo
-    await new Promise((r) => setTimeout(r, 500));
-    setLoading(false);
-    alert("Metnin gönderildi! (Demo)");
+      /* === KENDİ İŞ MANTIĞINI BURAYA KOY ======================================
+         - Burada var olan kayıt/submit API isteğini çağır.
+         - Örn:
+         await fetch("/api/story/submit", {
+           method: "POST",
+           headers: { "Content-Type": "application/json" },
+           body: JSON.stringify(
+             tab === "new"
+               ? { mode: "new", title, theme, opening }
+               : { mode: "continue", lastSentence, previousPart, yourPart }
+           ),
+         });
+      ========================================================================= */
+
+      // Demo
+      await new Promise((r) => setTimeout(r, 500));
+      alert("Metnin gönderildi! (Demo)");
+    } catch (error) {
+      alert("Bir hata oluştu: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
