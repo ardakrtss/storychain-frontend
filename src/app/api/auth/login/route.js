@@ -14,13 +14,31 @@ export async function POST(req) {
       );
     }
 
-        // Firebase ile kullanıcı doğrula
-    const { userDB } = await import('../../../lib/firebaseDB.js');
-    const result = await userDB.authenticateUser(nickname, password);
+        // Geçici localStorage tabanlı doğrulama
+    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    
+    // Demo kullanıcı ekle (eğer yoksa)
+    if (!users.find(u => u.nickname === 'demo')) {
+      users.push({
+        id: '1',
+        nickname: 'demo',
+        password: 'password',
+        createdAt: new Date().toISOString(),
+        isActive: true,
+        role: 'user'
+      });
+      localStorage.setItem('storychain_users', JSON.stringify(users));
+    }
 
-    if (!result.success) {
+    // Kullanıcıyı bul
+    const user = users.find(u => 
+      u.nickname.toLowerCase() === nickname.toLowerCase() && 
+      u.password === password
+    );
+
+    if (!user) {
       return NextResponse.json(
-        { error: result.error },
+        { error: 'Kullanıcı bulunamadı veya şifre yanlış' },
         { status: 401 }
       );
     }
@@ -28,11 +46,15 @@ export async function POST(req) {
     // Başarılı giriş
     const response = NextResponse.json({
       success: true,
-      user: result.user
+      user: {
+        id: user.id,
+        nickname: user.nickname,
+        createdAt: user.createdAt
+      }
     });
 
     // Session cookie ayarla
-    response.cookies.set("user_session", result.user.id, {
+    response.cookies.set("user_session", user.id, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

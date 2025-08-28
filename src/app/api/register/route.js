@@ -29,21 +29,43 @@ export async function POST(req) {
       );
     }
 
-    // Firebase ile kullanıcı oluştur
-    const { userDB } = await import('../../../lib/firebaseDB.js');
-    const result = await userDB.createUser({ nickname, password });
-
-    if (!result.success) {
+    // Geçici localStorage tabanlı kullanıcı oluşturma
+    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    
+    // Kullanıcı adı zaten var mı kontrol et
+    const existingUser = users.find(u => 
+      u.nickname.toLowerCase() === nickname.toLowerCase()
+    );
+    
+    if (existingUser) {
       return NextResponse.json(
-        { error: result.error },
+        { error: 'Bu kullanıcı adı zaten kullanılıyor' },
         { status: 409 }
       );
     }
 
+    // Yeni kullanıcı oluştur
+    const newUser = {
+      id: Date.now().toString(),
+      nickname: nickname.trim(),
+      password: password, // Gerçek projede hash'lenecek
+      createdAt: new Date().toISOString(),
+      isActive: true,
+      role: 'user'
+    };
+
+    // Kullanıcıyı kaydet
+    users.push(newUser);
+    localStorage.setItem('storychain_users', JSON.stringify(users));
+
     // Başarılı kayıt
     const response = NextResponse.json({
       success: true,
-      user: result.user
+      user: {
+        id: newUser.id,
+        nickname: newUser.nickname,
+        createdAt: newUser.createdAt
+      }
     });
 
     // Session cookie ayarla

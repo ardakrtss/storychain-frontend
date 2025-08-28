@@ -25,15 +25,30 @@ export async function POST(req) {
       );
     }
 
-    // Firebase ile hikaye oluştur
-    const { storyDB } = await import('../../../lib/firebaseDB.js');
-    const result = await storyDB.createStory({
-      title,
-      content,
-      theme,
-      authorId,
-      authorNickname
-    });
+    // Geçici localStorage tabanlı hikaye oluşturma
+    const stories = JSON.parse(localStorage.getItem('storychain_stories') || '[]');
+    
+    const newStory = {
+      id: Date.now().toString(),
+      title: title.trim(),
+      content: content.trim(),
+      theme: theme,
+      authorId: authorId,
+      authorNickname: authorNickname,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      isCompleted: false,
+      likes: [],
+      likeCount: 0,
+      views: 0,
+      isActive: true
+    };
+
+    // Hikayeyi kaydet
+    stories.push(newStory);
+    localStorage.setItem('storychain_stories', JSON.stringify(stories));
+
+    const result = { success: true, story: newStory };
 
     if (!result.success) {
       return NextResponse.json(
@@ -65,15 +80,23 @@ export async function GET(req) {
 
     let result;
 
-    const { storyDB } = await import('../../../lib/firebaseDB.js');
+    // Geçici localStorage tabanlı hikaye getirme
+    const stories = JSON.parse(localStorage.getItem('storychain_stories') || '[]');
     
     switch (type) {
       case 'popular':
-        result = await storyDB.getPopularStories(limit);
+        const popularStories = stories
+          .filter(s => s.isCompleted && s.isActive)
+          .sort((a, b) => b.likeCount - a.likeCount)
+          .slice(0, limit);
+        result = { success: true, stories: popularStories };
         break;
       case 'completed':
       default:
-        result = await storyDB.getCompletedStories();
+        const completedStories = stories
+          .filter(s => s.isCompleted && s.isActive)
+          .slice(0, 50);
+        result = { success: true, stories: completedStories };
         break;
     }
 

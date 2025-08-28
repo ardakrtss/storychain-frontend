@@ -16,9 +16,9 @@ export async function GET(req) {
       );
     }
 
-    // Firebase ile kullanıcı getir
-    const { userDB } = await import('../../../lib/firebaseDB.js');
-    const user = await userDB.getUserById(sessionId);
+    // Geçici localStorage tabanlı kullanıcı getirme
+    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    const user = users.find(u => u.id === sessionId);
 
     if (!user) {
       return NextResponse.json(
