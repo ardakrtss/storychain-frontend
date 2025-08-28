@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { moderateNickname } from "../../lib/moderation";
 
 /* -------------------------------------------------------
    Basit Modal bileşeni (Tailwind ile)
@@ -60,9 +61,9 @@ function Modal({ open, title, children, onClose }) {
 ------------------------------------------------------- */
 export default function KaydolPage() {
   const [form, setForm] = useState({
-    name: "",
-    email: "",
+    nickname: "",
     password: "",
+    confirm: "",
     terms: false, // Kullanım Şartları
     privacy: false, // Gizlilik Politikası
     kvkk: false, // KVKK
@@ -90,17 +91,45 @@ export default function KaydolPage() {
   async function onSubmit(e) {
     e.preventDefault();
     setError("");
+    
+    // Form validasyonu
+    if (!form.nickname.trim()) {
+      setError("Rumuz gereklidir.");
+      return;
+    }
+    
+    if (form.password.length < 6) {
+      setError("Şifre en az 6 karakter olmalıdır.");
+      return;
+    }
+    
+    if (form.password !== form.confirm) {
+      setError("Şifreler eşleşmiyor.");
+      return;
+    }
+    
     if (!allAccepted) {
       setError(
         "Kayıt için Kullanım Şartları, Gizlilik Politikası ve KVKK onaylarını kabul etmelisiniz."
       );
       return;
     }
+    
+    // Moderasyon kontrolü
+    const moderationResult = moderateNickname(form.nickname.trim());
+    if (!moderationResult.ok) {
+      setError(`Rumuz: ${moderationResult.reason}`);
+      return;
+    }
+    
     try {
       setLoading(true);
       const res = await fetch("/api/register", { 
         method: "POST", 
-        body: JSON.stringify({ ...form }), 
+        body: JSON.stringify({ 
+          nickname: form.nickname.trim().toLowerCase(),
+          password: form.password 
+        }), 
         headers: { "Content-Type": "application/json" }
       });
       
@@ -128,39 +157,24 @@ export default function KaydolPage() {
           </p>
 
           <form onSubmit={onSubmit} className="mt-6 space-y-4">
+            {/* Rumuz */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Ad Soyad
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Rumuz</label>
               <input
-                name="name"
-                value={form.name}
+                name="nickname"
+                value={form.nickname}
                 onChange={onChange}
-                placeholder="Adın ve soyadın"
+                placeholder="Örn: GokkusagiYazari"
                 className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                minLength={3}
                 required
               />
+              <p className="mt-1 text-xs text-gray-500">En az 3 karakter. Gerçek adını kullanmak zorunda değilsin.</p>
             </div>
 
+            {/* Şifre */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                E-posta
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={onChange}
-                placeholder="ornek@email.com"
-                className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Şifre
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Şifre</label>
               <input
                 type="password"
                 name="password"
@@ -171,6 +185,25 @@ export default function KaydolPage() {
                 minLength={6}
                 required
               />
+              <p className="mt-1 text-xs text-gray-500">En az 6 karakter olmalı.</p>
+            </div>
+
+            {/* Şifre (Tekrar) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Şifre (Tekrar)</label>
+              <input
+                type="password"
+                name="confirm"
+                value={form.confirm}
+                onChange={onChange}
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                minLength={6}
+                required
+              />
+              {form.confirm.length > 0 && form.password !== form.confirm && (
+                <p className="mt-1 text-xs text-rose-600">Şifreler eşleşmiyor.</p>
+              )}
             </div>
 
             {/* Zorunlu Onaylar */}
