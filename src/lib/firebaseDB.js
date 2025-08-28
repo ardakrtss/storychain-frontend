@@ -197,6 +197,36 @@ export const storyDB = {
       console.error('Error liking story:', error);
       throw error;
     }
+  },
+
+  async getStoriesByAuthor(authorId) {
+    try {
+      const storiesSnapshot = await storiesCollection
+        .where('authorId', '==', authorId)
+        .where('isActive', '==', true)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      return storiesSnapshot.docs.map(doc => doc.data());
+    } catch (error) {
+      console.error('Error getting stories by author:', error);
+      throw error;
+    }
+  },
+
+  async getLikedStoriesByUser(userId) {
+    try {
+      const storiesSnapshot = await storiesCollection
+        .where('userLikes', 'array-contains', userId)
+        .where('isActive', '==', true)
+        .orderBy('createdAt', 'desc')
+        .get();
+
+      return storiesSnapshot.docs.map(doc => doc.data());
+    } catch (error) {
+      console.error('Error getting liked stories by user:', error);
+      throw error;
+    }
   }
 };
 

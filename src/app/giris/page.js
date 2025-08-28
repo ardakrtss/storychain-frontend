@@ -42,7 +42,7 @@ export default function LoginPage() {
 
       // Oturumu cookie tutuyor; localStorage gerekmez.
       safeStorage.set("lastNickname", nickname);
-      router.push("/"); // anasayfa veya istediğin rota
+      router.push("/profilim"); // profilim sayfasına yönlendir
     } catch (err) {
       setError(err?.message || "Sunucu hatası");
     }

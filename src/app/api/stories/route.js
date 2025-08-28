@@ -59,6 +59,8 @@ export async function GET(req) {
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type') || 'completed';
     const limit = parseInt(searchParams.get('limit')) || 20;
+    const authorId = searchParams.get('authorId');
+    const userId = searchParams.get('userId');
 
     // Firebase'den hikaye getirme
     
@@ -67,6 +69,22 @@ export async function GET(req) {
       case 'popular':
         const popularStories = await storyDB.getPopularStories(limit);
         result = { ok: true, stories: popularStories };
+        break;
+      case 'author':
+        if (authorId) {
+          const authorStories = await storyDB.getStoriesByAuthor(authorId);
+          result = { ok: true, stories: authorStories };
+        } else {
+          result = { ok: true, stories: [] };
+        }
+        break;
+      case 'liked':
+        if (userId) {
+          const likedStories = await storyDB.getLikedStoriesByUser(userId);
+          result = { ok: true, stories: likedStories };
+        } else {
+          result = { ok: true, stories: [] };
+        }
         break;
       case 'completed':
       default:

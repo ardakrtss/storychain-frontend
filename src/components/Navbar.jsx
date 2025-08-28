@@ -1,8 +1,11 @@
 'use client';
 
 import Link from "next/link";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Navbar() {
+  const { user, signOut } = useAuth();
+
   return (
     <header className="sticky top-0 z-50 bg-white/70 backdrop-blur border-b border-white/40">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -22,13 +25,30 @@ export default function Navbar() {
           </Link>
           <Link href="/hakkimizda" className="text-gray-800 hover:text-gray-900">Hakkımızda</Link>
           <Link href="/iletisim" className="text-gray-800 hover:text-gray-900">İletişim</Link>
-          <Link href="/giris" className="text-gray-700 hover:text-gray-900">Giriş Yap</Link>
-          <Link
-            href="/kaydol"
-            className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 font-semibold shadow hover:opacity-90"
-          >
-            Kaydol
-          </Link>
+          
+          {user ? (
+            <>
+              <Link href="/profilim" className="text-gray-800 hover:text-gray-900">
+                Profilim
+              </Link>
+              <button
+                onClick={signOut}
+                className="text-gray-700 hover:text-gray-900"
+              >
+                Çıkış Yap
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/giris" className="text-gray-700 hover:text-gray-900">Giriş Yap</Link>
+              <Link
+                href="/kaydol"
+                className="rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 font-semibold shadow hover:opacity-90"
+              >
+                Kaydol
+              </Link>
+            </>
+          )}
         </div>
       </nav>
     </header>
