@@ -1,10 +1,24 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function GirisPage() {
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({ nickname: "", password: "" });
   const [msg, setMsg] = useState({ type: "", text: "" });
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // URL'den registered parametresini kontrol et
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('registered') === 'true') {
+      setMsg({ 
+        type: "success", 
+        text: "Kayıt başarılı! Şimdi giriş yapabilirsin." 
+      });
+    }
+  }, []);
 
   function onChange(e) {
     const { name, value } = e.target;
@@ -12,8 +26,8 @@ export default function GirisPage() {
   }
 
   function validate() {
-    if (form.username.trim().length < 3)
-      return "Kullanıcı adı en az 3 karakter olmalı.";
+    if (form.nickname.trim().length < 2)
+      return "Kullanıcı adı en az 2 karakter olmalı.";
     if (form.password.length < 6)
       return "Şifre en az 6 karakter olmalı.";
     return "";
@@ -26,12 +40,40 @@ export default function GirisPage() {
       setMsg({ type: "error", text: err });
       return;
     }
-    // Backend bağlanınca buraya login isteği atılacak.
-    console.log("LOGIN_PAYLOAD", form);
-    setMsg({
-      type: "success",
-      text: "Giriş başarılı (örnek). Backend eklendiğinde doğrulama yapılacak.",
-    });
+
+    try {
+      setLoading(true);
+      setMsg({ type: "", text: "" });
+
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname: form.nickname.trim(),
+          password: form.password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Giriş başarısız");
+      }
+
+      setMsg({ type: "success", text: "Giriş başarılı! Yönlendiriliyorsun..." });
+      
+      // Ana sayfaya yönlendir
+      setTimeout(() => {
+        router.push("/");
+      }, 1000);
+
+    } catch (error) {
+      setMsg({ type: "error", text: error.message });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -62,8 +104,8 @@ export default function GirisPage() {
               Kullanıcı Adı
             </label>
             <input
-              name="username"
-              value={form.username}
+              name="nickname"
+              value={form.nickname}
               onChange={onChange}
               className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
               placeholder="ör. Tuna123"
@@ -88,9 +130,14 @@ export default function GirisPage() {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white py-2.5 font-semibold shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            disabled={loading}
+            className={`w-full rounded-xl py-2.5 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+              loading
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:opacity-95"
+            }`}
           >
-            Giriş Yap
+            {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
           </button>
         </form>
 

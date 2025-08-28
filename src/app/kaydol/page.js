@@ -136,14 +136,24 @@ export default function KaydolPage() {
     try {
       setLoading(true);
       
-      // LocalStorage'a kaydet
-      const result = userStorage.registerUser({
-        nickname: form.nickname.trim(),
-        password: form.password
+      const response = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nickname: form.nickname.trim(),
+          password: form.password,
+          terms: form.terms,
+          privacy: form.privacy,
+          kvkk: form.kvkk
+        }),
       });
-      
-      if (!result.success) {
-        throw new Error(result.error);
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Kayıt başarısız");
       }
       
       // Başarılı kayıt sonrası yönlendirme
