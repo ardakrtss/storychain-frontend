@@ -1,7 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-
+import { userDB } from '../../../lib/firebaseDB.js';
 
 export async function POST(req) {
   try {
@@ -29,34 +29,8 @@ export async function POST(req) {
       );
     }
 
-    // Geçici localStorage tabanlı kullanıcı oluşturma
-    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
-    
-    // Kullanıcı adı zaten var mı kontrol et
-    const existingUser = users.find(u => 
-      u.nickname.toLowerCase() === nickname.toLowerCase()
-    );
-    
-    if (existingUser) {
-      return NextResponse.json(
-        { ok: false, error: 'Bu kullanıcı adı zaten kullanılıyor' },
-        { status: 409 }
-      );
-    }
-
-    // Yeni kullanıcı oluştur
-    const newUser = {
-      id: Date.now().toString(),
-      nickname: nickname.trim(),
-      password: password, // Gerçek projede hash'lenecek
-      createdAt: new Date().toISOString(),
-      isActive: true,
-      role: 'user'
-    };
-
-    // Kullanıcıyı kaydet
-    users.push(newUser);
-    localStorage.setItem('storychain_users', JSON.stringify(users));
+    // Firebase ile kullanıcı oluşturma
+    const newUser = await userDB.createUser(nickname, password);
 
     // Başarılı kayıt
     const response = NextResponse.json({

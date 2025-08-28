@@ -1,4 +1,6 @@
 // LocalStorage tabanlı veri saklama sistemi
+import { safeStorage } from './safeStorage.js';
+
 const STORAGE_KEYS = {
   USER: 'storychain_user',
   STORIES: 'storychain_stories',
@@ -9,16 +11,16 @@ const STORAGE_KEYS = {
 // Kullanıcı verileri
 export const userStorage = {
   save: (user) => {
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+    safeStorage.set(STORAGE_KEYS.USER, JSON.stringify(user));
   },
   
   get: () => {
-    const user = localStorage.getItem(STORAGE_KEYS.USER);
+    const user = safeStorage.get(STORAGE_KEYS.USER);
     return user ? JSON.parse(user) : null;
   },
   
   remove: () => {
-    localStorage.removeItem(STORAGE_KEYS.USER);
+    safeStorage.remove(STORAGE_KEYS.USER);
   },
   
   update: (updates) => {
@@ -33,14 +35,14 @@ export const userStorage = {
   
   // Case-insensitive kullanıcı adı kontrolü
   isNicknameTaken: (nickname) => {
-    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    const users = JSON.parse(safeStorage.get('storychain_users') || '[]');
     const normalizedNickname = nickname.toLowerCase().trim();
     return users.some(user => user.nickname.toLowerCase() === normalizedNickname);
   },
   
   // Kullanıcı kaydetme (case-insensitive kontrol ile)
   registerUser: (userData) => {
-    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
+    const users = JSON.parse(safeStorage.get('storychain_users') || '[]');
     const normalizedNickname = userData.nickname.toLowerCase().trim();
     
     // Kullanıcı adı zaten var mı kontrol et
@@ -57,7 +59,7 @@ export const userStorage = {
     };
     
     users.push(newUser);
-    localStorage.setItem('storychain_users', JSON.stringify(users));
+    safeStorage.set('storychain_users', JSON.stringify(users));
     
     return { success: true, user: newUser };
   }
@@ -66,11 +68,11 @@ export const userStorage = {
 // Hikaye verileri
 export const storyStorage = {
   save: (stories) => {
-    localStorage.setItem(STORAGE_KEYS.STORIES, JSON.stringify(stories));
+    safeStorage.set(STORAGE_KEYS.STORIES, JSON.stringify(stories));
   },
   
   get: () => {
-    const stories = localStorage.getItem(STORAGE_KEYS.STORIES);
+    const stories = safeStorage.get(STORAGE_KEYS.STORIES);
     return stories ? JSON.parse(stories) : [];
   },
   
@@ -138,11 +140,11 @@ export const storyStorage = {
 // Tema verileri
 export const themeStorage = {
   save: (themes) => {
-    localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(themes));
+    safeStorage.set(STORAGE_KEYS.THEMES, JSON.stringify(themes));
   },
   
   get: () => {
-    const themes = localStorage.getItem(STORAGE_KEYS.THEMES);
+    const themes = safeStorage.get(STORAGE_KEYS.THEMES);
     if (themes) {
       return JSON.parse(themes);
     }
@@ -218,11 +220,11 @@ export const themeStorage = {
 // Lider tablosu verileri
 export const leaderboardStorage = {
   save: (data) => {
-    localStorage.setItem(STORAGE_KEYS.LEADERBOARD, JSON.stringify(data));
+    safeStorage.set(STORAGE_KEYS.LEADERBOARD, JSON.stringify(data));
   },
   
   get: () => {
-    const data = localStorage.getItem(STORAGE_KEYS.LEADERBOARD);
+    const data = safeStorage.get(STORAGE_KEYS.LEADERBOARD);
     return data ? JSON.parse(data) : { writers: [], stories: [] };
   },
   
@@ -242,6 +244,6 @@ export const leaderboardStorage = {
 // Tüm verileri temizle
 export const clearAllData = () => {
   Object.values(STORAGE_KEYS).forEach(key => {
-    localStorage.removeItem(key);
+    safeStorage.remove(key);
   });
 };

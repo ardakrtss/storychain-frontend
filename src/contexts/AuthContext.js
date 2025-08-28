@@ -20,50 +20,32 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Check if user is logged in on app start
     const checkAuth = async () => {
-      const token = localStorage.getItem('token');
-      const adminToken = localStorage.getItem('adminToken');
-      
-      if (adminToken) {
-        try {
-          const adminUser = JSON.parse(localStorage.getItem('adminUser') || '{}');
-          setUser(adminUser);
-        } catch {
-          localStorage.removeItem('adminToken');
-          localStorage.removeItem('adminUser');
-        }
-      } else if (token) {
-        try {
-          const response = await api.get('/auth/me');
-          setUser(response.data);
-        } catch {
-          localStorage.removeItem('token');
-        }
+      try {
+        // Cookie-based authentication - /api/auth/me endpoint'i kullan
+        const response = await api.get('/auth/me');
+        setUser(response.data);
+      } catch (error) {
+        // Kullanıcı giriş yapmamış, user null kalacak
+        console.log('User not authenticated');
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     checkAuth();
   }, []);
 
-  const signIn = async (nickname, password = null) => {
+  const signIn = async (nickname, password) => {
     try {
-      let response;
+      // Cookie-based authentication
+      const response = await api.post('/auth/login', { 
+        nickname: nickname.toLowerCase(), 
+        password 
+      });
       
-      // Case insensitive nickname
-      const normalizedNickname = nickname.toLowerCase();
-      
-      if (password) {
-        // Şifre ile giriş
-        response = await api.post('/auth/login', { nickname: normalizedNickname, password });
-      } else {
-        // Sadece rumuz ile giriş (eski yöntem)
-        response = await api.post('/auth/login', { nickname: normalizedNickname });
-      }
-      
-      const { token, user } = response.data;
-      
-      localStorage.setItem('token', token);
-      setUser(user);
+      // Cookie otomatik olarak set edildi, user bilgisini al
+      const userResponse = await api.get('/auth/me');
+      setUser(userResponse.data);
       
       return { success: true };
     } catch (error) {
@@ -78,12 +60,13 @@ export const AuthProvider = ({ children }) => {
 
   const signOut = async () => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('adminToken');
-      localStorage.removeItem('adminUser');
+      // Cookie'yi temizlemek için logout endpoint'ini çağır
+      await api.post('/auth/logout');
       setUser(null);
-    } catch {
-      console.error('Sign out error');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      // Hata olsa bile user'ı temizle
+      setUser(null);
     }
   };
 

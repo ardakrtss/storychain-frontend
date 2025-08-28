@@ -2,7 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-
+import { userDB } from '../../../../lib/firebaseDB.js';
 
 export async function GET(req) {
   try {
@@ -16,23 +16,12 @@ export async function GET(req) {
       );
     }
 
-    // Geçici localStorage tabanlı kullanıcı getirme
-    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
-    const user = users.find(u => u.id === sessionId);
-
-    if (!user) {
-      return NextResponse.json(
-        { ok: false, error: "Kullanıcı bulunamadı" },
-        { status: 401 }
-      );
-    }
-
-    // Şifreyi çıkar
-    const { password, ...userWithoutPassword } = user;
+    // Firebase'den kullanıcı getirme
+    const user = await userDB.getUserById(sessionId);
 
     return NextResponse.json({
       ok: true,
-      user: userWithoutPassword
+      user: user
     }, { status: 200 });
 
   } catch (e) {

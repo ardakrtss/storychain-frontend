@@ -1,156 +1,87 @@
-"use client";
-import { useState, useEffect } from "react";
-import Link from "next/link";
+"use client"; // önemli: bu sayfa/komponent yalnızca client'ta render olsun
+
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { safeStorage } from "../../lib/safeStorage.js";
 
-export default function GirisPage() {
-  const [form, setForm] = useState({ nickname: "", password: "" });
-  const [msg, setMsg] = useState({ type: "", text: "" });
-  const [loading, setLoading] = useState(false);
+export default function LoginPage() {
   const router = useRouter();
+  const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [ready, setReady] = useState(false);
 
+  // İstersen rumuzu hatırlat
   useEffect(() => {
-    // URL'den registered parametresini kontrol et
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('registered') === 'true') {
-      setMsg({ 
-        type: "success", 
-        text: "Kayıt başarılı! Şimdi giriş yapabilirsin." 
-      });
-    }
+    const last = safeStorage.get("lastNickname");
+    if (last) setNickname(last);
+    setReady(true);
   }, []);
 
-  function onChange(e) {
-    const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
+  if (!ready) {
+    // SSR hydration sorunlarını önlemek için kısa bekleme
+    return null;
   }
 
-  function validate() {
-    if (form.nickname.trim().length < 2)
-      return "Kullanıcı adı en az 2 karakter olmalı.";
-    if (form.password.length < 6)
-      return "Şifre en az 6 karakter olmalı.";
-    return "";
-  }
-
-  async function onSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const err = validate();
-    if (err) {
-      setMsg({ type: "error", text: err });
-      return;
-    }
+    setError(null);
 
     try {
-      setLoading(true);
-      setMsg({ type: "", text: "" });
-
-      const response = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nickname: form.nickname.trim(),
-          password: form.password,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nickname, password }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Giriş başarısız");
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data?.error || "Giriş başarısız");
+        return;
       }
 
-      setMsg({ type: "success", text: "Giriş başarılı! Yönlendiriliyorsun..." });
-      
-      // Ana sayfaya yönlendir
-      setTimeout(() => {
-        router.push("/");
-      }, 1000);
-
-    } catch (error) {
-      setMsg({ type: "error", text: error.message });
-    } finally {
-      setLoading(false);
+      // Oturumu cookie tutuyor; localStorage gerekmez.
+      safeStorage.set("lastNickname", nickname);
+      router.push("/"); // anasayfa veya istediğin rota
+    } catch (err) {
+      setError(err?.message || "Sunucu hatası");
     }
   }
 
   return (
-    <main className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-6">
-        <h1 className="text-2xl font-extrabold text-gray-900 text-center">
+    <div className="max-w-md mx-auto p-6">
+      {error && <div className="mb-3 rounded-md bg-red-100 text-red-700 p-3">{error}</div>}
+
+      <h1 className="text-2xl font-bold mb-6">Giriş Yap</h1>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm mb-1">Kullanıcı Adı</label>
+          <input
+            className="w-full rounded-md border p-3"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            placeholder="rumuz"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm mb-1">Şifre</label>
+          <input
+            className="w-full rounded-md border p-3"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="•••••••"
+            required
+          />
+        </div>
+
+        <button className="w-full rounded-md bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 font-semibold">
           Giriş Yap
-        </h1>
-        <p className="mt-1 text-center text-gray-600">
-          Kullanıcı adın ve şifrenle giriş yap.
-        </p>
-
-        {msg.text && (
-          <div
-            className={`mt-4 rounded-md p-3 text-sm ${
-              msg.type === "success"
-                ? "bg-green-50 text-green-700 border border-green-200"
-                : "bg-red-50 text-red-700 border border-red-200"
-            }`}
-          >
-            {msg.text}
-          </div>
-        )}
-
-        <form onSubmit={onSubmit} className="mt-5 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Kullanıcı Adı
-            </label>
-            <input
-              name="nickname"
-              value={form.nickname}
-              onChange={onChange}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              placeholder="ör. Tuna123"
-              autoComplete="username"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Şifre
-            </label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={onChange}
-              className="mt-1 w-full rounded-xl border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              placeholder="••••••"
-              autoComplete="current-password"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full rounded-xl py-2.5 font-semibold shadow focus:outline-none focus:ring-2 focus:ring-purple-400 ${
-              loading
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-gradient-to-r from-pink-500 to-purple-600 text-white hover:opacity-95"
-            }`}
-          >
-            {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
-          </button>
-        </form>
-
-        <p className="mt-4 text-center text-sm text-gray-600">
-          Hesabın yok mu?{" "}
-          <Link
-            href="/kaydol"
-            className="font-semibold text-purple-600 hover:text-purple-700 underline"
-          >
-            Kaydol
-          </Link>
-        </p>
-      </div>
-    </main>
+        </button>
+      </form>
+    </div>
   );
 }

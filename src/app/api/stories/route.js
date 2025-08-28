@@ -2,6 +2,7 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { moderateStory } from "../../../lib/moderation.js";
+import { storyDB } from '../../../lib/firebaseDB.js';
 
 // Hikaye oluşturma
 export async function POST(req) {
@@ -25,28 +26,18 @@ export async function POST(req) {
       );
     }
 
-    // Geçici localStorage tabanlı hikaye oluşturma
-    const stories = JSON.parse(localStorage.getItem('storychain_stories') || '[]');
-    
-    const newStory = {
-      id: Date.now().toString(),
+    // Firebase ile hikaye oluşturma
+    const storyData = {
       title: title.trim(),
       content: content.trim(),
       theme: theme,
       authorId: authorId,
       authorNickname: authorNickname,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
       isCompleted: false,
-      likes: [],
-      likeCount: 0,
-      views: 0,
-      isActive: true
+      views: 0
     };
 
-    // Hikayeyi kaydet
-    stories.push(newStory);
-    localStorage.setItem('storychain_stories', JSON.stringify(stories));
+    const newStory = await storyDB.createStory(storyData);
 
     return NextResponse.json({
       ok: true,
@@ -69,23 +60,17 @@ export async function GET(req) {
     const type = searchParams.get('type') || 'completed';
     const limit = parseInt(searchParams.get('limit')) || 20;
 
-    // Geçici localStorage tabanlı hikaye getirme
-    const stories = JSON.parse(localStorage.getItem('storychain_stories') || '[]');
+    // Firebase'den hikaye getirme
     
     let result;
     switch (type) {
       case 'popular':
-        const popularStories = stories
-          .filter(s => s.isCompleted && s.isActive)
-          .sort((a, b) => b.likeCount - a.likeCount)
-          .slice(0, limit);
+        const popularStories = await storyDB.getPopularStories(limit);
         result = { ok: true, stories: popularStories };
         break;
       case 'completed':
       default:
-        const completedStories = stories
-          .filter(s => s.isCompleted && s.isActive)
-          .slice(0, 50);
+        const completedStories = await storyDB.getCompletedStories(50);
         result = { ok: true, stories: completedStories };
         break;
     }

@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '../../../contexts/AuthContext';
 import Link from 'next/link';
 import api from '../../../lib/api';
+import { safeStorage } from '../../../lib/safeStorage.js';
 
 export default function StoryDetailPage() {
   const [story, setStory] = useState(null);
@@ -26,8 +27,8 @@ export default function StoryDetailPage() {
         const response = await api.get(`/stories/${storyId}`);
         let storyData = response.data;
         
-        // localStorage'dan beğeni sayısını al
-        const storyLikes = JSON.parse(localStorage.getItem('storyLikes') || '{}');
+        // safeStorage'dan beğeni sayısını al
+        const storyLikes = JSON.parse(safeStorage.get('storyLikes') || '{}');
         const storyKey = `story_${storyId}`;
         storyData.likeCount = storyLikes[storyKey] || storyData.likeCount || 0;
         
@@ -59,9 +60,9 @@ export default function StoryDetailPage() {
       return;
     }
 
-    // localStorage'dan beğeni verilerini al
-    const storyLikes = JSON.parse(localStorage.getItem('storyLikes') || '{}');
-    const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+    // safeStorage'dan beğeni verilerini al
+    const storyLikes = JSON.parse(safeStorage.get('storyLikes') || '{}');
+    const userLikes = JSON.parse(safeStorage.get('userLikes') || '{}');
     
     const storyKey = `story_${storyId}`;
     const userKey = `${user.id}_${storyId}`;
@@ -79,9 +80,9 @@ export default function StoryDetailPage() {
       alert('Hikayeyi beğendiniz!');
     }
     
-    // localStorage'a kaydet
-    localStorage.setItem('storyLikes', JSON.stringify(storyLikes));
-    localStorage.setItem('userLikes', JSON.stringify(userLikes));
+    // safeStorage'a kaydet
+    safeStorage.set('storyLikes', JSON.stringify(storyLikes));
+    safeStorage.set('userLikes', JSON.stringify(userLikes));
     
     // Story state'ini güncelle
     setStory(prevStory => ({
@@ -169,7 +170,7 @@ export default function StoryDetailPage() {
               onClick={handleLikeStory}
               className={`group relative text-white px-12 py-6 rounded-2xl font-bold text-xl transition-all duration-500 shadow-2xl transform hover:scale-110 flex items-center justify-center gap-4 overflow-hidden ${
                 (() => {
-                  const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+                  const userLikes = JSON.parse(safeStorage.get('userLikes') || '{}');
                   const userKey = `${user?.id}_${storyId}`;
                   return userLikes[userKey] 
                     ? 'bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 hover:shadow-red-500/50' 
@@ -180,14 +181,14 @@ export default function StoryDetailPage() {
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               <span className="text-2xl relative z-10">
                 {(() => {
-                  const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+                  const userLikes = JSON.parse(safeStorage.get('userLikes') || '{}');
                   const userKey = `${user?.id}_${storyId}`;
                   return userLikes[userKey] ? '💖' : '❤️';
                 })()}
               </span>
               <span className="relative z-10">
                 {(() => {
-                  const userLikes = JSON.parse(localStorage.getItem('userLikes') || '{}');
+                  const userLikes = JSON.parse(safeStorage.get('userLikes') || '{}');
                   const userKey = `${user?.id}_${storyId}`;
                   return userLikes[userKey] ? 'Beğendiniz' : 'Beğen';
                 })()} ({story.likeCount || 0})

@@ -1,7 +1,7 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-
+import { userDB } from '../../../../lib/firebaseDB.js';
 
 export async function POST(req) {
   try {
@@ -14,34 +14,8 @@ export async function POST(req) {
       );
     }
 
-    // Geçici localStorage tabanlı doğrulama
-    const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
-    
-    // Demo kullanıcı ekle (eğer yoksa)
-    if (!users.find(u => u.nickname === 'demo')) {
-      users.push({
-        id: '1',
-        nickname: 'demo',
-        password: 'password',
-        createdAt: new Date().toISOString(),
-        isActive: true,
-        role: 'user'
-      });
-      localStorage.setItem('storychain_users', JSON.stringify(users));
-    }
-
-    // Kullanıcıyı bul
-    const user = users.find(u => 
-      u.nickname.toLowerCase() === nickname.toLowerCase() && 
-      u.password === password
-    );
-
-    if (!user) {
-      return NextResponse.json(
-        { ok: false, error: 'Kullanıcı bulunamadı veya şifre yanlış' },
-        { status: 401 }
-      );
-    }
+    // Firebase ile kullanıcı doğrulama
+    const user = await userDB.authenticateUser(nickname, password);
 
     // Başarılı giriş
     const response = NextResponse.json({
