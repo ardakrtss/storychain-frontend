@@ -16,24 +16,24 @@ export async function GET(req) {
       );
     }
 
-    // Basit kullanıcı kontrolü (geçici)
-    if (sessionId === "1") {
-      const user = {
-        id: "1",
-        nickname: "demo",
-        createdAt: new Date().toISOString()
-      };
+    // Firebase ile kullanıcı getir
+    const { userDB } = await import('../../../lib/firebaseDB.js');
+    const user = await userDB.getUserById(sessionId);
 
-      return NextResponse.json({
-        success: true,
-        user: user
-      });
-    } else {
+    if (!user) {
       return NextResponse.json(
         { error: "Kullanıcı bulunamadı" },
         { status: 401 }
       );
     }
+
+    // Şifreyi çıkar
+    const { password, ...userWithoutPassword } = user;
+
+    return NextResponse.json({
+      success: true,
+      user: userWithoutPassword
+    });
 
   } catch (error) {
     console.error("Get user error:", error);

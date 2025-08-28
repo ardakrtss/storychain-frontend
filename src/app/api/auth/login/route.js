@@ -14,35 +14,32 @@ export async function POST(req) {
       );
     }
 
-    // Basit doğrulama (geçici)
-    if (nickname === "demo" && password === "password") {
-      const user = {
-        id: "1",
-        nickname: "demo",
-        createdAt: new Date().toISOString()
-      };
+        // Firebase ile kullanıcı doğrula
+    const { userDB } = await import('../../../lib/firebaseDB.js');
+    const result = await userDB.authenticateUser(nickname, password);
 
-      // Başarılı giriş
-      const response = NextResponse.json({
-        success: true,
-        user: user
-      });
-
-          // Session cookie ayarla
-      response.cookies.set("user_session", user.id, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7 // 7 gün
-      });
-
-      return response;
-    } else {
+    if (!result.success) {
       return NextResponse.json(
-        { error: "Kullanıcı bulunamadı veya şifre yanlış" },
+        { error: result.error },
         { status: 401 }
       );
     }
+
+    // Başarılı giriş
+    const response = NextResponse.json({
+      success: true,
+      user: result.user
+    });
+
+    // Session cookie ayarla
+    response.cookies.set("user_session", result.user.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 7 // 7 gün
+    });
+
+    return response;
 
   } catch (error) {
     console.error("Login error:", error);

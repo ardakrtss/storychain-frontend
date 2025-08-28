@@ -1,7 +1,6 @@
 export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
-import { storyDB } from "../../../lib/simpleDB.js";
 import { moderateStory } from "../../../lib/moderation.js";
 
 // Hikaye oluşturma
@@ -26,7 +25,8 @@ export async function POST(req) {
       );
     }
 
-    // Hikaye oluştur
+    // Firebase ile hikaye oluştur
+    const { storyDB } = await import('../../../lib/firebaseDB.js');
     const result = await storyDB.createStory({
       title,
       content,
@@ -65,6 +65,8 @@ export async function GET(req) {
 
     let result;
 
+    const { storyDB } = await import('../../../lib/firebaseDB.js');
+    
     switch (type) {
       case 'popular':
         result = await storyDB.getPopularStories(limit);
