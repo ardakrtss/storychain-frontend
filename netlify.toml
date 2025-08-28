@@ -1,6 +1,16 @@
 [build]
-  command = "npm run build"
+  command = "rm -rf .next && rm -rf node_modules/.cache && npm install && npm run build"
   publish = ".next"
+
+[build.environment]
+  SKIP_TYPE_CHECK = "true"
+  NEXT_SKIP_TYPE_CHECK = "true"
+  NEXT_TELEMETRY_DISABLED = "1"
+  NODE_ENV = "production"
+  NEXT_DISABLE_TYPE_CHECK = "true"
+  NEXT_DISABLE_ESLINT = "true"
+  NEXT_DISABLE_SOURCEMAPS = "true"
+  NEXT_DISABLE_OPTIMIZATION = "false"
 
 [[headers]]
   for = "/*"

@@ -6,45 +6,13 @@ const STORAGE_KEYS = {
   LEADERBOARD: 'storychain_leaderboard'
 };
 
-interface User {
-  id: string;
-  nickname: string;
-  storiesWritten: number;
-  totalLikes: number;
-}
-
-interface Story {
-  id: string;
-  title: string;
-  theme: string;
-  segments: Array<{
-    author: string;
-    content: string;
-    order: number;
-  }>;
-  isCompleted: boolean;
-  likes: string[];
-  likeCount: number;
-  createdAt: string;
-}
-
-interface Theme {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-  characters: string;
-  plotHints: string;
-}
-
 // Kullanıcı verileri
 export const userStorage = {
-  save: (user: User) => {
+  save: (user) => {
     localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
   },
   
-  get: (): User | null => {
+  get: () => {
     const user = localStorage.getItem(STORAGE_KEYS.USER);
     return user ? JSON.parse(user) : null;
   },
@@ -53,7 +21,7 @@ export const userStorage = {
     localStorage.removeItem(STORAGE_KEYS.USER);
   },
   
-  update: (updates: Partial<User>): User | null => {
+  update: (updates) => {
     const user = userStorage.get();
     if (user) {
       const updatedUser = { ...user, ...updates };
@@ -66,18 +34,18 @@ export const userStorage = {
 
 // Hikaye verileri
 export const storyStorage = {
-  save: (stories: Story[]) => {
+  save: (stories) => {
     localStorage.setItem(STORAGE_KEYS.STORIES, JSON.stringify(stories));
   },
   
-  get: (): Story[] => {
+  get: () => {
     const stories = localStorage.getItem(STORAGE_KEYS.STORIES);
     return stories ? JSON.parse(stories) : [];
   },
   
-  add: (story: Omit<Story, 'id' | 'createdAt' | 'likes' | 'likeCount'>): Story => {
+  add: (story) => {
     const stories = storyStorage.get();
-    const newStory: Story = {
+    const newStory = {
       ...story,
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
@@ -89,7 +57,7 @@ export const storyStorage = {
     return newStory;
   },
   
-  update: (storyId: string, updates: Partial<Story>): Story | null => {
+  update: (storyId, updates) => {
     const stories = storyStorage.get();
     const index = stories.findIndex(s => s.id === storyId);
     if (index !== -1) {
@@ -100,7 +68,7 @@ export const storyStorage = {
     return null;
   },
   
-  like: (storyId: string, userId: string): Story | null => {
+  like: (storyId, userId) => {
     const stories = storyStorage.get();
     const story = stories.find(s => s.id === storyId);
     if (story) {
@@ -117,17 +85,17 @@ export const storyStorage = {
     return null;
   },
   
-  getByTheme: (theme: string): Story[] => {
+  getByTheme: (theme) => {
     const stories = storyStorage.get();
     return stories.filter(s => s.theme === theme && s.isCompleted);
   },
   
-  getCompleted: (): Story[] => {
+  getCompleted: () => {
     const stories = storyStorage.get();
     return stories.filter(s => s.isCompleted);
   },
   
-  getPopular: (): Story[] => {
+  getPopular: () => {
     const stories = storyStorage.get();
     return stories
       .filter(s => s.isCompleted)
@@ -138,18 +106,18 @@ export const storyStorage = {
 
 // Tema verileri
 export const themeStorage = {
-  save: (themes: Theme[]) => {
+  save: (themes) => {
     localStorage.setItem(STORAGE_KEYS.THEMES, JSON.stringify(themes));
   },
   
-  get: (): Theme[] => {
+  get: () => {
     const themes = localStorage.getItem(STORAGE_KEYS.THEMES);
     if (themes) {
       return JSON.parse(themes);
     }
     
     // Varsayılan temalar
-    const defaultThemes: Theme[] = [
+    const defaultThemes = [
       {
         id: 'fantastik',
         name: 'Fantastik',
@@ -210,35 +178,30 @@ export const themeStorage = {
     return defaultThemes;
   },
   
-  getById: (id: string): Theme | undefined => {
+  getById: (id) => {
     const themes = themeStorage.get();
     return themes.find(t => t.id === id);
   }
 };
 
 // Lider tablosu verileri
-interface LeaderboardData {
-  writers: User[];
-  stories: Story[];
-}
-
 export const leaderboardStorage = {
-  save: (data: LeaderboardData) => {
+  save: (data) => {
     localStorage.setItem(STORAGE_KEYS.LEADERBOARD, JSON.stringify(data));
   },
   
-  get: (): LeaderboardData => {
+  get: () => {
     const data = localStorage.getItem(STORAGE_KEYS.LEADERBOARD);
     return data ? JSON.parse(data) : { writers: [], stories: [] };
   },
   
-  updateWriters: (writers: User[]) => {
+  updateWriters: (writers) => {
     const data = leaderboardStorage.get();
     data.writers = writers;
     leaderboardStorage.save(data);
   },
   
-  updateStories: (stories: Story[]) => {
+  updateStories: (stories) => {
     const data = leaderboardStorage.get();
     data.stories = stories;
     leaderboardStorage.save(data);

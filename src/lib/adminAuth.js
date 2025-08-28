@@ -1,5 +1,5 @@
-// 4) lib/adminAuth.ts — admin cookie doğrulama/ayarlama
-// create lib/adminAuth.ts
+// 4) lib/adminAuth.js — admin cookie doğrulama/ayarlama
+// create lib/adminAuth.js
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "admin_session";

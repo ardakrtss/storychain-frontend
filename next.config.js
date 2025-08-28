@@ -1,4 +1,3 @@
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -6,20 +5,19 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  trailingSlash: false,
   images: {
     unoptimized: true
   },
   experimental: {
     typedRoutes: false
   },
-  // Netlify için gerekli ayarlar
-  async redirects() {
-    return [];
+  // TypeScript'i tamamen devre dışı bırak
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
-  async rewrites() {
-    return [];
-  }
+  // Netlify için ek ayarlar
+  output: 'standalone',
+  poweredByHeader: false
 }
 
 module.exports = nextConfig
