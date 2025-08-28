@@ -11,7 +11,7 @@ export async function GET(req) {
 
     if (!sessionId) {
       return NextResponse.json(
-        { error: "Oturum bulunamadı" },
+        { ok: false, error: "Oturum bulunamadı" },
         { status: 401 }
       );
     }
@@ -22,7 +22,7 @@ export async function GET(req) {
 
     if (!user) {
       return NextResponse.json(
-        { error: "Kullanıcı bulunamadı" },
+        { ok: false, error: "Kullanıcı bulunamadı" },
         { status: 401 }
       );
     }
@@ -31,14 +31,14 @@ export async function GET(req) {
     const { password, ...userWithoutPassword } = user;
 
     return NextResponse.json({
-      success: true,
+      ok: true,
       user: userWithoutPassword
-    });
+    }, { status: 200 });
 
-  } catch (error) {
-    console.error("Get user error:", error);
+  } catch (e) {
+    console.error("ME_API_ERROR:", e);
     return NextResponse.json(
-      { error: "Sunucu hatası" },
+      { ok: false, error: String(e?.message || e) },
       { status: 500 }
     );
   }

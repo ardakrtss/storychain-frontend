@@ -10,21 +10,21 @@ export async function POST(req) {
     // Validasyonlar
     if (!nickname || !password) {
       return NextResponse.json(
-        { error: "Kullanıcı adı ve şifre gerekli" },
+        { ok: false, error: "Kullanıcı adı ve şifre gerekli" },
         { status: 400 }
       );
     }
 
     if (!terms || !privacy || !kvkk) {
       return NextResponse.json(
-        { error: "Tüm yasal onaylar (Kullanım Şartları, Gizlilik, KVKK) zorunludur." },
+        { ok: false, error: "Tüm yasal onaylar (Kullanım Şartları, Gizlilik, KVKK) zorunludur." },
         { status: 400 }
       );
     }
 
     if (password.length < 6) {
       return NextResponse.json(
-        { error: "Şifre en az 6 karakter olmalıdır" },
+        { ok: false, error: "Şifre en az 6 karakter olmalıdır" },
         { status: 400 }
       );
     }
@@ -39,7 +39,7 @@ export async function POST(req) {
     
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Bu kullanıcı adı zaten kullanılıyor' },
+        { ok: false, error: 'Bu kullanıcı adı zaten kullanılıyor' },
         { status: 409 }
       );
     }
@@ -60,13 +60,14 @@ export async function POST(req) {
 
     // Başarılı kayıt
     const response = NextResponse.json({
-      success: true,
+      ok: true,
+      userId: newUser.id,
       user: {
         id: newUser.id,
         nickname: newUser.nickname,
         createdAt: newUser.createdAt
       }
-    });
+    }, { status: 200 });
 
     // Session cookie ayarla
     response.cookies.set("user_session", newUser.id, {
@@ -78,10 +79,10 @@ export async function POST(req) {
 
     return response;
 
-  } catch (error) {
-    console.error("Register error:", error);
+  } catch (e) {
+    console.error("REGISTER_API_ERROR:", e);
     return NextResponse.json(
-      { error: "Sunucu hatası" },
+      { ok: false, error: String(e?.message || e) },
       { status: 500 }
     );
   }

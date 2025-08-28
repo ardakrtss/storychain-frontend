@@ -11,7 +11,7 @@ export async function POST(req) {
     // Validasyonlar
     if (!title || !content || !theme || !authorId || !authorNickname) {
       return NextResponse.json(
-        { error: "Tüm alanlar gerekli" },
+        { ok: false, error: "Tüm alanlar gerekli" },
         { status: 400 }
       );
     }
@@ -20,7 +20,7 @@ export async function POST(req) {
     const moderationResult = moderateStory({ title, content });
     if (!moderationResult.ok) {
       return NextResponse.json(
-        { error: moderationResult.reason },
+        { ok: false, error: moderationResult.reason },
         { status: 400 }
       );
     }
@@ -48,24 +48,15 @@ export async function POST(req) {
     stories.push(newStory);
     localStorage.setItem('storychain_stories', JSON.stringify(stories));
 
-    const result = { success: true, story: newStory };
-
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json({
-      success: true,
-      story: result.story
-    });
+      ok: true,
+      story: newStory
+    }, { status: 200 });
 
-  } catch (error) {
-    console.error("Hikaye oluşturma hatası:", error);
+  } catch (e) {
+    console.error("STORY_CREATE_API_ERROR:", e);
     return NextResponse.json(
-      { error: "Sunucu hatası" },
+      { ok: false, error: String(e?.message || e) },
       { status: 500 }
     );
   }
@@ -78,44 +69,33 @@ export async function GET(req) {
     const type = searchParams.get('type') || 'completed';
     const limit = parseInt(searchParams.get('limit')) || 20;
 
-    let result;
-
     // Geçici localStorage tabanlı hikaye getirme
     const stories = JSON.parse(localStorage.getItem('storychain_stories') || '[]');
     
+    let result;
     switch (type) {
       case 'popular':
         const popularStories = stories
           .filter(s => s.isCompleted && s.isActive)
           .sort((a, b) => b.likeCount - a.likeCount)
           .slice(0, limit);
-        result = { success: true, stories: popularStories };
+        result = { ok: true, stories: popularStories };
         break;
       case 'completed':
       default:
         const completedStories = stories
           .filter(s => s.isCompleted && s.isActive)
           .slice(0, 50);
-        result = { success: true, stories: completedStories };
+        result = { ok: true, stories: completedStories };
         break;
     }
 
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
-    }
+    return NextResponse.json(result, { status: 200 });
 
-    return NextResponse.json({
-      success: true,
-      stories: result.stories
-    });
-
-  } catch (error) {
-    console.error("Hikayeler getirme hatası:", error);
+  } catch (e) {
+    console.error("STORY_GET_API_ERROR:", e);
     return NextResponse.json(
-      { error: "Sunucu hatası" },
+      { ok: false, error: String(e?.message || e) },
       { status: 500 }
     );
   }

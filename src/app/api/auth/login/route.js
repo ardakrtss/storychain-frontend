@@ -9,12 +9,12 @@ export async function POST(req) {
 
     if (!nickname || !password) {
       return NextResponse.json(
-        { error: "Kullanıcı adı ve şifre gerekli" },
+        { ok: false, error: "Kullanıcı adı ve şifre gerekli" },
         { status: 400 }
       );
     }
 
-        // Geçici localStorage tabanlı doğrulama
+    // Geçici localStorage tabanlı doğrulama
     const users = JSON.parse(localStorage.getItem('storychain_users') || '[]');
     
     // Demo kullanıcı ekle (eğer yoksa)
@@ -38,20 +38,21 @@ export async function POST(req) {
 
     if (!user) {
       return NextResponse.json(
-        { error: 'Kullanıcı bulunamadı veya şifre yanlış' },
+        { ok: false, error: 'Kullanıcı bulunamadı veya şifre yanlış' },
         { status: 401 }
       );
     }
 
     // Başarılı giriş
     const response = NextResponse.json({
-      success: true,
+      ok: true,
+      userId: user.id,
       user: {
         id: user.id,
         nickname: user.nickname,
         createdAt: user.createdAt
       }
-    });
+    }, { status: 200 });
 
     // Session cookie ayarla
     response.cookies.set("user_session", user.id, {
@@ -63,10 +64,10 @@ export async function POST(req) {
 
     return response;
 
-  } catch (error) {
-    console.error("Login error:", error);
+  } catch (e) {
+    console.error("LOGIN_API_ERROR:", e);
     return NextResponse.json(
-      { error: "Sunucu hatası" },
+      { ok: false, error: String(e?.message || e) },
       { status: 500 }
     );
   }
