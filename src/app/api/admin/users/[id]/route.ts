@@ -1,6 +1,6 @@
 export const runtime = "nodejs";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../../../../lib/prisma";
 
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   const { id } = params;

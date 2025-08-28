@@ -1,6 +1,6 @@
 export const runtime = "nodejs";
 
-import { prisma } from "@/lib/prisma";
+import { prisma } from "../../../../lib/prisma";
 export async function GET() {
   const stories = await prisma.story.findMany({
     orderBy: { createdAt: "desc" },
