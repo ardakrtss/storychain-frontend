@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Kontrolü</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .clear-btn {
+            background: #f44336;
+        }
+        .clear-btn:hover {
+            background: #da190b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Storage Kontrolü</h1>
+        
+        <div>
+            <button onclick="checkStorage()">Storage'ı Kontrol Et</button>
+            <button onclick="clearAll()" class="clear-btn">Tüm Storage'ı Temizle</button>
+            <button onclick="clearUserData()" class="clear-btn">Sadece Kullanıcı Verilerini Temizle</button>
+        </div>
+        
+        <div id="output">
+            <p>Yukarıdaki butona tıklayarak storage'ı kontrol edin.</p>
+        </div>
+    </div>
+
+    <script>
+        function checkStorage() {
+            let output = '=== localStorage Kontrolü ===\n\n';
+            
+            // Tüm localStorage anahtarlarını listele
+            output += 'Tüm localStorage anahtarları:\n';
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                output += `${key}: ${value}\n`;
+            }
+            
+            output += '\n=== Özel Kontroller ===\n';
+            
+            // Kullanıcı ile ilgili anahtarları kontrol et
+            const userKeys = ['user', 'adminUser', 'token', 'adminToken', 'nickname', 'rememberNickname'];
+            
+            userKeys.forEach(key => {
+                const value = localStorage.getItem(key);
+                if (value) {
+                    output += `${key}: ${value}\n`;
+                    try {
+                        const parsed = JSON.parse(value);
+                        output += `${key} (parsed): ${JSON.stringify(parsed, null, 2)}\n`;
+                    } catch (e) {
+                        output += `${key} JSON parse edilemedi\n`;
+                    }
+                } else {
+                    output += `${key}: bulunamadı\n`;
+                }
+            });
+            
+            output += '\n=== SessionStorage Kontrolü ===\n';
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                const value = sessionStorage.getItem(key);
+                output += `${key}: ${value}\n`;
+            }
+            
+            document.getElementById('output').innerHTML = '<pre>' + output + '</pre>';
+        }
+        
+        function clearAll() {
+            if (confirm('Tüm localStorage ve sessionStorage verilerini silmek istediğinizden emin misiniz?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                alert('Tüm storage verileri temizlendi!');
+                checkStorage();
+            }
+        }
+        
+        function clearUserData() {
+            if (confirm('Sadece kullanıcı ile ilgili verileri silmek istediğinizden emin misiniz?')) {
+                const userKeys = ['user', 'adminUser', 'token', 'adminToken', 'nickname', 'rememberNickname'];
+                userKeys.forEach(key => {
+                    localStorage.removeItem(key);
+                    sessionStorage.removeItem(key);
+                });
+                alert('Kullanıcı verileri temizlendi!');
+                checkStorage();
+            }
+        }
+        
+        // Sayfa yüklendiğinde otomatik kontrol et
+        window.onload = function() {
+            checkStorage();
+        };
+    </script>
+</body>
+</html>

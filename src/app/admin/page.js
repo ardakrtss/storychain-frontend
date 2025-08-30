@@ -165,79 +165,45 @@ export default function AdminPanel() {
     }
   };
 
-  const loadMockData = () => {
-    const mockStories = [
-      {
-        id: '1',
-        title: 'Uçaktaki Gizem',
-        theme: 'gizem',
-        segments: [
-          { content: 'Arda ile Tuna bir uçakta rastgele bir şekilde bir kişi kişi öldü...', author: 'Tunazor', authorId: 'user1' }
-        ],
-        isComplete: false,
-        likeCount: 0,
-        createdAt: new Date('2024-08-24')
-      },
-      {
-        id: '2',
-        title: 'Uzay Macerası',
-        theme: 'macera',
-        segments: [
-          { content: 'Küçük astronot Ali, uzay gemisinde bir sürprizle karşılaştı...', author: 'Uzayci', authorId: 'user2' }
-        ],
-        isComplete: false,
-        likeCount: 2,
-        createdAt: new Date('2024-08-23')
-      }
-    ];
+  const loadMockData = async () => {
+    try {
+      // Firebase'den gerçek verileri çek
+      const { getAllStories } = await import('../../lib/firebase-stories');
+      const { getUsers } = await import('../../lib/firebase-auth');
+      
+      const realStories = await getAllStories();
+      const realUsers = await getUsers();
+      
+      const realStats = {
+        totalUsers: realUsers.length,
+        totalStories: realStories.length,
+        completedStories: realStories.filter(s => s.status === 'completed').length,
+        ongoingStories: realStories.filter(s => s.status === 'ongoing').length,
+        totalSegments: realStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0),
+        averageSegmentsPerStory: realStories.length > 0 
+          ? Math.round((realStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0) / realStories.length) * 10) / 10
+          : 0
+      };
 
-    const mockUsers = [
-      {
-        id: 'user1',
-        nickname: 'Tunazor',
-        role: 'user',
-        isActive: true,
-        storiesWritten: 1,
-        totalLikes: 0,
-        createdAt: new Date('2024-08-20'),
-        lastLogin: new Date('2024-08-24')
-      },
-      {
-        id: 'user2',
-        nickname: 'Uzayci',
-        role: 'user',
-        isActive: true,
-        storiesWritten: 1,
-        totalLikes: 2,
-        createdAt: new Date('2024-08-19'),
-        lastLogin: new Date('2024-08-23')
-      },
-      {
-        id: 'admin1',
-        nickname: 'admin',
-        role: 'admin',
-        isActive: true,
-        storiesWritten: 0,
-        totalLikes: 0,
-        createdAt: new Date('2024-08-15'),
-        lastLogin: new Date('2024-08-24')
-      }
-    ];
-
-    const mockStats = {
-      totalUsers: mockUsers.length,
-      totalStories: mockStories.length,
-      completedStories: mockStories.filter(s => s.isComplete).length,
-      ongoingStories: mockStories.filter(s => !s.isComplete).length,
-      totalSegments: mockStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0),
-      averageSegmentsPerStory: mockStories.length > 0 
-        ? Math.round((mockStories.reduce((sum, story) => sum + (story.segments?.length || 0), 0) / mockStories.length) * 10) / 10
-        : 0
-    };
-
-    setStories(mockStories);
-    setUsers(mockUsers);
-    setStats(mockStats);
+      setStories(realStories);
+      setUsers(realUsers);
+      setStats(realStats);
+      
+      console.log('Firebase verileri yüklendi:', { realStories, realUsers, realStats });
+    } catch (error) {
+      console.error('Firebase veri yükleme hatası:', error);
+      // Hata durumunda boş veriler göster
+      setStories([]);
+      setUsers([]);
+      setStats({
+        totalUsers: 0,
+        totalStories: 0,
+        completedStories: 0,
+        ongoingStories: 0,
+        totalSegments: 0,
+        averageSegmentsPerStory: 0
+      });
+    }
   };
 
   const deleteStory = async (storyId) => {

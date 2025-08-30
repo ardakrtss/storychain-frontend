@@ -14,8 +14,13 @@ export default function Header() {
     return null;
   }
 
-  const handleLogout = () => {
-    signOut();
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      console.log('✅ Çıkış başarılı');
+    } catch (error) {
+      console.error('❌ Çıkış hatası:', error);
+    }
   };
 
   return (
@@ -37,41 +42,41 @@ export default function Header() {
               href="/" 
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                 pathname === '/' 
-                  ? 'bg-blue-500 text-white shadow-md' 
+                  ? 'bg-purple-500 text-white shadow-md' 
                   : 'text-gray-700 hover:text-black hover:bg-gray-100'
               }`}
             >
               Ana Sayfa
             </Link>
             <Link 
-              href="/how-it-works" 
+              href="/stories" 
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                pathname === '/how-it-works' 
-                  ? 'bg-blue-500 text-white shadow-md' 
+                pathname === '/stories' 
+                  ? 'bg-purple-500 text-white shadow-md' 
                   : 'text-gray-700 hover:text-black hover:bg-gray-100'
               }`}
             >
-              Nasıl Çalışır
+              Hikayeler
             </Link>
             <Link 
-              href="/about" 
+              href="/write" 
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                pathname === '/about' 
-                  ? 'bg-blue-500 text-white shadow-md' 
+                pathname === '/write' 
+                  ? 'bg-purple-500 text-white shadow-md' 
                   : 'text-gray-700 hover:text-black hover:bg-gray-100'
               }`}
             >
-              Hakkımızda
+              Hikaye Yaz
             </Link>
             <Link 
-              href="/contact" 
+              href="/themes" 
               className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                pathname === '/contact' 
-                  ? 'bg-blue-500 text-white shadow-md' 
+                pathname === '/themes' 
+                  ? 'bg-purple-500 text-white shadow-md' 
                   : 'text-gray-700 hover:text-black hover:bg-gray-100'
               }`}
             >
-              İletişim
+              Temalar
             </Link>
           </nav>
 
@@ -86,7 +91,7 @@ export default function Header() {
                   Giriş Yap
                 </Link>
                 <Link 
-                  href="/register" 
+                  href="/kaydol" 
                   className="px-6 py-2 rounded-lg font-medium transition-all duration-300 bg-gradient-to-r from-pink-500 to-purple-500 text-white hover:from-pink-600 hover:to-purple-600 shadow-md"
                 >
                   Kaydol
@@ -94,22 +99,23 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link 
-                  href="/profile" 
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
-                    pathname === '/profile' 
-                      ? 'bg-blue-500 text-white shadow-md' 
-                      : 'text-gray-700 hover:text-black hover:bg-gray-100'
-                  }`}
-                >
-                  Profilim
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-700 hover:text-black hover:bg-gray-100"
-                >
-                  Çıkış
-                </button>
+                <div className="flex items-center space-x-3">
+                  <div className="text-sm text-gray-600">
+                    <span className="font-medium">👋</span> {user.nickname || user.displayName || user.email}
+                  </div>
+                  <Link 
+                    href="/write" 
+                    className="px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-purple-500 text-white hover:bg-purple-600 shadow-md"
+                  >
+                    ✏️ Yaz
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 rounded-lg font-medium transition-all duration-300 text-gray-700 hover:text-black hover:bg-gray-100"
+                  >
+                    Çıkış
+                  </button>
+                </div>
               </>
             )}
           </div>
@@ -148,23 +154,23 @@ export default function Header() {
             Hikaye Yaz
           </Link>
           <Link
-            href="/about"
+            href="/themes"
             className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
-              pathname === '/about'
+              pathname === '/themes'
                 ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm'
                 : 'text-gray-700'
             }`}
           >
-            Hakkımızda
+            Temalar
           </Link>
           {!user && (
             <>
               <Link
-                href="/register"
+                href="/kaydol"
                 className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 whitespace-nowrap shadow-lg transform hover:scale-105 ${
-                  pathname === '/register'
-                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-black shadow-xl'
-                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-black hover:from-blue-600 hover:to-blue-700 hover:shadow-xl'
+                  pathname === '/kaydol'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl'
+                    : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 hover:shadow-xl'
                 }`}
               >
                 ✨ Kayıt Ol
@@ -183,16 +189,15 @@ export default function Header() {
           )}
           {user && (
             <>
-              <Link
-                href="/profile"
-                className={`px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 ${
-                  pathname === '/profile'
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm'
-                    : 'text-gray-700'
-                }`}
+              <div className="text-xs text-gray-600 px-2">
+                👋 {user.nickname || user.displayName || user.email}
+              </div>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 rounded-lg text-xs font-medium transition-all duration-300 whitespace-nowrap bg-gray-100 hover:bg-gray-200 text-gray-700"
               >
-                Profilim
-              </Link>
+                Çıkış
+              </button>
             </>
           )}
         </div>

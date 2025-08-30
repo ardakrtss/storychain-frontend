@@ -1,138 +1,131 @@
-# 📚 StoryChain Proje Özeti
+# StoryChain Frontend - Proje Özeti
 
-## 🎯 Proje Genel Bakış
-**StoryChain** - Çocuklar için paylaşımlı hikaye yazma platformu
-- **URL**: https://storychain.com.tr
-- **Frontend**: Next.js 15.4.6 (Netlify)
-- **Backend**: Node.js + Express (AWS EC2)
-- **Veritabanı**: MongoDB Atlas
+## 🎯 Proje Durumu
+**Son Güncelleme:** VPS Kurulum Aşamasında
+**Mevcut Durum:** Node.js kurulum komutları verildi, VPS'e bağlanma aşamasında
 
-## 🚀 Mevcut Durum (Son Güncelleme: 2024-12-19)
+## 📋 Tamamlanan İşler
 
-### ✅ Tamamlanan Özellikler
+### ✅ Firebase Migrasyonu
+- **MongoDB'den Firebase'e geçiş** tamamlandı
+- **Firebase Authentication** entegre edildi
+- **Firebase Firestore** veritabanı kuruldu
+- **Kullanıcı kayıt/giriş sistemi** Firebase ile çalışıyor
+- **Hikaye yazma ve yönetim sistemi** Firestore'a taşındı
 
-#### 1. **Kullanıcı Sistemi**
-- ✅ Kullanıcı kaydı (username/password)
-- ✅ Kullanıcı girişi
-- ✅ Profil sayfası
-- ✅ Kullanıcı istatistikleri (hikaye sayısı, karakter sayısı, beğeni sayısı)
+### ✅ Temizlik İşlemleri
+- **"tunazor", "demo", "mock" referansları** temizlendi
+- **Eski API route'ları** silindi (`/api/auth/*`, `/api/register`, vb.)
+- **Eski session yönetimi** kaldırıldı
+- **Demo veriler** temizlendi
 
-#### 2. **Hikaye Sistemi**
-- ✅ Hikaye yazma
-- ✅ Hikaye listeleme
-- ✅ Hikaye detay görüntüleme
-- ✅ Hikaye devam etme
-- ✅ Beğeni sistemi (localStorage ile geçici)
+### ✅ Sayfa Güncellemeleri
+- **`/kaydol`** - Firebase kayıt sayfası
+- **`/nickname`** - Firebase giriş sayfası  
+- **`/write`** - Hikaye yazma sayfası
+- **`/stories`** - Hikaye listesi
+- **`/stories/[id]`** - Hikaye detay sayfası
+- **`/forgot-password`** - Şifre sıfırlama
+- **`/admin`** - Admin paneli (Firebase entegrasyonu)
 
-#### 3. **Admin Paneli**
-- ✅ Kullanıcı yönetimi
-- ✅ Hikaye yönetimi
-- ✅ İstatistikler
-- ✅ Kullanıcı silme (localStorage ile)
-- ✅ Hikaye silme (backend + localStorage)
-- ✅ Veri sıfırlama sistemi
+### ✅ Bileşen Güncellemeleri
+- **`AuthContext.js`** - Firebase auth state yönetimi
+- **`Header.js`** - Kullanıcı durumuna göre navigasyon
+- **`MagicalHero.js`** - Ana sayfa hero bileşeni
+- **`Stories.jsx`** - Firebase'den hikaye listesi
+- **`Themes.jsx`** - Giriş durumuna göre gösterim
 
-#### 4. **Tasarım Sistemi**
-- ✅ Modern minimal tasarım
-- ✅ Responsive layout
-- ✅ Siyah yazı rengi (tüm sayfalarda)
-- ✅ Mavi-mor gradient butonlar
-- ✅ Hafif renklendirme arka planları
+### ✅ Firebase Yardımcı Modülleri
+- **`firebase-auth.js`** - Kullanıcı işlemleri
+- **`firebase-stories.js`** - Hikaye işlemleri
+- **`firebase.js`** - Firebase konfigürasyonu
 
-### 🎨 Tasarım Güncellemeleri (Son Çalışma)
+## 🔧 Mevcut Konfigürasyon
 
-#### **Tamamlanan Sayfalar:**
-1. ✅ **Anasayfa** (`/`) - Minimal tasarım, siyah yazılar
-2. ✅ **Hikayeler Sayfası** (`/stories`) - Minimal tasarım, siyah yazılar
-3. ✅ **Tema Seçim Sayfası** (`/themes`) - Minimal tasarım, siyah yazılar
-
-#### **Sıradaki Sayfalar:**
-4. 🔄 **Profil Sayfası** (`/profile`) - Şu anda burada
-5. ⏳ **Admin Paneli** (`/admin`)
-6. ⏳ **Diğer sayfalar**
-
-## 📋 Tasarım Özellikleri
-
-### **Renk Paleti:**
-- **Ana yazılar**: Siyah (`text-black`)
-- **Butonlar**: Mavi-mor gradient (`from-blue-500 to-purple-600`)
-- **Arka plan**: Hafif gradient (`from-blue-50 via-purple-50 to-pink-50`)
-- **Geometrik elementler**: Yumuşak daireler, grid pattern
-
-### **Layout Özellikleri:**
-- **Minimal tasarım**: Temiz ve sade
-- **Responsive**: Tüm cihazlarda uyumlu
-- **Modern UI**: Güncel tasarım trendleri
-- **Çocuk dostu**: Renkli ama göz yormayan
-
-## 🔧 Teknik Detaylar
-
-### **Frontend (Next.js):**
-- **Framework**: Next.js 15.4.6
-- **Styling**: Tailwind CSS
-- **State Management**: React Context (AuthContext)
-- **API**: Axios ile backend bağlantısı
-- **Deployment**: Netlify
-
-### **Backend (Node.js):**
-- **Framework**: Express.js
-- **Database**: MongoDB Atlas
-- **Authentication**: JWT
-- **Deployment**: AWS EC2
-- **Domain**: 56.228.35.82.nip.io
-
-### **Geçici Çözümler:**
-- **Beğeni sistemi**: localStorage ile
-- **Kullanıcı silme**: localStorage ile
-- **Rol değiştirme**: localStorage ile
-
-## 📁 Dosya Yapısı
-
-```
-storychain-frontend/
-├── src/
-│   ├── app/
-│   │   ├── page.js (✅ Güncellendi)
-│   │   ├── stories/page.js (✅ Güncellendi)
-│   │   ├── themes/page.js (🔄 Şu anda burada)
-│   │   ├── profile/page.js (⏳ Bekliyor)
-│   │   ├── admin/page.js (⏳ Bekliyor)
-│   │   └── ...
-│   ├── components/
-│   │   ├── Header.js (✅ Güncellendi)
-│   │   └── ...
-│   └── contexts/
-│       └── AuthContext.js
-├── public/
-│   └── hero-background.png
-└── PROJE_OZETI.md (Bu dosya)
+### Environment Variables (`.env.local`)
+```env
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCgVQTNPiRBCQt_GGd_VPHOyjtNC1yTnDI
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=storychain-website.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=storychain-website
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=storychain-website.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=689075505297
+NEXT_PUBLIC_FIREBASE_APP_ID=1:689075505297:web:650bb0eb934828554e1730
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=G-NL33C4CK8Y
 ```
 
-## 🎯 Sonraki Adımlar
+### Firebase Projesi
+- **Proje ID:** storychain-website
+- **Authentication:** Aktif
+- **Firestore Database:** Aktif
+- **Hosting:** Hazır (kullanılmıyor)
 
-### **Acil:**
-1. **Tema Seçim Sayfası** güncelleme (şu anda buradayız)
-2. **Profil Sayfası** güncelleme
-3. **Admin Paneli** güncelleme
+## 🚀 Deployment Durumu
 
-### **Gelecek:**
-1. Backend endpoint'lerinin tamamlanması
-2. Beğeni sisteminin backend'e taşınması
-3. Kullanıcı silme sisteminin backend'e taşınması
-4. Performans optimizasyonları
+### Denenen Platformlar
+1. **Firebase Hosting** ❌ - Static export sorunları
+2. **Vercel** ❌ - Kullanıcı tercihi
+3. **Netlify** ❌ - Manuel deploy yapıldı
+4. **VPS** 🔄 - Şu anda bu aşamada
 
-## 🚨 Bilinen Sorunlar
+### VPS Kurulum Komutları (Sıradaki)
+```bash
+# Node.js kurulumu
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt -y install nodejs
+npm i -g pm2
+node -v && npm -v
+```
 
-1. **Backend endpoint eksiklikleri**: Kullanıcı silme, beğeni sistemi
-2. **localStorage bağımlılığı**: Geçici çözümler
-3. **Admin paneli**: Backend entegrasyonu eksik
+## 📁 Önemli Dosyalar
 
-## 📞 İletişim
+### Ana Dosyalar
+- `src/lib/firebase.js` - Firebase konfigürasyonu
+- `src/lib/firebase-auth.js` - Kullanıcı işlemleri
+- `src/lib/firebase-stories.js` - Hikaye işlemleri
+- `src/contexts/AuthContext.js` - Global auth state
+- `.env.local` - Environment variables
 
-- **Proje Sahibi**: Kullanıcı
-- **Geliştirici**: AI Assistant
-- **Son Güncelleme**: 2024-12-19 (Tema Seçim Sayfası tamamlandı)
+### Sayfalar
+- `src/app/kaydol/page.js` - Kayıt sayfası
+- `src/app/nickname/page.js` - Giriş sayfası
+- `src/app/write/page.js` - Hikaye yazma
+- `src/app/stories/page.js` - Hikaye listesi
+- `src/app/stories/[id]/page.js` - Hikaye detayı
+- `src/app/admin/page.js` - Admin paneli
+
+## 🔄 Sıradaki Adımlar
+
+### VPS Kurulumu (Devam Ediyor)
+1. ✅ SSH bağlantısı ve sistem güncellemesi
+2. ✅ Temel paket kurulumu (ufw, curl, git)
+3. ✅ Firewall konfigürasyonu
+4. 🔄 **Node.js kurulumu** (şu anda buradayız)
+5. ⏳ PM2 kurulumu
+6. ⏳ Proje dosyalarının VPS'e kopyalanması
+7. ⏳ Environment variables ayarlanması
+8. ⏳ Build ve deploy
+
+### Gelecek Geliştirmeler
+- [ ] Real-time bildirimler
+- [ ] Hikaye paylaşım özellikleri
+- [ ] Admin paneli geliştirmeleri
+- [ ] Performans optimizasyonları
+
+## 🐛 Bilinen Sorunlar
+- Yok (tüm sorunlar çözüldü)
+
+## 📞 Kullanıcı Bilgileri
+- **Firebase Projesi:** storychain-website
+- **Son Test:** Başarılı (kayıt, giriş, hikaye yazma çalışıyor)
+- **Lokal Test:** ✅ Çalışıyor
+- **Deploy Durumu:** VPS kurulum aşamasında
+
+## 💡 Önemli Notlar
+- Firebase Authentication kullanılıyor (cookie tabanlı değil)
+- Tüm veriler Firestore'da saklanıyor
+- Eski MongoDB/Express backend tamamen kaldırıldı
+- "tunazor" sorunu çözüldü
+- Login loop sorunu çözüldü
 
 ---
-
-**Not**: Bu dosya proje durumunu takip etmek için oluşturulmuştur. Her önemli değişiklikte güncellenmelidir.
+**Son Güncelleme:** VPS Node.js kurulum komutları verildi, bekleniyor

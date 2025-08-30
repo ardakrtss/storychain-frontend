@@ -1,23 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '../../contexts/AuthContext';
-import api from '../../lib/api';
-import { moderateNickname } from '../../lib/moderation';
 import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { user, signIn, loading: authLoading } = useAuth();
   const [formData, setFormData] = useState({
-    nickname: '',
+    email: '',
     password: ''
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [debugInfo, setDebugInfo] = useState('');
+
+  // Kullanıcı zaten giriş yapmışsa hikaye yazma sayfasına yönlendir
+  useEffect(() => {
+    if (user && !authLoading) {
+      console.log('✅ Kullanıcı giriş yapmış, yönlendiriliyor...', user);
+      router.push('/write');
+    }
+  }, [user, authLoading, router]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,18 +44,10 @@ export default function LoginPage() {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.nickname.trim()) {
-      newErrors.nickname = 'Rumuz gereklidir';
-    } else {
-      // Moderasyon kontrolü
-      const moderationResult = moderateNickname(formData.nickname.trim());
-      if (!moderationResult.ok) {
-        let errorMessage = moderationResult.reason;
-        if (moderationResult.suggestions) {
-          errorMessage += `\n\nÖneriler: ${moderationResult.suggestions.join(', ')}`;
-        }
-        newErrors.nickname = errorMessage;
-      }
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email adresi gereklidir';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Geçerli bir email adresi giriniz';
     }
 
     if (!formData.password) {
@@ -68,35 +67,65 @@ export default function LoginPage() {
 
     setLoading(true);
     setErrors({});
+    setDebugInfo('');
 
     try {
-      const result = await signIn(formData.nickname.trim().toLowerCase(), formData.password);
+      console.log('🔄 Giriş işlemi başlatılıyor...', { email: formData.email });
+      setDebugInfo('Giriş işlemi başlatılıyor...');
+      
+      const result = await signIn(formData.email.trim().toLowerCase(), formData.password);
+      
+      console.log('📋 Giriş sonucu:', result);
+      setDebugInfo(`Giriş sonucu: ${JSON.stringify(result, null, 2)}`);
+      
       if (result.success) {
-        router.push('/profile');
+        console.log('✅ Giriş başarılı! AuthContext güncellenecek...');
+        setDebugInfo('✅ Giriş başarılı! Yönlendiriliyor...');
+        // Başarılı giriş - AuthContext state'i güncellenecek ve useEffect tetiklenecek
       } else {
+        console.log('❌ Giriş başarısız:', result.error);
         setErrors({ general: result.error || 'Giriş yapılamadı' });
+        setDebugInfo(`❌ Giriş başarısız: ${result.error}`);
       }
     } catch (error) {
-      console.error('Login error:', error);
-      if (error.response?.data?.error) {
-        setErrors({ general: error.response.data.error });
-      } else {
-        setErrors({ general: 'Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.' });
-      }
+      console.error('❌ Giriş hatası:', error);
+      setErrors({ general: 'Giriş yapılırken bir hata oluştu' });
+      setDebugInfo(`❌ Hata: ${error.message}`);
     } finally {
       setLoading(false);
     }
   };
 
+  // Auth yükleniyorsa loading göster
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Auth yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Kullanıcı zaten giriş yapmışsa loading göster
+  if (user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Hikaye yazma sayfasına yönlendiriliyor...</p>
+          <p className="text-sm text-gray-500 mt-2">Kullanıcı: {user.email || user.nickname}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-purple-600/10"></div>
-      <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%2230%22%20r%3D%222%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
-      
-      <div className="relative z-10 w-full max-w-md">
+      <div className="max-w-md w-full space-y-8">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center">
           <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-6 shadow-2xl">
             🔐
           </div>
@@ -118,32 +147,39 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Nickname Field */}
+            {/* Debug Info */}
+            {debugInfo && (
+              <div className="bg-blue-100 border border-blue-300 rounded-xl p-4 text-blue-700 text-xs font-mono">
+                <strong>Debug:</strong> {debugInfo}
+              </div>
+            )}
+
+            {/* Email Field */}
             <div>
-              <label htmlFor="nickname" className="block text-sm font-medium text-gray-900 mb-3">
-                Rumuz
+              <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-3">
+                Email Adresi
               </label>
               <div className="flex items-center space-x-3">
                 <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <span className="text-gray-600 text-lg">👤</span>
+                  <span className="text-gray-600 text-lg">📧</span>
                 </div>
                 <input
-                  id="nickname"
-                  name="nickname"
-                  type="text"
-                  value={formData.nickname}
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
                   onChange={handleChange}
                   style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', textIndent: '0 !important' }}
                   className={`flex-1 py-4 px-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
-                    errors.nickname 
+                    errors.email 
                       ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-gray-300 hover:border-gray-400'
+                      : 'border-gray-300'
                   }`}
-                  placeholder="Rumuzunuzu girin"
+                  placeholder="Email adresinizi girin"
                 />
               </div>
-              {errors.nickname && (
-                <p className="mt-2 text-sm text-red-600">{errors.nickname}</p>
+              {errors.email && (
+                <p className="mt-2 text-sm text-red-600">{errors.email}</p>
               )}
             </div>
 
@@ -156,7 +192,7 @@ export default function LoginPage() {
                 <div className="flex-shrink-0 w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
                   <span className="text-gray-600 text-lg">🔒</span>
                 </div>
-                <div className="relative flex-1">
+                <div className="flex-1 relative">
                   <input
                     id="password"
                     name="password"
@@ -164,22 +200,22 @@ export default function LoginPage() {
                     value={formData.password}
                     onChange={handleChange}
                     style={{ color: '#000000 !important', backgroundColor: '#ffffff !important', textIndent: '0 !important' }}
-                    className={`w-full pr-12 py-4 px-4 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
+                    className={`w-full py-4 px-4 pr-12 bg-white border rounded-xl text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 ${
                       errors.password 
                         ? 'border-red-500 focus:ring-red-500' 
-                        : 'border-gray-300 hover:border-gray-400'
+                        : 'border-gray-300'
                     }`}
                     placeholder="Şifrenizi girin"
                   />
                   <button
                     type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-500 hover:text-gray-700 transition-colors"
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
+                      <EyeOff className="h-5 w-5 text-gray-400" />
                     ) : (
-                      <Eye className="h-5 w-5" />
+                      <Eye className="h-5 w-5 text-gray-400" />
                     )}
                   </button>
                 </div>
@@ -193,45 +229,38 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 disabled:from-gray-600 disabled:to-gray-600 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed flex items-center justify-center gap-3"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {loading ? (
-                <>
-                  <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-                  <span>Giriş Yapılıyor...</span>
-                </>
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Giriş Yapılıyor...
+                </div>
               ) : (
-                <>
-                  <span className="text-xl">🚀</span>
-                  <span>Giriş Yap</span>
-                </>
+                "Giriş Yap"
               )}
             </button>
           </form>
 
-          {/* Register Link */}
-          <div className="mt-8 text-center">
-            <p className="text-gray-300">
-              Hesabınız yok mu?{' '}
-              <Link 
-                href="/register" 
-                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors duration-300"
-              >
-                Hesap Oluşturun
+          {/* Links */}
+          <div className="mt-6 space-y-4 text-center">
+            <p className="text-gray-600">
+              Hesabınız yok mu?{" "}
+              <Link href="/kaydol" className="text-purple-600 hover:text-purple-700 font-medium">
+                Kayıt Olun
+              </Link>
+            </p>
+            <p className="text-gray-600">
+              <Link href="/forgot-password" className="text-purple-600 hover:text-purple-700 font-medium">
+                Şifremi Unuttum
+              </Link>
+            </p>
+            <p className="text-gray-600">
+              <Link href="/debug" className="text-orange-600 hover:text-orange-700 font-medium">
+                🔧 Debug Sayfası
               </Link>
             </p>
           </div>
-        </div>
-
-        {/* Back to Home */}
-        <div className="mt-8 text-center">
-          <Link 
-            href="/" 
-            className="text-gray-400 hover:text-white transition-colors duration-300 flex items-center justify-center gap-2"
-          >
-            <span>←</span>
-            <span>Ana Sayfaya Dön</span>
-          </Link>
         </div>
       </div>
     </div>

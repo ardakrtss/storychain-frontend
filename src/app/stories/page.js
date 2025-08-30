@@ -10,6 +10,8 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { getAllStories, getCompletedStories, getOngoingStories } from "../../lib/firebase-stories";
+import { useAuth } from "../../contexts/AuthContext";
 
 /* ====== Tema / Yardımcılar ====== */
 const THEMES = [
@@ -32,8 +34,10 @@ const THEME_COLORS = {
   hepsi: "bg-slate-100 text-slate-800 ring-slate-200",
 };
 
-function timeAgo(iso) {
-  const d = new Date(iso);
+function timeAgo(timestamp) {
+  if (!timestamp) return "az önce";
+  
+  const d = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
   const diff = (Date.now() - d.getTime()) / 1000;
   if (diff < 60) return "az önce";
   if (diff < 3600) return `${Math.floor(diff / 60)} dk önce`;
@@ -43,277 +47,329 @@ function timeAgo(iso) {
 
 /* ====== Sayfa ====== */
 export default function StoriesPage() {
+  const { user } = useAuth();
+  
   // filtreler
   const [q, setQ] = useState("");
   const [theme, setTheme] = useState("hepsi");
   const [sort, setSort] = useState("latest"); // latest | liked | parts
+  const [filter, setFilter] = useState("all"); // all | completed | ongoing
   const [page, setPage] = useState(1);
   const pageSize = 9;
 
   // veri
   const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState([]);
+  const [error, setError] = useState("");
 
-  /* === DEMO VERİ ===
-     → Burayı kendi API'nle değiştir (ör. fetch("/api/stories?...")) */
+  // Hikayeleri yükle
   useEffect(() => {
-    setLoading(true);
-    const sample = Array.from({ length: 28 }).map((_, i) => ({
-      id: String(i + 1),
-      title: [
-        "Gökkuşağı Köprüsünün Sırrı",
-        "Zamanda Kayıp Not Defteri",
-        "Ormanın Fısıltısı",
-        "Mars'taki İlk Kamp",
-        "Deniz Feneri ve Minik Ejder",
-      ][i % 5],
-      excerpt:
-        [
-          "Köprünün taşlarında parıldayan işaretler bir anda canlandı...",
-          "Notların arasında açılan minik kapı başka bir güne işaret ediyordu...",
-          "Rüzgâr her yaprağa bambaşka bir hikâye anlattı...",
-          "Ufuk çizgisi turuncuya dönerken kamp ateşi garip bir ses çıkardı...",
-          "Fenerin ışığı, gökyüzündeki minik ejderin pullarında dans etti...",
-        ][i % 5] + " Devamını birlikte yazalım!",
-      theme: THEMES[(i % (THEMES.length - 1)) + 1].key,
-      likes: 25 + (i * 7) % 200,
-      parts: 3 + (i % 10),
-      words: 800 + ((i * 97) % 1200),
-      updatedAt: new Date(Date.now() - i * 2 * 3600_000).toISOString(),
-      emoji: ["🌈", "📓", "🌲", "🚀", "🐉"][i % 5],
-      author: ["Elif", "Deniz", "Arda", "Zeynep", "Can"][i % 5],
-    }));
-    const t = setTimeout(() => {
-      setStories(sample);
-      setLoading(false);
-    }, 350);
-    return () => clearTimeout(t);
-  }, []);
+    const loadStories = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        
+        let result;
+        switch (filter) {
+          case "completed":
+            result = await getCompletedStories();
+            break;
+          case "ongoing":
+            result = await getOngoingStories();
+            break;
+          default:
+            result = await getAllStories();
+        }
+        
+        if (result.success) {
+          setStories(result.stories);
+        } else {
+          setError(result.error || "Hikayeler yüklenirken bir hata oluştu");
+        }
+      } catch (error) {
+        console.error('Load stories error:', error);
+        setError("Hikayeler yüklenirken beklenmeyen bir hata oluştu");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStories();
+  }, [filter]);
 
   // filtreleme + arama + sıralama
   const filtered = useMemo(() => {
     let arr = [...stories];
-    if (theme !== "hepsi") arr = arr.filter((s) => s.theme === theme);
+    
+    // Tema filtresi
+    if (theme !== "hepsi") {
+      arr = arr.filter((s) => s.theme === theme);
+    }
+    
+    // Arama filtresi
     if (q.trim()) {
       const needle = q.trim().toLowerCase();
       arr = arr.filter(
         (s) =>
           s.title.toLowerCase().includes(needle) ||
-          s.author.toLowerCase().includes(needle) ||
-          s.excerpt.toLowerCase().includes(needle)
+          s.authorName?.toLowerCase().includes(needle) ||
+          (s.segments && s.segments[0]?.content?.toLowerCase().includes(needle))
       );
     }
-    if (sort === "latest") arr.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-    if (sort === "liked") arr.sort((a, b) => b.likes - a.likes);
-    if (sort === "parts") arr.sort((a, b) => b.parts - a.parts);
+    
+    // Sıralama
+    switch (sort) {
+      case "liked":
+        arr.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
+        break;
+      case "parts":
+        arr.sort((a, b) => (b.segments?.length || 0) - (a.segments?.length || 0));
+        break;
+      case "latest":
+      default:
+        arr.sort((a, b) => {
+          const aTime = a.updatedAt?.toDate?.() || a.updatedAt || a.createdAt?.toDate?.() || a.createdAt;
+          const bTime = b.updatedAt?.toDate?.() || b.updatedAt || b.createdAt?.toDate?.() || b.createdAt;
+          return new Date(bTime) - new Date(aTime);
+        });
+    }
+    
     return arr;
   }, [stories, q, theme, sort]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
-  const current = useMemo(() => {
+  // sayfalama
+  const paginated = useMemo(() => {
     const start = (page - 1) * pageSize;
     return filtered.slice(start, start + pageSize);
-  }, [filtered, page, pageSize]);
+  }, [filtered, page]);
 
-  useEffect(() => setPage(1), [q, theme, sort]); // filtre değişince başa dön
+  const totalPages = Math.ceil(filtered.length / pageSize);
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-indigo-50/40 to-pink-50/40">
-      {/* HERO */}
-      <section className="rounded-b-3xl bg-gradient-to-r from-sky-50 to-purple-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-10 text-center">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white shadow">
-            <BookOpen className="h-7 w-7" />
-          </div>
-          <h1 className="mt-4 text-3xl sm:text-4xl font-extrabold">Hikayeler</h1>
-          <p className="mt-2 text-gray-700">
-            Tüm hikayeleri keşfet, filtrele ve sevdiğini devam ettir. Hayal gücü burada büyür!
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-purple-50 to-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Hikaye Koleksiyonu
+          </h1>
+          <p className="text-xl text-gray-600">
+            Diğer yazarların hikayelerini keşfet ve katkıda bulun
           </p>
+        </div>
 
-          {/* Filtre Çubuğu */}
-          <div className="mx-auto mt-6 max-w-5xl">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-                <input
-                  value={q}
-                  onChange={(e) => setQ(e.target.value)}
-                  placeholder="Başlık, yazar veya özetten ara..."
-                  className="w-full rounded-xl border border-gray-300 bg-white/90 px-10 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-300"
-                />
-              </div>
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 border border-red-300 rounded-xl p-4 text-red-700 mb-6">
+            {error}
+          </div>
+        )}
 
-              <select
-                value={theme}
-                onChange={(e) => setTheme(e.target.value)}
-                className="rounded-xl border border-gray-300 bg-white/90 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-300"
-              >
-                {THEMES.map((t) => (
-                  <option key={t.key} value={t.key}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value)}
-                className="rounded-xl border border-gray-300 bg-white/90 px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-purple-300"
-              >
-                <option value="latest">En Yeni</option>
-                <option value="liked">En Beğenilen</option>
-                <option value="parts">En Çok Bölüm</option>
-              </select>
+        {/* Filtreler */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Arama */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              <input
+                type="text"
+                placeholder="Hikaye ara..."
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
             </div>
+
+            {/* Tema Filtresi */}
+            <select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              {THEMES.map((t) => (
+                <option key={t.key} value={t.key}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+
+            {/* Durum Filtresi */}
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              <option value="all">Tüm Hikayeler</option>
+              <option value="ongoing">Devam Eden</option>
+              <option value="completed">Tamamlanan</option>
+            </select>
+
+            {/* Sıralama */}
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              <option value="latest">En Yeni</option>
+              <option value="liked">En Beğenilen</option>
+              <option value="parts">En Çok Bölüm</option>
+            </select>
           </div>
         </div>
-      </section>
 
-      {/* LİSTE */}
-      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-10">
-        {loading ? (
-          <LoadingGrid />
-        ) : filtered.length === 0 ? (
-          <EmptyState query={q} />
-        ) : (
+        {/* Loading */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Hikayeler yükleniyor...</p>
+          </div>
+        )}
+
+        {/* Hikaye Listesi */}
+        {!loading && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {current.map((s) => (
-                <StoryCard key={s.id} s={s} />
-              ))}
-            </div>
+            {paginated.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="text-6xl mb-4">📚</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Hikaye Bulunamadı</h3>
+                <p className="text-gray-600 mb-6">
+                  {q.trim() || theme !== "hepsi" || filter !== "all"
+                    ? "Arama kriterlerinize uygun hikaye bulunamadı."
+                    : "Henüz hiç hikaye yok. İlk hikayeyi sen yaz!"}
+                </p>
+                <a
+                  href="/write"
+                  className="inline-block bg-gradient-to-r from-pink-500 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200"
+                >
+                  Hikaye Yazmaya Başla
+                </a>
+              </div>
+            ) : (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {paginated.map((story) => (
+                    <div
+                      key={story.id}
+                      className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                    >
+                      {/* Header */}
+                      <div className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                          <span
+                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ring-1 ring-inset ${
+                              THEME_COLORS[story.theme] || THEME_COLORS.hepsi
+                            }`}
+                          >
+                            {THEMES.find(t => t.key === story.theme)?.label || story.theme}
+                          </span>
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Heart className="h-4 w-4" />
+                            <span>{story.likeCount || 0}</span>
+                          </div>
+                        </div>
 
-            {/* Sayfalama */}
-            <div className="mt-8 flex items-center justify-center gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className={`flex items-center gap-1 rounded-xl px-3 py-2 text-sm ring-1 ring-black/10 shadow-sm ${
-                  page === 1 ? "bg-gray-200 text-gray-500" : "bg-white hover:bg-slate-50"
-                }`}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Geri
-              </button>
-              <span className="text-sm text-gray-600">
-                Sayfa <b>{page}</b> / {totalPages}
-              </span>
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className={`flex items-center gap-1 rounded-xl px-3 py-2 text-sm ring-1 ring-black/10 shadow-sm ${
-                  page === totalPages
-                    ? "bg-gray-200 text-gray-500"
-                    : "bg-white hover:bg-slate-50"
-                }`}
-              >
-                İleri <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
+                        {/* Title */}
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                          {story.title}
+                        </h3>
+
+                        {/* Excerpt */}
+                        <p className="text-gray-600 mb-4 line-clamp-3">
+                          {story.segments && story.segments.length > 0
+                            ? story.segments[0].content.substring(0, 150) + "..."
+                            : "Henüz içerik yok..."}
+                        </p>
+
+                        {/* Stats */}
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                          <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1">
+                              <BookOpen className="h-4 w-4" />
+                              {story.segments?.length || 0}/{story.maxSegments || 3}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Sparkles className="h-4 w-4" />
+                              {story.segments?.reduce((total, seg) => total + (seg.content?.length || 0), 0) || 0} karakter
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Author & Time */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold">
+                              {story.authorName?.charAt(0) || "?"}
+                            </div>
+                            <span className="text-sm font-medium text-gray-900">
+                              {story.authorName || "Anonim"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <Calendar className="h-3 w-3" />
+                            <span>{timeAgo(story.updatedAt || story.createdAt)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <span className={`text-sm font-medium ${
+                            story.isComplete ? 'text-green-600' : 'text-orange-600'
+                          }`}>
+                            {story.isComplete ? '✅ Tamamlandı' : '⏳ Devam Ediyor'}
+                          </span>
+                          <a
+                            href={`/stories/${story.id}`}
+                            className="bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200"
+                          >
+                            {story.isComplete ? 'Oku' : 'Devam Et'}
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      onClick={() => setPage(Math.max(1, page - 1))}
+                      disabled={page === 1}
+                      className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    
+                    <span className="px-4 py-2 text-sm text-gray-600">
+                      Sayfa {page} / {totalPages}
+                    </span>
+                    
+                    <button
+                      onClick={() => setPage(Math.min(totalPages, page + 1))}
+                      disabled={page === totalPages}
+                      className="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ChevronRight className="h-5 w-5" />
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </>
         )}
-      </section>
-    </main>
-  );
-}
 
-/* ====== Kart Bileşenleri ====== */
-function StoryCard({ s }) {
-  const badge = THEME_COLORS[s.theme] || THEME_COLORS.hepsi;
-
-  return (
-    <article className="group rounded-2xl bg-white p-5 shadow-lg ring-1 ring-black/5 hover:shadow-xl transition">
-      <div className="flex items-start justify-between">
-        <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 ${badge}`}>
-          <span>{s.emoji}</span>
-          {labelOf(s.theme)}
-        </div>
-        <span className="inline-flex items-center gap-1 text-sm text-pink-600">
-          <Heart className="h-4 w-4" />
-          {s.likes}
-        </span>
-      </div>
-
-      <h3 className="mt-3 line-clamp-2 text-xl font-extrabold text-gray-900">
-        {s.title}
-      </h3>
-      <p className="mt-2 line-clamp-3 text-sm text-gray-700">{s.excerpt}</p>
-
-      <div className="mt-4 grid grid-cols-3 gap-2 text-xs text-gray-600">
-        <div className="flex items-center gap-1">
-          <Sparkles className="h-4 w-4 text-fuchsia-600" />
-          {s.parts} bölüm
-        </div>
-        <div className="flex items-center gap-1">
-          <Timer className="h-4 w-4 text-indigo-600" />
-          {s.words.toLocaleString("tr-TR")} kelime
-        </div>
-        <div className="flex items-center gap-1 justify-end">
-          <Calendar className="h-4 w-4 text-emerald-600" />
-          {timeAgo(s.updatedAt)}
-        </div>
-      </div>
-
-      <div className="mt-5 flex items-center justify-between">
-        <div className="text-xs text-gray-500">Yazar: <b>{s.author}</b></div>
-        <div className="flex gap-2">
+        {/* CTA */}
+        <div className="text-center mt-12">
           <a
-            href={`/hikaye/${s.id}`}
-            className="rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-3 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
+            href="/write"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-pink-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
-            Oku / Devam Et
-          </a>
-          <a
-            href={`/hikaye/${s.id}#paylas`}
-            className="rounded-xl ring-1 ring-black/10 bg-white px-3 py-2 text-sm font-semibold hover:bg-slate-50"
-          >
-            Paylaş
+            <Sparkles className="h-5 w-5" />
+            Yeni Hikaye Başlat
           </a>
         </div>
-      </div>
-    </article>
-  );
-}
-
-function labelOf(key) {
-  const t = THEMES.find((x) => x.key === key);
-  return t ? t.label : "Tema";
-}
-
-/* ====== Yardımcı Bileşenler ====== */
-function LoadingGrid() {
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Array.from({ length: 9 }).map((_, i) => (
-        <div
-          key={i}
-          className="h-48 rounded-2xl bg-white shadow ring-1 ring-black/5 animate-pulse"
-        />
-      ))}
-    </div>
-  );
-}
-
-function EmptyState({ query }) {
-  return (
-    <div className="rounded-2xl bg-white p-10 text-center shadow ring-1 ring-black/5">
-      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white shadow">
-        <Search className="h-7 w-7" />
-      </div>
-      <h3 className="mt-4 text-xl font-extrabold">Sonuç bulunamadı</h3>
-      <p className="mt-2 text-gray-600">
-        {query
-          ? `"${query}" için eşleşen hikaye yok. Farklı bir arama deneyebilirsin.`
-          : "Henüz burada listelenecek hikaye yok gibi görünüyor."}
-      </p>
-      <div className="mt-4">
-        <a
-          href="/hikaye-yaz"
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-fuchsia-500 px-4 py-2 text-sm font-semibold text-white shadow hover:opacity-95"
-        >
-          <Sparkles className="h-4 w-4" />
-          İlk hikayeyi sen başlat!
-        </a>
       </div>
     </div>
   );

@@ -1,9 +1,15 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
-import api from '../lib/api';
+import { 
+  registerUser, 
+  loginUser, 
+  logoutUser, 
+  getUserData, 
+  onAuthStateChange 
+} from '../lib/firebase-auth';
 
-const AuthContext = createContext(undefined);
+const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -18,55 +24,77 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in on app start
-    const checkAuth = async () => {
-      try {
-        // Cookie-based authentication - /api/auth/me endpoint'i kullan
-        const response = await api.get('/auth/me');
-        setUser(response.data);
-      } catch (error) {
-        // Kullanıcı giriş yapmamış, user null kalacak
-        console.log('User not authenticated');
-      } finally {
-        setLoading(false);
+    // Firebase auth state listener
+    const unsubscribe = onAuthStateChange(async (firebaseUser) => {
+      if (firebaseUser) {
+        // Firebase user varsa, Firestore'dan detaylı bilgileri al
+        const userDataResult = await getUserData(firebaseUser.uid);
+        if (userDataResult.success) {
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            ...userDataResult.data
+          });
+        } else {
+          // Firestore'da kullanıcı yoksa, sadece Firebase user'ı kullan
+          setUser({
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            nickname: firebaseUser.displayName,
+            role: 'user',
+            storiesWritten: 0,
+            totalLikes: 0
+          });
+        }
+      } else {
+        setUser(null);
       }
-    };
+      setLoading(false);
+    });
 
-    checkAuth();
+    return () => unsubscribe();
   }, []);
 
-  const signIn = async (nickname, password) => {
+  const signUp = async (nickname, email, password) => {
     try {
-      // Cookie-based authentication
-      const response = await api.post('/auth/login', { 
-        nickname: nickname.toLowerCase(), 
-        password 
-      });
-      
-      // Cookie otomatik olarak set edildi, user bilgisini al
-      const userResponse = await api.get('/auth/me');
-      setUser(userResponse.data);
-      
-      return { success: true };
+      const result = await registerUser(nickname, email, password);
+      if (result.success) {
+        // Kullanıcı otomatik olarak giriş yapacak ve auth state listener tetiklenecek
+        return { success: true };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return { success: false, error: 'Kayıt olurken bir hata oluştu' };
+    }
+  };
+
+  const signIn = async (email, password) => {
+    try {
+      const result = await loginUser(email, password);
+      if (result.success) {
+        // Kullanıcı otomatik olarak giriş yapacak ve auth state listener tetiklenecek
+        return { success: true };
+      } else {
+        return { success: false, error: result.error };
+      }
     } catch (error) {
       console.error('Sign in error:', error);
-      const errorMessage = error.response?.data?.error || error.message || 'Giriş yapılamadı';
-      return { 
-        success: false, 
-        error: errorMessage
-      };
+      return { success: false, error: 'Giriş yapılamadı' };
     }
   };
 
   const signOut = async () => {
     try {
-      // Cookie'yi temizlemek için logout endpoint'ini çağır
-      await api.post('/auth/logout');
+      await logoutUser();
       setUser(null);
+      return { success: true };
     } catch (error) {
       console.error('Sign out error:', error);
-      // Hata olsa bile user'ı temizle
-      setUser(null);
+      return { success: false, error: 'Çıkış yapılırken hata oluştu' };
     }
   };
 
@@ -75,15 +103,19 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         const updatedUser = { ...user, ...updates };
         setUser(updatedUser);
+        return { success: true };
       }
+      return { success: false, error: 'Kullanıcı bulunamadı' };
     } catch (error) {
       console.error('Update user error:', error);
+      return { success: false, error: 'Kullanıcı güncellenirken hata oluştu' };
     }
   };
 
   const value = {
     user,
     loading,
+    signUp,
     signIn,
     signOut,
     updateUser,
