@@ -14,10 +14,10 @@ export async function signupWithUsername({ username, password }) {
 }
 
 export async function loginWithUsername({ username, password }) {
-  const r = await fetch(`${API}/api/auth/login`, {
+  const r = await fetch(`${API}/api/auth/login-nickname`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    body: JSON.stringify({ nickname: username, password }),
   });
   const data = await r.json();
   if (!r.ok) throw new Error(data?.error || "login_failed");
